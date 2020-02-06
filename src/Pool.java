@@ -176,16 +176,14 @@ public class Pool {
         Random rand = new Random();
 
         int rand_int = rand.nextInt(LetterPool.size());
-        System.out.println(LetterPool.get(rand_int).getLetter());
-
         LetterTile letterChosen = LetterPool.get(rand_int);
         LetterPool.remove(rand_int);
 
         return letterChosen;
-
     }
 
     public static void main(String[] args) {
+        /*
         // some simple code to test functionality
         Pool bag = new Pool();
         System.out.println(bag.LetterPool.get(78).getLetter()); // should output C
@@ -205,7 +203,7 @@ public class Pool {
         }
 
         System.out.println(bag.LetterPool.size());
-
+        */
 
     }
 
