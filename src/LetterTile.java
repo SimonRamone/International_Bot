@@ -1,3 +1,4 @@
+// International Bot 17205786, 18439314, 18763829
 public class LetterTile {
 
     public char letter;
@@ -45,6 +46,8 @@ public class LetterTile {
     final static LetterTile tileX = new LetterTile('X', 8);
     final static LetterTile tileY = new LetterTile('Y', 4);
     final static LetterTile tileZ = new LetterTile('Z', 10);
+
+    // accessor and mutators
 
     public char getLetter() {
         return letter;
