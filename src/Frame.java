@@ -26,6 +26,10 @@ public class Frame {
 		return tileFrame.size();
 	}
 	
+	public void clear() {
+		tileFrame.clear();
+	}
+	
 //Constructor method
 	public Frame(Pool passedInPool){
 		P = passedInPool;
@@ -48,11 +52,23 @@ public class Frame {
 
 //Method for removing a selected tile
 	public void removeTile(LetterTile letter){
+		if(tileFrame.isEmpty()) throw new IllegalArgumentException ("Frame is emtpy. No more tiles can be removed.");
 		tileFrame.remove(letter);
+	}
+
+//Method returns tile at queried index
+	public LetterTile getTile(int index) {
+		return tileFrame.get(index);
+	}
+	
+//Method returns true if frame contains queried tile
+	public Boolean containsTile(LetterTile letter) {
+		return tileFrame.contains(letter);
 	}
 	
 //Method for removing a tile at the selected index
 	public void removeTile(int index){
+		if(tileFrame.isEmpty()) throw new IllegalArgumentException ("Frame is emtpy. No more tiles can be removed.");
 		tileFrame.remove(index);
 	}
 	
