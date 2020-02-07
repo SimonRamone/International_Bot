@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+// International Bot 17205786, 18439314, 18763829
 public class Pool {
 
     // initially come up with an idea to create two arraylists
@@ -173,6 +174,10 @@ public class Pool {
     // this method allows random tile to be drawn from bag
     // will reduce size of arraylist by 1
     public LetterTile randomDraw(){
+        if(LetterPool.isEmpty()){
+            throw new IllegalArgumentException("Bag is empty. No tiles can be drawn.");
+        }
+
         Random rand = new Random();
 
         int rand_int = rand.nextInt(LetterPool.size());
