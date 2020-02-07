@@ -1,86 +1,47 @@
-import java.util.Scanner;
+import java.util.ArrayList;
+//International Bot: 17205786, 18439314, 18763829
 
 public class ScrabblePlayer {
-    private static int num;
-    public String name;
-    public int score;
-    public Frame player_frame;
 
-    public ScrabblePlayer(Frame f, String n){
-        player_frame = f;
-        name = n;
+    public ArrayList<SimplePlayer> players = new ArrayList<SimplePlayer>();
+
+    public ScrabblePlayer(){
+
     }
 
-    public Frame getFrame(){
-        return player_frame;
+    public void addPlayer(Frame f, String name){
+        players.add(new SimplePlayer(f, name));
     }
 
-    public void setName(){      //setName function, takes in username from scanner.
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Enter player Name: \n");
-        name = scan.nextLine();
-        name = name.trim();			//trims name so that there are no white spaces before or after the name string.
+    public void removePlayer(int i){
+        players.remove(i);
+    }
+    //reset player will remove current player at index i,and create a new player at tht index.
+    public void resetPlayer(int i, Frame f, String name){
+        removePlayer(i);
+        players.add(i, new SimplePlayer(f, name));
     }
 
-    public void setScore() {    //initialises player score to 0
-        score = 0;
-    }     //initialises player score.
 
-    public void resetName() {
-        setName();
-    }   //both resets are basically calling initialisation function again.
-
-    public void resetScore() {
-        setScore();
-    }
-
-    @Override
-    public String toString() {
-        String text = "No user inputted";
-        int count = 0;
-        if (name != "") {
-            text = "playerName: " + getName() + "\nPlayer Score: " + getScore();
-        }
-        return text;
-    }
-
-    public void updateScore(int wordScore){
-        score += wordScore; //based on the pool and frame methods, player's score will add
-    }                           // with the value of the word.
-    private String getName() {
-        return name.trim();
-    }
-
-    private int getScore() {
-        return score;
-    }
 
     public static void main(String[] args) {
-       // ScrabblePlayer[] players = new ScrabblePlayer[4];
-//
-//        numOfPlayers();
-//        for (int i=0; i<num;i++ ) {
-//            players[i] = new ScrabblePlayer();
-//            players[i].setName();
-//            players[i].setScore();
-//        }
-//
-//        System.out.println("there will be " + num + " players");
-//
-//        for (int i=0; i<num;i++ ) {
-//            System.out.println(players[i].toString());
-//
-//        }
+        Frame f = new Frame(new Pool());
+        ScrabblePlayer s = new ScrabblePlayer();
+        s.addPlayer(f, "Jack Liu    ");      //player 1
+        System.out.println(s.players.get(0));
+        s.players.get(0).updateScore(456);
+
+        s.addPlayer(f, "jerald");       //player2
+        //s.resetPlayer(0, f,"bob");      // new player 1
+       // System.out.println(s.players.get(0));
+        System.out.println(s.players.get(0).getFrame());
+        s.players.get(0).getFrame().removeTile(0);
+        System.out.println(s.players.get(0).getFrame());
+        System.out.println(s.players.get(0).getName());
+        s.players.get(0).updateScore(100);
+        System.out.println(s.players.get(0).getScore());
     }
 
-    private static void numOfPlayers() {    //function to set the amount of players
-        Scanner q = new Scanner(System.in);
-        System.out.println("Enter amount of players: ");
-        num = q.nextInt();
-        if (num > 4 || num < 0){    //guard for incase
-            throw new IllegalArgumentException("# of players entered is invalid ");
-        }
-    }
 
 }
 
