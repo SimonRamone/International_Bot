@@ -193,20 +193,15 @@ public class Pool {
         Pool bag = new Pool();
         System.out.println(bag.LetterPool.get(78).getLetter()); // should output C
         System.out.println(bag.getLetterScore('C')); // should be 3
-
         bag.randomDraw(); // initialize a draw from the bag
         System.out.println(bag.tilesLeft()); // check if there are 99 tiles left after removing one tile
-
         bag.reset();
         System.out.println(bag.tilesLeft());
-
         // check if i can draw all the tiles
-
         for(int i = 0; i < 100; i++){
             bag.randomDraw();
             bag.isEmpty();
         }
-
         System.out.println(bag.LetterPool.size());
         */
 

@@ -9,13 +9,13 @@ class FrameTest {
 
 	Frame F;
 	Pool P;
-	
+
 	@BeforeEach
 	void setUp() throws Exception {
 		P = new Pool();
 		F = new Frame(P);
 	}
-	
+
 	@Test
 	void testRemoveTile() {
 		F.removeTile(6);
@@ -30,22 +30,22 @@ class FrameTest {
 		try {
 			F.removeTile(0);
 		} catch(IllegalArgumentException ex) {}
-		
+
 	}
-	
+
 	@Test
 	void testRefillFrame() {
 		try {
 			F.refillFrame();
 		} catch(IllegalArgumentException ex) {}
-		
+
 		for(int i = 0; i < 14; i++) {
 			F.clear();
 			F.refillFrame();
 		}
-		
+
 		assertEquals(0, P.tilesLeft());
-		
+
 		try {
 			F.clear();
 			F.refillFrame();
