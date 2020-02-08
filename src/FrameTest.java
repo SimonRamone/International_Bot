@@ -3,6 +3,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+//International Bot 17205786, 18439314, 18763829
+
 class FrameTest {
 
 	Frame F;
@@ -28,6 +30,7 @@ class FrameTest {
 		try {
 			F.removeTile(0);
 		} catch(IllegalArgumentException ex) {}
+		
 	}
 	
 	@Test
@@ -48,7 +51,5 @@ class FrameTest {
 			F.refillFrame();
 		} catch(IllegalArgumentException ex) {}
 	}
-	
-	
-	
+
 }
