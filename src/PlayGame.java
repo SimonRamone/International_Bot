@@ -12,8 +12,8 @@ public class PlayGame {
 		Scanner q = new Scanner(System.in);
 		System.out.println("Enter amount of players: ");
 		numOfPlayers = Integer.parseInt(q.nextLine());
-		while (numOfPlayers > 4 || numOfPlayers < 0){    //guard for min and max players, will keep asking until appropriate value is given
-			if(numOfPlayers > 4 || numOfPlayers < 0) {
+		while (numOfPlayers > 4 || numOfPlayers < 2){    //guard for min and max players, will keep asking until appropriate value is given
+			if(numOfPlayers > 4 || numOfPlayers < 2) {
 				System.out.println("# of players entered is invalid. Only 2 to 4 players allowed");
 				numOfPlayers = Integer.parseInt(q.nextLine());
 			}
@@ -24,7 +24,8 @@ public class PlayGame {
 
 		// set name for players
 		for(int i = 0; i < numOfPlayers; i++){
-			System.out.println("Player " + i + 1 + " Enter your name: ");
+			int j = i + 1;
+			System.out.println("Player " + j + " Enter your name: ");
 			playerName = q.nextLine();
 			scrabblePlayers.addPlayer(playerName.trim());
 		}
