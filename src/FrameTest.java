@@ -15,7 +15,7 @@ class FrameTest {
 		P = new Pool();
 		F = new Frame(P);
 	}
-
+	
 	//Removes all tiles from the frame then checks that the frame is empty 
 	//and that no more tiles can be removed
 	@Test
@@ -35,6 +35,50 @@ class FrameTest {
 
 	}
 
+	@Test
+	void testGetTile() {
+		assertEquals(F.tileFrame.get(0), F.getTile(0));
+		assertEquals(F.tileFrame.get(1), F.getTile(1));
+		assertEquals(F.tileFrame.get(2), F.getTile(2));
+		assertEquals(F.tileFrame.get(3), F.getTile(3));
+		assertEquals(F.tileFrame.get(4), F.getTile(4));
+		assertEquals(F.tileFrame.get(5), F.getTile(5));
+		assertEquals(F.tileFrame.get(6), F.getTile(6));
+		
+		try {
+			F.getTile(-1);
+		} catch(IllegalArgumentException ex) {}
+		
+		try {
+			F.getTile(7);
+		} catch(IllegalArgumentException ex) {}
+		
+		try {
+			F.removeTile(0);
+			F.getTile(6);
+		} catch(IllegalArgumentException ex) {}
+	}
+	
+	@Test
+	void testContainsTile() {
+		assertTrue(F.containsTile(F.getTile(0)));
+	}
+	
+	@Test
+	void testToString() {
+		String str = F.getTile(0).toString() + F.getTile(1).toString() + F.getTile(2).toString() + F.getTile(3).toString()
+				+ F.getTile(4).toString() + F.getTile(5).toString() + F.getTile(6).toString();
+		assertEquals(str, F.toString());
+		
+		F.removeTile(0);
+		str = F.getTile(0).toString() + F.getTile(1).toString() + F.getTile(2).toString() + F.getTile(3).toString()
+				+ F.getTile(4).toString() + F.getTile(5).toString();
+		assertEquals(str, F.toString());
+		
+		F.emptyFrame();
+		assertEquals("", F.toString());
+	}
+	
 	@Test
 	void testGetSize() {
 		assertEquals(7, F.getSize());
@@ -71,14 +115,19 @@ class FrameTest {
 	}
 	
 	@Test
+	void testEmptyFrame() {
+		F.emptyFrame();
+		assertEquals(0, F.getSize());
+	}
+	
+	@Test
 	void testGetFrame() {
-		Frame temp = F;
-		assertTrue(temp.equals(F.getFrame()));
+		assertEquals(F.tileFrame, F.getFrame());
 	}
 	
 	@Test
 	void testIsEmpty() {
-		F.clear();
+		F.emptyFrame();
 		assertEquals(true, F.isEmpty());
 		
 		F.refillFrame();
@@ -88,6 +137,7 @@ class FrameTest {
 		F.removeTile(3);
 		F.removeTile(2);
 		F.removeTile(1);
+		assertEquals(false, F.isEmpty());
 		F.removeTile(0);
 		assertEquals(true, F.isEmpty());
 	}
@@ -101,7 +151,7 @@ class FrameTest {
 
 		//Empties pool
 		for(int i = 0; i < 14; i++) {
-			F.clear();
+			F.emptyFrame();
 			F.refillFrame();
 		}
 		
@@ -110,7 +160,7 @@ class FrameTest {
 		
 		//Checks that frame cannot be refilled when pool is empty
 		try {
-			F.clear();
+			F.emptyFrame();
 			F.refillFrame();
 		} catch(IllegalArgumentException ex) {}
 	}
