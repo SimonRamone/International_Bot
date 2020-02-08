@@ -5,18 +5,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScrabblePlayerTest {
 
     Frame f = new Frame(new Pool());
-    ScrabblePlayer s = new ScrabblePlayer();
     Pool P = new Pool();
+    ScrabblePlayer s = new ScrabblePlayer(P);
 
     @Test
     void TestGetName(){
-        s.addPlayer(f, "Jack Liu   ");
+        s.addPlayer("Jack Liu   ");
         assertEquals("Jack Liu", s.players.get(0).getName());
     }
     @Test
     void TestResetPlayer(){
-        s.addPlayer(f, "Jack Liu   ");
-        s.resetPlayer(0, f, "bob");
+        s.addPlayer("Jack Liu   ");
+        s.resetPlayer(0, "bob");
         assertEquals("bob", s.players.get(0).getName());
     }
     @Test

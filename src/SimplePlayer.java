@@ -4,8 +4,8 @@ public class SimplePlayer {
         public int score;
         public Frame playerFrame;
 
-        public SimplePlayer(Frame playerFrame, String name ){
-            this.playerFrame = playerFrame;
+        public SimplePlayer(Pool P, String name ){
+            playerFrame = new Frame(P);
             this.name = name;
             resetScore();
         }
