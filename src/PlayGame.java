@@ -29,6 +29,8 @@ public class PlayGame {
 			playerName = q.nextLine();
 			scrabblePlayers.addPlayer(playerName.trim());
 		}
+		
+		q.close();
 
 		for(int i = 0; i < numOfPlayers; i++){
 			System.out.println(scrabblePlayers.players.get(i));
