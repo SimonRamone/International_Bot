@@ -51,12 +51,13 @@ public class Frame {
 	//Method for removing a selected tile
 	public void removeTile(LetterTile letter){
 		if(tileFrame.isEmpty()) throw new IllegalArgumentException ("Frame is emtpy. No more tiles can be removed.");
-		tileFrame.remove(letter);
+			else tileFrame.remove(letter);
 	}
 
 	//Method returns tile at queried index
 	public LetterTile getTile(int index) {
-		return tileFrame.get(index);
+		if(index > tileFrame.size() || index < 0) throw new IllegalArgumentException ("There is no tile at index: " + index);
+			else return tileFrame.get(index);
 	}
 
 	//Method returns true if frame contains queried tile
@@ -67,14 +68,14 @@ public class Frame {
 	//Method for removing a tile at the selected index
 	public void removeTile(int index){
 		if(tileFrame.isEmpty()) throw new IllegalArgumentException ("Frame is emtpy. No more tiles can be removed.");
-		tileFrame.remove(index);
+			else tileFrame.remove(index);
 	}
 
 	//Returns String form of frame
 	public String toString(){
 		String frameString = "";
 		for(int i = 0; i < tileFrame.size(); i++){
-			frameString += (tileFrame.get(i)).toString();
+			frameString += tileFrame.get(i).toString();
 		}
 		return frameString;
 	}
