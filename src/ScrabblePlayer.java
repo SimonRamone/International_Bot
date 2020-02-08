@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 //International Bot: 17205786, 18439314, 18763829
 
 public class ScrabblePlayer {
@@ -10,24 +12,32 @@ public class ScrabblePlayer {
         scrabblePool = P;
     }
 
-    public void addPlayer(String name){
-        players.add(new SimplePlayer(scrabblePool, name));
+    public void addPlayer(String name){ //catch if too many players entered
+        if(players.size() == 4) throw new IllegalArgumentException("Maximum number of players reached, can't enter anymore players.");
+        else players.add(new SimplePlayer(scrabblePool, name));
     }
 
-    public void removePlayer(int i){
-        players.remove(i);
+    public void removePlayer(int i){        //Catch trying to remove empty list
+        if(players.isEmpty()) throw new IllegalArgumentException ("No player left. Can't remove anymore players.");
+        else players.remove(i);
+
     }
     //reset player will remove current player at index i,and create a new player at that index.
     public void resetPlayer(int i, String name){
-        removePlayer(i);
-        players.add(i, new SimplePlayer(scrabblePool, name));
+//        if (i<0|| i>players.size()-1){  java automatically throws out of bounds exception
+//            throw new IllegalArgumentException("Cannot reset player as no player exist at this index");
+//        }else {
+            removePlayer(i);
+            players.add(i, new SimplePlayer(scrabblePool, name));
+        //}
     }
 
 
-
     public static void main(String[] args) {
-//        Frame f = new Frame(new Pool());
-//        ScrabblePlayer s = new ScrabblePlayer();
+        Frame f = new Frame(new Pool());
+        Pool P = new Pool();
+        ScrabblePlayer s = new ScrabblePlayer(P);
+
 //        s.addPlayer(f, "Jack Liu    ");      //player 1
 //        System.out.println(s.players.get(0));
 //        s.players.get(0).updateScore(456);
@@ -41,7 +51,11 @@ public class ScrabblePlayer {
 //        System.out.println(s.players.get(0).getName());
 //        s.players.get(0).updateScore(100);
 //        System.out.println(s.players.get(0).getScore());
+//        s.addPlayer("bob builder ");
+//        s.players.get(0).setScore(123);
+//        s.players.get(0).updateScore(26);
+//        s.players.get(0).updateScore(1);
+//        System.out.println(s.players.get(0).getScore());
     }
-
 
 }
