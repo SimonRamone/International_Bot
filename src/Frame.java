@@ -1,12 +1,15 @@
 import java.util.ArrayList;
 
-//International Bot 17205786, 18439314, 18763829
-
 public class Frame {
-	
+
 	public ArrayList<LetterTile> tileFrame = new ArrayList<LetterTile>();	//Arraylist for which contains drawn tiles
 	public static Pool P;	//Pool from which tiles are drawn
 	private final int MAX_TILES_IN_FRAME = 7;	//Scrabble frame size
+
+
+	public static void main(String[] args) {
+			
+	}
 
 //Method returns the arraylist tileFrame containing all tiles
 	public ArrayList<LetterTile> getFrame(){
@@ -22,8 +25,7 @@ public class Frame {
 	public int getSize(){
 		return tileFrame.size();
 	}
-
-//Method removes all tiles from frame
+	
 	public void clear() {
 		tileFrame.clear();
 	}
@@ -72,19 +74,11 @@ public class Frame {
 	
 //Returns String form of frame
 	public String toString(){	
-		String frameString = "";
+		String frameString = "| ";
 		for(int i = 0; i < tileFrame.size(); i++){
-			frameString += (tileFrame.get(i)).toString();
+			frameString += (tileFrame.get(i)).getLetter() + " " + (tileFrame.get(i)).getScore() + " | ";
 		}
 		return frameString;
 	}
-	
-	public static void main(String[] args) {
-		Pool P = new Pool();
-		Frame F = new Frame(P);
-		System.out.println(F);
-		System.out.println(F.getTile(1));
-		
-}
 	
 }

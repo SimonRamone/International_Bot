@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="International-Bot - Assignment 1">
+    <output-path>$PROJECT_DIR$/classes/artifacts/International_Bot___Assignment_1</output-path>
+    <root id="archive" name="International-Bot - Assignment 1.jar" />
+  </artifact>
+</component>
