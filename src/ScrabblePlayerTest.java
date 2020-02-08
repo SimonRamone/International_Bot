@@ -21,6 +21,7 @@ class ScrabblePlayerTest {
     }
     @Test
     void TestSetScore(){
+    	s.addPlayer("Jack Liu   ");
         s.players.get(0).updateScore(25);
         assertEquals(25, s.players.get(0).getScore());
     }
