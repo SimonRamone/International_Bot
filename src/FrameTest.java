@@ -35,6 +35,7 @@ class FrameTest {
 
 	}
 
+
 	@Test
 	void testGetTile() {
 		assertEquals(F.tileFrame.get(0), F.getTile(0));
@@ -45,14 +46,17 @@ class FrameTest {
 		assertEquals(F.tileFrame.get(5), F.getTile(5));
 		assertEquals(F.tileFrame.get(6), F.getTile(6));
 		
+		//Test when input index is negative
 		try {
 			F.getTile(-1);
 		} catch(IllegalArgumentException ex) {}
 		
+		//Tests when input index is greater than amount of tiles in frame
 		try {
 			F.getTile(7);
 		} catch(IllegalArgumentException ex) {}
 		
+		//Tests when input index is greater than amount of tiles in frame
 		try {
 			F.removeTile(0);
 			F.getTile(6);
@@ -66,15 +70,18 @@ class FrameTest {
 	
 	@Test
 	void testToString() {
+		//Test when frame is full
 		String str = F.getTile(0).toString() + F.getTile(1).toString() + F.getTile(2).toString() + F.getTile(3).toString()
 				+ F.getTile(4).toString() + F.getTile(5).toString() + F.getTile(6).toString();
 		assertEquals(str, F.toString());
 		
+		//When frame has less than 7 tiles
 		F.removeTile(0);
 		str = F.getTile(0).toString() + F.getTile(1).toString() + F.getTile(2).toString() + F.getTile(3).toString()
 				+ F.getTile(4).toString() + F.getTile(5).toString();
 		assertEquals(str, F.toString());
 		
+		//When frame is empty
 		F.emptyFrame();
 		assertEquals("", F.toString());
 	}
