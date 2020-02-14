@@ -87,6 +87,17 @@ public class Board {
 
     }
 
+    public void resetBoard(){
+        initBoard();
+    }
+
+    public BoardSquare getSquare(int row, int col){
+        return scrabbleBoard[row][col];
+    }
+
+    public int getType (int row, int col){
+
+    }
 
     public static void main(String[] args) {
         Board b = new Board();

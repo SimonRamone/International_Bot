@@ -1,26 +1,20 @@
 public class BoardSquare {
     private int wordMultiplier;
     private int letterMultiplier;
-//    private int row;
-//    private int column;
-    private char letter;
 
-    public BoardSquare(char letter, int letterMultiplier, int wordMultiplier){
-        this.letter = letter;
-//        this.row = row;
-//        this.column = column;
+    public BoardSquare(LetterTile letter, int letterMultiplier, int wordMultiplier){
         this.letterMultiplier = letterMultiplier;
         this.wordMultiplier = wordMultiplier;
     }
 
-    public char getLetter(){
-        return letter;
+    public int getLetterMultiplier() {
+        return letterMultiplier;
     }
 
-    public void setLetter(char letter) {
-        this.letter = letter;
+    public int getWordMultiplier(){
+        return wordMultiplier;
     }
-
+    
     /*
      * Types of letter scores -
      * Double letter score, triple letter score, double word score, triple word score.
@@ -30,22 +24,22 @@ public class BoardSquare {
      */
 
     public static BoardSquare normalSquare(){
-        return new BoardSquare( ' ', 1, 1);
+        return new BoardSquare( null, 1, 1);
     }
 
     public static BoardSquare doubleLetterScore(){
-        return new BoardSquare(' ', 2, 1);
+        return new BoardSquare(null, 2, 1);
     }
 
     public static BoardSquare tripleLetterScore(){
-        return new BoardSquare(' ', 3, 1);
+        return new BoardSquare(null, 3, 1);
     }
 
     public static BoardSquare doubleWordScore(){
-        return new BoardSquare(' ', 1, 2);
+        return new BoardSquare(null, 1, 2);
     }
 
     public static BoardSquare tripleWordScore(){
-        return new BoardSquare(' ', 1, 3);
+        return new BoardSquare(null, 1, 3);
     }
 }
