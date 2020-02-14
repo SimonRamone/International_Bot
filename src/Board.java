@@ -188,20 +188,16 @@ public class Board {
         initBoard();
     }
 
-    public BoardSquare getSquare(int row, int col){
-        return scrabbleBoard[row][col];
-    }
-
-    public int getType (int row, int col){
+    public void placeTile(){
 
     }
 
     public static void main(String[] args) {
         Board b = new Board();
 
-        System.out.println(b.scrabbleBoard[1][1].getLetter());
-        b.scrabbleBoard[1][1].setLetter('A');
-        System.out.println(b.scrabbleBoard[1][1].getLetter());
+        System.out.println(b.scrabbleBoard[1][1].getLetterTile());
+        b.scrabbleBoard[1][1].setTile(LetterTile.tileA);
+        System.out.println(b.scrabbleBoard[1][1].getLetterTile());
 
     }
 
