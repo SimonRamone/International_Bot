@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Board {
     public static int boardSize = 15;
     public static int tileStart = 7;
@@ -85,6 +87,103 @@ public class Board {
         scrabbleBoard[13][1] = BoardSquare.doubleWordScore();
         scrabbleBoard[13][13] = BoardSquare.doubleWordScore();
 
+    }
+    
+    public ArrayList<LetterTile> splitWord (String word){
+    	ArrayList<LetterTile> tiles = new ArrayList<LetterTile>();
+    	word.toUpperCase();
+    	for(int i = 0; i < word.length(); i++) {
+    		char letter = word.charAt(i);
+    		switch(letter) {
+    		case 'A':
+    			tiles.add(LetterTile.tileA);
+    			break;
+    		case 'B':
+    			tiles.add(LetterTile.tileB);
+    			break;
+    		case 'C':
+    			tiles.add(LetterTile.tileC);
+    			break;
+    		case 'D':
+    			tiles.add(LetterTile.tileD);
+    			break;
+    		case 'E':
+    			tiles.add(LetterTile.tileE);
+    			break;
+    		case 'F':
+    			tiles.add(LetterTile.tileF);
+    			break;
+    		case 'G':
+    			tiles.add(LetterTile.tileG);
+    			break;
+    		case 'H':
+    			tiles.add(LetterTile.tileH);
+    			break;
+    		case 'I':
+    			tiles.add(LetterTile.tileI);
+    			break;
+    		case 'J':
+    			tiles.add(LetterTile.tileJ);
+    			break;
+    		case 'K':
+    			tiles.add(LetterTile.tileK);
+    			break;
+    		case 'L':
+    			tiles.add(LetterTile.tileL);
+    			break;
+    		case 'M':
+    			tiles.add(LetterTile.tileM);
+    			break;
+    		case 'N':
+    			tiles.add(LetterTile.tileN);
+    			break;
+    		case 'O':
+    			tiles.add(LetterTile.tileO);
+    			break;
+    		case 'P':
+    			tiles.add(LetterTile.tileP);
+    			break;
+    		case 'Q':
+    			tiles.add(LetterTile.tileQ);
+    			break;
+    		case 'R':
+    			tiles.add(LetterTile.tileR);
+    			break;
+    		case 'S':
+    			tiles.add(LetterTile.tileS);
+    			break;
+    		case 'T':
+    			tiles.add(LetterTile.tileT);
+    			break;
+    		case 'U':
+    			tiles.add(LetterTile.tileU);
+    			break;
+    		case 'V':
+    			tiles.add(LetterTile.tileV);
+    			break;
+    		case 'W':
+    			tiles.add(LetterTile.tileW);
+    			break;
+    		case 'X':
+    			tiles.add(LetterTile.tileX);
+    			break;
+    		case 'Y':
+    			tiles.add(LetterTile.tileY);
+    			break;
+    		case 'Z':
+    			tiles.add(LetterTile.tileZ);
+    			break;
+    		case ' ':
+    			tiles.add(LetterTile.tileBlank);
+    			break;
+    		case '_':
+    			tiles.add(LetterTile.tileBlank);
+    			break;
+    		}
+    		
+    	}
+    	
+    	return tiles;
     }
 
 
