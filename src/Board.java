@@ -95,17 +95,48 @@ public class Board {
         return scrabbleBoard[row][col];
     }
 
-    public int getType (int row, int col){
-
-    }
-
     public static void main(String[] args) {
         Board b = new Board();
 
-        System.out.println(b.scrabbleBoard[1][1].getLetter());
-        b.scrabbleBoard[1][1].setLetter('A');
-        System.out.println(b.scrabbleBoard[1][1].getLetter());
+        //System.out.println(b.scrabbleBoard[1][1].getLetter());
+//        b.scrabbleBoard[7][5].setLetter('A');
+//        b.scrabbleBoard[7][6].setLetter('S');
+//        b.scrabbleBoard[7][7].setLetter('S');
+       // System.out.println(b.scrabbleBoard[1][1].getLetter());
 
+        PrintBoard(b);  //board prints with letters indicating columns and numbers indicating rows
+
+    }
+
+    public static void PrintBoard(Board b){
+        int x =65;
+        for (int j=0;j<boardSize;j++){
+                int ascii = x + j;
+                System.out.print("{" + (char)ascii + " } ");
+        }
+        System.out.println();
+        for(int i = 0; i < boardSize; i++){
+            for(int j = 0; j < boardSize; j++){
+                System.out.print("|");
+                if (i==7 && j==7){System.out.print("★");}      // centre block is a double word score block
+                else if (b.scrabbleBoard[i][j].getLetterMultiplier() == 2){
+                    System.out.print("DL");     //DL indicates double letter score
+                }
+                else if (b.scrabbleBoard[i][j].getLetterMultiplier() == 3){
+                    System.out.print("TL");     //TL indicates Triple letter score
+                }
+                else if (b.scrabbleBoard[i][j].getWordMultiplier() == 3){
+                    System.out.print("TW");     //TW indicates Triple word score
+                }
+                else if (b.scrabbleBoard[i][j].getWordMultiplier() == 2){
+                    System.out.print("DW");    //DW indicates Double word score
+                }else {
+                    System.out.print("  ");
+                }
+                System.out.print("| ");
+            }
+            System.out.println("-"+i);
+        }
     }
 
 }
