@@ -95,7 +95,6 @@ public class Board {
         return scrabbleBoard[row][col];
     }
 
-
     public static void main(String[] args) {
         Board b = new Board();
         PrintBoard(b);
