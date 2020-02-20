@@ -1,6 +1,8 @@
-import org.junit.jupiter.api.Test;
+package Logic;
 
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 // International Bot 17205786, 18439314, 18763829
 class PoolTest {
     Pool p = new Pool();

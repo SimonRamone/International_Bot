@@ -1,3 +1,5 @@
+package Logic;
+
 public class BoardSquare {
     private int wordMultiplier;
     private int letterMultiplier;

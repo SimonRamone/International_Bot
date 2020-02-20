@@ -1,3 +1,5 @@
+package Logic;
+
 public class Board {
     public static int boardSize = 15;
     public static int tileStart = 7;
