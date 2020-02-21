@@ -10,7 +10,6 @@ public class Board {
 
     public BoardSquare[][] scrabbleBoard = new BoardSquare[boardSize][boardSize];
 
-
     public Board(){
         initBoard();
         wordsOnBoard = 0;
@@ -134,7 +133,7 @@ public class Board {
 		
 		setSquare(row, col, tileFrame.getTile(index));
 		tileFrame.removeTile(index);
-		PrintBoard(b);
+		b.PrintBoard();
 		input.close();
     }
     
@@ -249,10 +248,10 @@ public class Board {
 
     public static void main(String[] args) {
         Board b = new Board();
-        PrintBoard(b);
+        b.PrintBoard();
     }
 
-    public static void PrintBoard(Board b){
+    public void PrintBoard(){
         int x =65;
         for (int j=0;j<boardSize;j++){
             int ascii = x + j;
@@ -263,16 +262,16 @@ public class Board {
             for(int j = 0; j < boardSize; j++){
                 System.out.print("|");
                 if (i==7 && j==7){System.out.print("★");}
-                else if (b.scrabbleBoard[i][j].getLetterMultiplier() == 2){
+                else if (scrabbleBoard[i][j].getLetterMultiplier() == 2){
                     System.out.print("DL");     //DL indicates double letter score
                 }
-                else if (b.scrabbleBoard[i][j].getLetterMultiplier() == 3){
+                else if (scrabbleBoard[i][j].getLetterMultiplier() == 3){
                     System.out.print("TL");     //TL indicates Triple letter score
                 }
-                else if (b.scrabbleBoard[i][j].getWordMultiplier() == 3){
+                else if (scrabbleBoard[i][j].getWordMultiplier() == 3){
                     System.out.print("TW");     //TW indicates Triple word score
                 }
-                else if (b.scrabbleBoard[i][j].getWordMultiplier() == 2){
+                else if (scrabbleBoard[i][j].getWordMultiplier() == 2){
                     System.out.print("DW");    //DW indicates Double word score
                 }else {
                     System.out.print("  ");
