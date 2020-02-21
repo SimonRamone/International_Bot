@@ -60,13 +60,6 @@ public class Frame {
 		return tileFrame.get(index);
 	}
 
-	public LetterTile getTile(char letter) {
-		for(int i = 0; i < tileFrame.size(); i++) {
-			if(tileFrame.get(i).getLetter() == letter) return tileFrame.get(i);
-		}
-		throw new IllegalArgumentException ("Your frame does not contain the letter: " + letter);
-	}
-	
 	//Method returns true if frame contains queried tile
 	public Boolean containsTile(LetterTile letter) {
 		return tileFrame.contains(letter);
