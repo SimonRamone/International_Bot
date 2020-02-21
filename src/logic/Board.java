@@ -101,7 +101,7 @@ public class Board {
     	scrabbleBoard[row][col].setTile(letter);
     }
     
-    public void placeTile(Frame tileFrame, Board b, int row, int col) {
+    public void placeTile(Frame tileFrame, int row, int col) {
     	int index = -1;
     	char letter = '#';
     	
@@ -133,17 +133,17 @@ public class Board {
 		
 		setSquare(row, col, tileFrame.getTile(index));
 		tileFrame.removeTile(index);
-		b.PrintBoard();
+		PrintBoard();
 		input.close();
     }
     
-    public void placeWord(SimplePlayer player, Board b) {
+    public void placeWord(SimplePlayer player) {
     	int row, col;
     	Boolean submit = false;
     	String rightOrDown = "";
     	Scanner input = new Scanner(System.in);
     	System.out.println("Do you want to skip your turn? Enter 'YES' or 'NO':");
-	    if(input.next().toUpperCase() == "NO") {
+	    if(input.next().toUpperCase().equals("NO")) {
 	    	System.out.println("Enter row: ");
 			if(input.hasNextInt()) {
 				row = input.nextInt();
@@ -179,7 +179,7 @@ public class Board {
 					}
 	    	}
 	    	
-			placeTile(player.getFrame(), b, row, col);
+			placeTile(player.getFrame(), row, col);
 			System.out.println("Enter 'SUBMIT' to submit your word.");
 			if(input.next().toUpperCase() == "SUBMIT") submit = true;
 	    	if(!submit) {
@@ -187,19 +187,19 @@ public class Board {
 	    		rightOrDown = input.next().toUpperCase();
 	    		if(rightOrDown == "RIGHT" && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
 	    			col++;
-	    			placeTile(player.getFrame(), b, row, col);
+	    			placeTile(player.getFrame(), row, col);
 	    		}
 	    		if(rightOrDown == "DOWN" && scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
 	    			row++;
-	    			placeTile(player.getFrame(), b, row, col);
+	    			placeTile(player.getFrame(), row, col);
 	    		}	
 	    		if(rightOrDown == "RIGHT" && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
 	    			col += 2;
-	    			placeTile(player.getFrame(), b, row, col);
+	    			placeTile(player.getFrame(), row, col);
 	    		}
 	    		if(rightOrDown == "DOWN" && !scrabbleBoard[row+1][col].isEmpty() && row+2 < boardSize) {
 	    			row += 2;
-	    			placeTile(player.getFrame(), b, row, col);
+	    			placeTile(player.getFrame(), row, col);
 	    		}
 	    	}
 			
@@ -210,11 +210,11 @@ public class Board {
 				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
 		    		if(scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
 		    			row++;
-		    			placeTile(player.getFrame(), b, row, col);
+		    			placeTile(player.getFrame(), row, col);
 		    		}	
 		    		else if(!scrabbleBoard[row+1][col].isEmpty() && row+2 < boardSize) {
 		    			row += 2;
-		    			placeTile(player.getFrame(), b, row, col);
+		    			placeTile(player.getFrame(), row, col);
 		    		}
 		    		System.out.println("Enter 'SUBMIT' to submit your word.");
 		    		if(input.next().toUpperCase() == "SUBMIT") submit = true;
@@ -225,11 +225,11 @@ public class Board {
 				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
 					if(rightOrDown == "RIGHT" && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
 		    			col++;
-		    			placeTile(player.getFrame(), b, row, col);
+		    			placeTile(player.getFrame(), row, col);
 		    		}
 					else if(rightOrDown == "RIGHT" && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
 		    			col += 2;
-		    			placeTile(player.getFrame(), b, row, col);
+		    			placeTile(player.getFrame(), row, col);
 		    		}
 		    		System.out.println("Enter 'SUBMIT' to submit your word.");
 		    		if(input.next().toUpperCase() == "SUBMIT") submit = true;
@@ -249,6 +249,16 @@ public class Board {
     public static void main(String[] args) {
         Board b = new Board();
         b.PrintBoard();
+
+		Pool P = new Pool();
+		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
+
+		scrabblePlayers.addPlayer("Jerald");
+		scrabblePlayers.addPlayer("Simonas");
+
+		b.placeWord(scrabblePlayers.players.get(0));
+
+
     }
 
     public void PrintBoard(){
