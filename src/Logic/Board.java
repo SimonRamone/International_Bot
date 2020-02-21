@@ -1,14 +1,19 @@
 package Logic;
 
+import java.util.Scanner;
+
 public class Board {
     public static int boardSize = 15;
     public static int tileStart = 7;
+    
+    public static int wordsOnBoard;
 
     public BoardSquare[][] scrabbleBoard = new BoardSquare[boardSize][boardSize];
 
 
     public Board(){
         initBoard();
+        wordsOnBoard = 0;
     }
 
     public void initBoard(){
@@ -91,6 +96,151 @@ public class Board {
 
     public void resetBoard(){
         initBoard();
+    }
+    
+    public void setSquare(int row, int col, LetterTile letter) {
+    	scrabbleBoard[row][col].setTile(letter);
+    }
+    
+    public void placeTile(Frame tileFrame, Board b, int row, int col) {
+    	int index = -1;
+    	char letter = '#';
+    	
+    	Scanner input = new Scanner(System.in);
+    	
+    	System.out.println("Your frame: ");
+		System.out.println(tileFrame);
+		System.out.println("Pick a tile from your frame: ");
+		if(input.hasNextInt()) {
+			index = input.nextInt() - 1;
+			letter = tileFrame.getTile(index).getLetter();
+		}
+			else if (input.hasNext()) letter = input.next().toUpperCase().charAt(0);
+			else {
+				input.close();
+				throw new IllegalArgumentException ("Invalid input.");
+			}
+		while(index > tileFrame.getSize() || !tileFrame.containsTile(letter)) {
+			System.out.println("Tile does not exist! ");
+			System.out.println("Pick a tile from your frame: ");
+			if(input.hasNextInt()) index = input.nextInt() - 1;
+				else if (input.hasNext()) letter = input.next().toUpperCase().charAt(0);
+				else {
+					input.close();
+					throw new IllegalArgumentException ("Invalid input.");
+				}
+		
+		}
+		
+		setSquare(row, col, tileFrame.getTile(index));
+		tileFrame.removeTile(index);
+		PrintBoard(b);
+		input.close();
+    }
+    
+    public void placeWord(SimplePlayer player, Board b) {
+    	int row, col;
+    	Boolean submit = false;
+    	String rightOrDown = "";
+    	Scanner input = new Scanner(System.in);
+    	System.out.println("Do you want to skip your turn? Enter 'YES' or 'NO':");
+	    if(input.next().toUpperCase() == "NO") {
+	    	System.out.println("Enter row: ");
+			if(input.hasNextInt()) {
+				row = input.nextInt();
+			}	else {
+					input.close();
+					throw new IllegalArgumentException ("Invalid input.");
+				}
+			
+			System.out.println("Enter column: ");
+			if(input.hasNext()) {
+				col = input.next().toUpperCase().charAt(0) - 65;
+			}	else {
+					input.close();
+					throw new IllegalArgumentException ("Invalid input.");
+				}
+			
+	    	while(!scrabbleBoard[row][col].isEmpty() || row > boardSize || row < 0 || col < 0 || col > boardSize) {
+	    		System.out.println("Square is occupied or out of bounds!");
+	    		System.out.println("Enter row: ");
+				if(input.hasNextInt()) {
+					row = input.nextInt();
+				}	else {
+						input.close();
+						throw new IllegalArgumentException ("Invalid input.");
+					}
+				
+				System.out.println("Enter column: ");
+				if(input.hasNext()) {
+					col = input.next().toUpperCase().charAt(0) - 65;
+				}	else {
+						input.close();
+						throw new IllegalArgumentException ("Invalid input.");
+					}
+	    	}
+	    	
+			placeTile(player.getFrame(), b, row, col);
+			System.out.println("Enter 'SUBMIT' to submit your word.");
+			if(input.next().toUpperCase() == "SUBMIT") submit = true;
+	    	if(!submit) {
+	    		System.out.println("Select next tile's position. Enter 'RIGHT' or 'DOWN'.");
+	    		rightOrDown = input.next().toUpperCase();
+	    		if(rightOrDown == "RIGHT" && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
+	    			col++;
+	    			placeTile(player.getFrame(), b, row, col);
+	    		}
+	    		if(rightOrDown == "DOWN" && scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
+	    			row++;
+	    			placeTile(player.getFrame(), b, row, col);
+	    		}	
+	    		if(rightOrDown == "RIGHT" && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
+	    			col += 2;
+	    			placeTile(player.getFrame(), b, row, col);
+	    		}
+	    		if(rightOrDown == "DOWN" && !scrabbleBoard[row+1][col].isEmpty() && row+2 < boardSize) {
+	    			row += 2;
+	    			placeTile(player.getFrame(), b, row, col);
+	    		}
+	    	}
+			
+	    	System.out.println("Enter 'SUBMIT' to submit your word.");
+			if(input.next().toUpperCase() == "SUBMIT") submit = true;
+			
+			if(rightOrDown == "DOWN") {
+				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
+		    		if(scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
+		    			row++;
+		    			placeTile(player.getFrame(), b, row, col);
+		    		}	
+		    		else if(!scrabbleBoard[row+1][col].isEmpty() && row+2 < boardSize) {
+		    			row += 2;
+		    			placeTile(player.getFrame(), b, row, col);
+		    		}
+		    		System.out.println("Enter 'SUBMIT' to submit your word.");
+		    		if(input.next().toUpperCase() == "SUBMIT") submit = true;
+				}
+			}
+	    	
+			if(rightOrDown == "RIGHT") {
+				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
+					if(rightOrDown == "RIGHT" && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
+		    			col++;
+		    			placeTile(player.getFrame(), b, row, col);
+		    		}
+					else if(rightOrDown == "RIGHT" && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
+		    			col += 2;
+		    			placeTile(player.getFrame(), b, row, col);
+		    		}
+		    		System.out.println("Enter 'SUBMIT' to submit your word.");
+		    		if(input.next().toUpperCase() == "SUBMIT") submit = true;
+				}
+			}
+	    	wordsOnBoard++;
+			input.close();
+    	}
+    	
+    	else input.close();
     }
 
     public BoardSquare getSquare(int row, int col){

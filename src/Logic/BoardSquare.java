@@ -23,6 +23,10 @@ public class BoardSquare {
         this.letter = selectedTile;
         return null;
     }
+    
+    public Boolean isEmpty() {
+    	return letter==null?true:false;
+    }
 
     public LetterTile getLetterTile(){
         return letter;

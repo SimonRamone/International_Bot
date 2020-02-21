@@ -64,6 +64,13 @@ public class Frame {
 	public Boolean containsTile(LetterTile letter) {
 		return tileFrame.contains(letter);
 	}
+	
+	public Boolean containsTile(char letter) {
+		for(int i = 0; i < tileFrame.size(); i++) {
+			if(tileFrame.get(i).getLetter() == letter) return true;
+		}
+		return false;
+	}
 
 	//Method for removing a tile at the selected index
 	public void removeTile(int index){
