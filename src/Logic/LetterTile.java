@@ -1,3 +1,5 @@
+package Logic;
+
 // International Bot 17205786, 18439314, 18763829
 public class LetterTile {
 

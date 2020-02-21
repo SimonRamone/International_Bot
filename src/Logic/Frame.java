@@ -1,3 +1,5 @@
+package Logic;
+
 import java.util.ArrayList;
 
 //International Bot 17205786, 18439314, 18763829
@@ -61,6 +63,13 @@ public class Frame {
 	//Method returns true if frame contains queried tile
 	public Boolean containsTile(LetterTile letter) {
 		return tileFrame.contains(letter);
+	}
+	
+	public Boolean containsTile(char letter) {
+		for(int i = 0; i < tileFrame.size(); i++) {
+			if(tileFrame.get(i).getLetter() == letter) return true;
+		}
+		return false;
 	}
 
 	//Method for removing a tile at the selected index

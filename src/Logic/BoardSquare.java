@@ -1,3 +1,5 @@
+package Logic;
+
 public class BoardSquare {
     private int wordMultiplier;
     private int letterMultiplier;
@@ -20,6 +22,10 @@ public class BoardSquare {
     public BoardSquare setTile(LetterTile selectedTile){
         this.letter = selectedTile;
         return null;
+    }
+    
+    public Boolean isEmpty() {
+    	return letter==null?true:false;
     }
 
     public LetterTile getLetterTile(){
