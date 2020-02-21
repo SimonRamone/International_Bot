@@ -26,14 +26,12 @@ public class PlayGame {
 		}
 
 		// set name for players
-		for(int i = 0; i < numOfPlayers; i++){
+		for(int i = 0; i < numOfPlayers; i++) {
 			int j = i + 1;
 			System.out.println("Player " + j + " Enter your name: ");
 			playerName = q.nextLine();
 			scrabblePlayers.addPlayer(playerName.trim());
 		}
-		
-		q.close();
 
 		for(int i = 0; i < numOfPlayers; i++){
 			System.out.println(scrabblePlayers.players.get(i));
