@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 import static org.junit.jupiter.api.Assertions.*;
 
