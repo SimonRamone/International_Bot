@@ -100,15 +100,22 @@ public class Board {
     public void setSquare(int row, int col, LetterTile letter) {
     	scrabbleBoard[row][col].setTile(letter);
     }
-    
+
     public void placeTile(Frame tileFrame, int row, int col) {
+<<<<<<< HEAD
     	char letter;
     	
+=======
+    	int index = 0;
+    	char letter = '#';
+
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
     	Scanner input = new Scanner(System.in);
-    	
+
     	System.out.println("Your frame: ");
 		System.out.println(tileFrame);
 		System.out.println("Pick a tile from your frame: ");
+<<<<<<< HEAD
 		if (input.hasNext()) letter = input.next().toUpperCase().charAt(0);
 			else {
 				input.close();
@@ -121,19 +128,80 @@ public class Board {
 				else {
 					input.close();
 					throw new IllegalArgumentException ("Invalid input.");
+=======
+
+		// an idea to use index to select tile.
+//		if(input.hasNextInt()) {
+//			index = input.nextInt() - 1;
+//
+//			while(index > tileFrame.getSize()) {
+//				System.out.println("Tile does not exist! ");
+//				System.out.println("Pick a tile from your frame: ");
+//				if(input.hasNextInt()){
+//					index = input.nextInt() - 1;
+//				}
+//				else{
+//					break;
+//				}
+//			}
+//
+//			letter = tileFrame.getTile(index).getLetter();
+//			System.out.println(letter); //check if correct tile is selected
+//
+//		}
+
+			if (input.hasNext()) {
+				letter = input.next().toUpperCase().charAt(0);
+
+
+			while(!tileFrame.containsTile(letter)) {
+				System.out.println("Tile does not exist! ");
+				System.out.println("Pick a tile from your frame: ");
+				if(input.hasNext()) {
+					letter = input.next().toUpperCase().charAt(0);
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 				}
+<<<<<<< HEAD
 		
 		}
 		
 		setSquare(row, col, tileFrame.getTile(letter));
 		tileFrame.removeTile(tileFrame.getTile(letter));
 		System.out.println(tileFrame);
+=======
+				else {
+					break;
+				}
+			}
+
+			index = tileFrame.findTileByChar(letter);
+			System.out.println(tileFrame.getTile(index)); //check if correct tile is selected
+			}
+
+
+
+			//scrap
+//		while(index > tileFrame.getSize() || !tileFrame.containsTile(letter)) {
+//			System.out.println("Tile does not exist! ");
+//			System.out.println("Pick a tile from your frame: ");
+//			if(input.hasNextInt()) index = input.nextInt() - 1;
+//				else if (input.hasNext()) letter = input.next().toUpperCase().charAt(0);
+//				else {
+//					input.close();
+//					throw new IllegalArgumentException ("Invalid input.");
+//				}
+//
+//		}
+
+		setSquare(row, col, tileFrame.getTile(index));
+		tileFrame.removeTile(index);
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 		PrintBoard();
 		//input.close();
     }
     
     public void placeWord(SimplePlayer player) {
-    	int row, col;
+    	int row = 0, col = 0;
     	Boolean submit = false;
     	String rightOrDown = "";
     	Scanner input = new Scanner(System.in);
@@ -142,19 +210,23 @@ public class Board {
 	    	System.out.println("Enter row: ");
 			if(input.hasNextInt()) {
 				row = input.nextInt();
-			}	else {
-					input.close();
-					throw new IllegalArgumentException ("Invalid input.");
+				while (row > 14 || row < 0) {
+					System.out.println("Please select row within the board limits. Only accept row in integer form");
+					System.out.println("Please choose again: ");
+					row = input.nextInt();
 				}
-			
+			}
+
 			System.out.println("Enter column: ");
 			if(input.hasNext()) {
 				col = input.next().toUpperCase().charAt(0) - 65;
-			}	else {
-					input.close();
-					throw new IllegalArgumentException ("Invalid input.");
+				while(col > 14 || col < 0){
+					System.out.println("Please select column within the board limits. Only accept column in character form");
+					System.out.println("Please choose again: ");
+					col = input.next().toUpperCase().charAt(0) - 65;
 				}
-			
+			}
+
 	    	while(!scrabbleBoard[row][col].isEmpty() || row > boardSize || row < 0 || col < 0 || col > boardSize) {
 	    		System.out.println("Square is occupied or out of bounds!");
 	    		System.out.println("Enter row: ");
@@ -164,7 +236,7 @@ public class Board {
 						input.close();
 						throw new IllegalArgumentException ("Invalid input.");
 					}
-				
+
 				System.out.println("Enter column: ");
 				if(input.hasNext()) {
 					col = input.next().toUpperCase().charAt(0) - 65;
@@ -173,7 +245,7 @@ public class Board {
 						throw new IllegalArgumentException ("Invalid input.");
 					}
 	    	}
-	    	
+
 			placeTile(player.getFrame(), row, col);
 			System.out.println("Enter 'SUBMIT' to submit your word.");
 			if(input.next().toUpperCase().equals("SUBMIT")) submit = true;
@@ -187,7 +259,11 @@ public class Board {
 	    		if(rightOrDown.equals("DOWN") && scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
 	    			row++;
 	    			placeTile(player.getFrame(), row, col);
+<<<<<<< HEAD
 	    		}	
+=======
+	    		}
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 	    		if(rightOrDown.equals("RIGHT") && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
 	    			col += 2;
 	    			placeTile(player.getFrame(), row, col);
@@ -197,35 +273,47 @@ public class Board {
 	    			placeTile(player.getFrame(), row, col);
 	    		}
 	    	}
-			
+
 	    	System.out.println("Enter 'SUBMIT' to submit your word.");
 			if(input.next().toUpperCase().equals("SUBMIT")) submit = true;
+<<<<<<< HEAD
 			
+=======
+
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 			if(rightOrDown.equals("DOWN")) {
 				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
 		    		if(scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
 		    			row++;
 		    			placeTile(player.getFrame(), row, col);
-		    		}	
+		    		}
 		    		else if(!scrabbleBoard[row+1][col].isEmpty() && row+2 < boardSize) {
 		    			row += 2;
 		    			placeTile(player.getFrame(), row, col);
 		    		}
 		    		System.out.println("Enter 'SUBMIT' to submit your word.");
+<<<<<<< HEAD
 		    		if(input.next().toUpperCase().equals("SUBMIT")) {
 		    			input.reset();
 		    			submit = true;
 		    		}
+=======
+		    		if(input.next().toUpperCase().equals("SUBMIT")) submit = true;
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 				}
 			}
+<<<<<<< HEAD
 	    	
+=======
+
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 			if(rightOrDown.equals("RIGHT")) {
 				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
-					if(rightOrDown == "RIGHT" && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
+					if(rightOrDown.equals("RIGHT") && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
 		    			col++;
 		    			placeTile(player.getFrame(), row, col);
 		    		}
-					else if(rightOrDown == "RIGHT" && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
+					else if(rightOrDown.equals("RIGHT") && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
 		    			col += 2;
 		    			placeTile(player.getFrame(), row, col);
 		    		}
@@ -236,6 +324,7 @@ public class Board {
 	    	wordsOnBoard++;
 			input.close();
     	}
+<<<<<<< HEAD
     	
     	else {
     		input.reset();
@@ -247,6 +336,10 @@ public class Board {
 	    	input.close();
 	    
 	    }
+=======
+
+	    input.close();
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
     }
 
     public BoardSquare getSquare(int row, int col){
@@ -264,7 +357,7 @@ public class Board {
 		scrabblePlayers.addPlayer("Simonas");
 
 		b.placeWord(scrabblePlayers.players.get(0));
-		b.placeWord(scrabblePlayers.players.get(0));
+		b.placeWord(scrabblePlayers.players.get(1));
 
     }
 

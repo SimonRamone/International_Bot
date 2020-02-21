@@ -56,8 +56,8 @@ public class Frame {
 
 	//Method returns tile at queried index
 	public LetterTile getTile(int index) {
-		if(index > tileFrame.size()-1 || index < 0) throw new IllegalArgumentException ("There is no tile at index: " + index);
-			else return tileFrame.get(index);
+//		if(index > tileFrame.size()-1 || index < 0) throw new IllegalArgumentException ("There is no tile at index: " + index);
+		return tileFrame.get(index);
 	}
 
 	public LetterTile getTile(char letter) {
@@ -77,6 +77,18 @@ public class Frame {
 			if(tileFrame.get(i).getLetter() == letter) return true;
 		}
 		return false;
+	}
+
+	public int findTileByChar(char letter) {
+		int index = 0;
+
+		for(int i = 0; i < tileFrame.size(); i++) {
+			if(tileFrame.get(i).getLetter() == letter) {
+				index = i;
+			}
+		}
+
+		return index;
 	}
 
 	//Method for removing a tile at the selected index
