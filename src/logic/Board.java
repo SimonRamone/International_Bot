@@ -170,6 +170,33 @@ public class Board {
 		PrintBoard();
 		input.close();
     }
+
+    public boolean isEmpty(int row, int col){
+    	if(scrabbleBoard[row][col].getLetterTile() == null){
+    		return true;
+		}
+    	else{
+			return false;
+		}
+	}
+
+	public boolean isValidRight(int wordLength, int row, int col){
+    	for(int j = col ; j < wordLength; j++){
+			if (scrabbleBoard[row][j].getLetterTile() != null) {
+				return false;
+			}
+		}
+    	return true;
+	}
+
+	public boolean isValidDown(int wordLength, int row, int col){
+		for(int i = row; i < wordLength; i++){
+			if (scrabbleBoard[i][col].getLetterTile() == null) {
+				return false;
+			}
+		}
+		return true;
+	}
     
     public void placeWord(SimplePlayer player) {
     	int row = 0, col = 0;
