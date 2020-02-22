@@ -7,6 +7,7 @@ public class PlayGame {
 
 	public static void main(String[] args) {
 		Pool P = new Pool();
+		
 		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
 
 		int numOfPlayers = 0;
@@ -37,29 +38,52 @@ public class PlayGame {
 			System.out.println(scrabblePlayers.players.get(i));
 			System.out.println(scrabblePlayers.players.get(i).getFrame());
 		}
-
-		System.out.println();
-		System.out.println("To show that removing a tile from frame, refilling frame, and number of tiles left in bag works appropriately:");
-		System.out.println("For Player 1");
-		System.out.println("Tiles left in pool: " + P.tilesLeft());
-		System.out.println("Removing a tile...");
-		scrabblePlayers.players.get(0).getFrame().removeTile(1);
-		System.out.println(scrabblePlayers.players.get(0).getFrame());
-		System.out.println("Refilling Frame...");
-		scrabblePlayers.players.get(0).getFrame().refillFrame();
-		System.out.println(scrabblePlayers.players.get(0).getFrame());
-		System.out.println("Tiles left in pool: " + P.tilesLeft());
-
-		System.out.println();
-		System.out.println("For Player 2");
-		System.out.println("Tiles left in pool: " + P.tilesLeft());
-		System.out.println("Removing a tile...");
-		scrabblePlayers.players.get(1).getFrame().removeTile(1);
-		System.out.println(scrabblePlayers.players.get(1).getFrame());
-		System.out.println("Refilling Frame...");
-		scrabblePlayers.players.get(1).getFrame().refillFrame();
-		System.out.println(scrabblePlayers.players.get(1).getFrame());
-		System.out.println("Tiles left in pool: " + P.tilesLeft());
+		
+		Board B = new Board();
+		int row;
+		char col;
+		String word;
+		char orientation;
+		
+		while(!P.isEmpty()) {
+		for(int i = 0; i < numOfPlayers; i++){
+			System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
+			System.out.println(scrabblePlayers.players.get(i).getFrame());
+			System.out.println("Enter a word to place on the board:");
+			word = q.nextLine();
+			System.out.println("Enter the row for the first letter:");
+			row = Integer.parseInt(q.nextLine());
+			System.out.println("Enter the column for the first letter:");
+			col = q.nextLine().charAt(0);
+			System.out.println("Enter orientation, either 'v' or '>':");
+			orientation = q.nextLine().charAt(0);
+			B.PrintBoard();
+			B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
+			B.PrintBoard();
+		}
+		}
+//		System.out.println();
+//		System.out.println("To show that removing a tile from frame, refilling frame, and number of tiles left in bag works appropriately:");
+//		System.out.println("For Player 1");
+//		System.out.println("Tiles left in pool: " + P.tilesLeft());
+//		System.out.println("Removing a tile...");
+//		scrabblePlayers.players.get(0).getFrame().removeTile(1);
+//		System.out.println(scrabblePlayers.players.get(0).getFrame());
+//		System.out.println("Refilling Frame...");
+//		scrabblePlayers.players.get(0).getFrame().refillFrame();
+//		System.out.println(scrabblePlayers.players.get(0).getFrame());
+//		System.out.println("Tiles left in pool: " + P.tilesLeft());
+//
+//		System.out.println();
+//		System.out.println("For Player 2");
+//		System.out.println("Tiles left in pool: " + P.tilesLeft());
+//		System.out.println("Removing a tile...");
+//		scrabblePlayers.players.get(1).getFrame().removeTile(1);
+//		System.out.println(scrabblePlayers.players.get(1).getFrame());
+//		System.out.println("Refilling Frame...");
+//		scrabblePlayers.players.get(1).getFrame().refillFrame();
+//		System.out.println(scrabblePlayers.players.get(1).getFrame());
+//		System.out.println("Tiles left in pool: " + P.tilesLeft());
 
 //		scrabblePlayers.addPlayer("John");
 //		System.out.println(scrabblePlayers.players.get(0));

@@ -101,41 +101,6 @@ public class Board {
     	scrabbleBoard[row][col].setTile(letter);
     }
 
-//    public void placeTile(Frame tileFrame, int row, int col) {
-//    	int index = 0;
-//    	char letter = '#';
-//
-//    	Scanner input = new Scanner(System.in);
-//
-//    	System.out.println("Your frame: ");
-//		System.out.println(tileFrame);
-//		System.out.println("Pick a tile from your frame: ");
-//
-//			if (input.hasNext()) {
-//				letter = input.next().toUpperCase().charAt(0);
-//
-//
-//			while(!tileFrame.containsTile(letter)) {
-//				System.out.println("Tile does not exist! ");
-//				System.out.println("Pick a tile from your frame: ");
-//				if(input.hasNext()) {
-//					letter = input.next().toUpperCase().charAt(0);
-//				}
-//				else {
-//					break;
-//				}
-//			}
-//
-//			index = tileFrame.findTileByChar(letter);
-//			System.out.println(tileFrame.getTile(index)); //check if correct tile is selected
-//			}
-//
-//		setSquare(row, col, tileFrame.getTile(index));
-//		tileFrame.removeTile(index);
-//		PrintBoard();
-//		input.close();
-//    }
-
     public boolean isEmpty(int row, int col){
     	if(scrabbleBoard[row][col].getLetterTile() == null){
     		return true;
@@ -157,9 +122,9 @@ public class Board {
     	return true;
 	}
 
-	public boolean isValid(int wordLength, int row, int col, String direction){
+	public boolean isValid(int wordLength, int row, int col, char orientation){
 
-    	if(direction.equals("RIGHT")){
+    	if(orientation == '>'){
 			for(int j = col ; j < wordLength; j++){
 				if (!isEmpty(row, j)) {
 					return false;
@@ -186,7 +151,7 @@ public class Board {
 			wordChar[i] = userWord.charAt(i);
 		}
 
-		for (int i = 0; i < tileFrame.getSize(); i++) {
+		for (int i = 0; i < wordChar.length; i++) {
 			if (tileFrame.containsTile(wordChar[i]) == false) {
 				valid = false;
 			} else {
@@ -196,154 +161,94 @@ public class Board {
 
 		return valid;
 	}
-
-	public void placeWord(SimplePlayer player, String userWord, int row, char colChar, String direction){
-		int colInteger = colChar - 65; // change from ASCII to integer
-
-    	if(!wordCheck(userWord, player.getFrame())){
-    		System.out.println("Please only use tiles form your frame"); // throw an exception?
+	
+	public String getLettersAlreadyOnBoard(String userWord, int row, int col, char orientation) {
+		String lettersOnBoard = "";
+		if(orientation == 'v' || orientation == 'V') {
+			for (int i = 0; i < userWord.length(); i++) {
+				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();
+				else lettersOnBoard += "*";
+				row++;
+			}
 		}
+		else {
+			for (int i = 0; i < userWord.length(); i++) {
+				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();
+				else lettersOnBoard += " ";
+				col++;
+			}
+		}
+		System.out.println(lettersOnBoard);
+		return lettersOnBoard;
+	}
+	
+	public String removeRedundantLettersFromWord(String userWord, int row, int col, char orientation) {
+		String lettersOnBoard = getLettersAlreadyOnBoard(userWord, row, col, orientation);
+		StringBuilder word = new StringBuilder(userWord);
+		for (int i = 0; i < lettersOnBoard.length(); i++) {
+			if(userWord.charAt(i) == lettersOnBoard.charAt(i)) word.deleteCharAt(i);
+		}
+		return word.toString();
+	}
+
+	public void placeWord(SimplePlayer player, String userWord, int row, char colChar, char orientation){
+		int colInteger = colChar - 65; // change from ASCII to integer
+		System.out.println(player.getFrame());
     	if(!isBound(row, colInteger)){
     		System.out.print("Please select coordinates that are within the scrabble board"); // throw an exception?
 		}
-    	if(!isValid(userWord.length(), row, colInteger, direction)){
+    	if(!isValid(userWord.length(), row, colInteger, orientation)){
     		System.out.println("Not enough space to fit this word here. Try again"); // throw an exception?
 		}
-    	else{
-    		// this is a valid space with valid letters used.
-			// make a function to place tiles into the space
+    	
+    	userWord = removeRedundantLettersFromWord(userWord, row, colInteger, orientation);
+    	System.out.println(userWord);
+    	
+    	if(!wordCheck(userWord, player.getFrame())){
+    		System.out.println("Please only use tiles from your frame"); // throw an exception?
 		}
+    	else{
+    		if(orientation == 'v' || orientation == 'V') {
+    			for (int i = 0; i < userWord.length(); i++) {
+    				if(isEmpty(row, colInteger)) {
+    					setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(i)));
+    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
+    					row++;
+    				}
+    				else {
+    					setSquare(row+1, colInteger, player.getFrame().getTile(userWord.charAt(i)));
+    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
+    					row += 2;
+    				}
+    			}
+    		}
+    		else {
+    			for (int i = 0; i < userWord.length(); i++) {
+    				if(isEmpty(row, colInteger)) {
+    					setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(i)));
+    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
+    					colInteger++;
+    				}
+    				else {
+    					setSquare(row, colInteger+1, player.getFrame().getTile(userWord.charAt(i)));
+    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
+    					colInteger += 2;
+    				}
+    			}
+    		}
+		}
+    	System.out.println(player.getFrame());
+    	player.getFrame().refillFrame();
 
     }
 
-
-
-//    public void placeWord(SimplePlayer player) {
-//    	int row = 0, col = 0;
-//    	Boolean submit = false;
-//    	String rightOrDown = "";
-//    	Scanner input = new Scanner(System.in);
-//    	System.out.println("Do you want to skip your turn? Enter 'YES' or 'NO':");
-//	    if(input.next().toUpperCase().equals("NO")) {
-//	    	System.out.println("Enter row: ");
-//			if(input.hasNextInt()) {
-//				row = input.nextInt();
-//				while (row > 14 || row < 0) {
-//					System.out.println("Please select row within the board limits. Only accept row in integer form");
-//					System.out.println("Please choose again: ");
-//					row = input.nextInt();
-//				}
-//			}
-//
-//			System.out.println("Enter column: ");
-//			if(input.hasNext()) {
-//				col = input.next().toUpperCase().charAt(0) - 65;
-//				while(col > 14 || col < 0){
-//					System.out.println("Please select column within the board limits. Only accept column in character form");
-//					System.out.println("Please choose again: ");
-//					col = input.next().toUpperCase().charAt(0) - 65;
-//				}
-//			}
-//
-//	    	while(!scrabbleBoard[row][col].isEmpty() || row > boardSize || row < 0 || col < 0 || col > boardSize) {
-//	    		System.out.println("Square is occupied or out of bounds!");
-//	    		System.out.println("Enter row: ");
-//				if(input.hasNextInt()) {
-//					row = input.nextInt();
-//				}	else {
-//						input.close();
-//						throw new IllegalArgumentException ("Invalid input.");
-//					}
-//
-//				System.out.println("Enter column: ");
-//				if(input.hasNext()) {
-//					col = input.next().toUpperCase().charAt(0) - 65;
-//				}	else {
-//						input.close();
-//						throw new IllegalArgumentException ("Invalid input.");
-//					}
-//	    	}
-//
-//			placeTile(player.getFrame(), row, col);
-//			System.out.println("Enter 'SUBMIT' to submit your word.");
-//			if(input.next().toUpperCase().equals("SUBMIT")) submit = true;
-//	    	if(!submit) {
-//	    		System.out.println("Select next tile's position. Enter 'RIGHT' or 'DOWN'.");
-//	    		rightOrDown = input.next().toUpperCase();
-//	    		if(rightOrDown.equals("RIGHT") && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
-//	    			col++;
-//	    			placeTile(player.getFrame(), row, col);
-//	    		}
-//	    		if(rightOrDown.equals("DOWN") && scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
-//	    			row++;
-//	    			placeTile(player.getFrame(), row, col);
-//	    		}
-//	    		if(rightOrDown.equals("RIGHT") && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
-//	    			col += 2;
-//	    			placeTile(player.getFrame(), row, col);
-//	    		}
-//	    		if(rightOrDown.equals("DOWN") && !scrabbleBoard[row+1][col].isEmpty() && row+2 < boardSize) {
-//	    			row += 2;
-//	    			placeTile(player.getFrame(), row, col);
-//	    		}
-//	    	}
-//
-//	    	System.out.println("Enter 'SUBMIT' to submit your word.");
-//			if(input.next().toUpperCase().equals("SUBMIT")) submit = true;
-//
-//			if(rightOrDown.equals("DOWN")) {
-//				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
-//		    		if(scrabbleBoard[row+1][col].isEmpty() && row+1 < boardSize) {
-//		    			row++;
-//		    			placeTile(player.getFrame(), row, col);
-//		    		}
-//		    		else if(!scrabbleBoard[row+1][col].isEmpty() && row+2 < boardSize) {
-//		    			row += 2;
-//		    			placeTile(player.getFrame(), row, col);
-//		    		}
-//		    		System.out.println("Enter 'SUBMIT' to submit your word.");
-//		    		if(input.next().toUpperCase().equals("SUBMIT")) submit = true;
-//				}
-//			}
-//
-//			if(rightOrDown.equals("RIGHT")) {
-//				while(!player.getFrame().isEmpty() && row < boardSize && col < boardSize && !submit) {
-//					if(rightOrDown.equals("RIGHT") && scrabbleBoard[row][col+1].isEmpty() && col+1 < boardSize) {
-//		    			col++;
-//		    			placeTile(player.getFrame(), row, col);
-//		    		}
-//					else if(rightOrDown.equals("RIGHT") && !scrabbleBoard[row][col+1].isEmpty() && col+2 < boardSize) {
-//		    			col += 2;
-//		    			placeTile(player.getFrame(), row, col);
-//		    		}
-//		    		System.out.println("Enter 'SUBMIT' to submit your word.");
-//		    		if(input.next().toUpperCase().equals("SUBMIT")) submit = true;
-//				}
-//			}
-//	    	wordsOnBoard++;
-//			input.close();
-//    	}
-//
-//	    input.close();
-//    }
 
     public BoardSquare getSquare(int row, int col){
         return scrabbleBoard[row][col];
     }
 
     public static void main(String[] args) {
-        Board b = new Board();
-        b.PrintBoard();
-
-		Pool P = new Pool();
-		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
-
-		scrabblePlayers.addPlayer("Jerald");
-		scrabblePlayers.addPlayer("Simonas");
-
-		b.placeWord(scrabblePlayers.players.get(0));
-
-
+    	
     }
 
     public void PrintBoard(){
@@ -356,19 +261,23 @@ public class Board {
         for(int i = 0; i < boardSize; i++){
             for(int j = 0; j < boardSize; j++){
                 System.out.print("|");
-                if (i==7 && j==7){System.out.print("★");}
-                else if (scrabbleBoard[i][j].getLetterMultiplier() == 2){
+                if (i==7 && j==7){System.out.print(" *");}
+                else if (scrabbleBoard[i][j].getLetterMultiplier() == 2 && scrabbleBoard[i][j].isEmpty()){
                     System.out.print("DL");     //DL indicates double letter score
                 }
-                else if (scrabbleBoard[i][j].getLetterMultiplier() == 3){
+                else if (scrabbleBoard[i][j].getLetterMultiplier() == 3 && scrabbleBoard[i][j].isEmpty()){
                     System.out.print("TL");     //TL indicates Triple letter score
                 }
-                else if (scrabbleBoard[i][j].getWordMultiplier() == 3){
+                else if (scrabbleBoard[i][j].getWordMultiplier() == 3 && scrabbleBoard[i][j].isEmpty()){
                     System.out.print("TW");     //TW indicates Triple word score
                 }
-                else if (scrabbleBoard[i][j].getWordMultiplier() == 2){
+                else if (scrabbleBoard[i][j].getWordMultiplier() == 2 && scrabbleBoard[i][j].isEmpty()){
                     System.out.print("DW");    //DW indicates Double word score
-                }else {
+                }
+                else if (!scrabbleBoard[i][j].isEmpty()){
+                    System.out.print(" " + scrabbleBoard[i][j].getLetterTile().getLetter());    //DW indicates Double word score
+                }
+                else {
                     System.out.print("  ");
                 }
                 System.out.print("| ");

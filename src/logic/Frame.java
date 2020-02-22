@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.lang.Character.*;
 
 //International Bot 17205786, 18439314, 18763829
 
@@ -59,6 +60,15 @@ public class Frame {
 //		if(index > tileFrame.size()-1 || index < 0) throw new IllegalArgumentException ("There is no tile at index: " + index);
 		return tileFrame.get(index);
 	}
+	
+	public LetterTile getTile(char letter) {
+		for(int i = 0; i < tileFrame.size(); i++) {
+			if(tileFrame.get(i).getLetter() == letter || tileFrame.get(i).getLetter() == letter-32) {
+				return tileFrame.get(i);
+			}
+		}
+		throw new IllegalArgumentException ("Selected letter is not in frame.");
+	}
 
 	//Method returns true if frame contains queried tile
 	public Boolean containsTile(LetterTile letter) {
@@ -67,7 +77,7 @@ public class Frame {
 	
 	public Boolean containsTile(char letter) {
 		for(int i = 0; i < tileFrame.size(); i++) {
-			if(tileFrame.get(i).getLetter() == letter) return true;
+			if(tileFrame.get(i).getLetter() == letter || tileFrame.get(i).getLetter() == letter-32) return true;
 		}
 		return false;
 	}
@@ -76,11 +86,10 @@ public class Frame {
 		int index = 0;
 
 		for(int i = 0; i < tileFrame.size(); i++) {
-			if(tileFrame.get(i).getLetter() == letter) {
+			if(tileFrame.get(i).getLetter() == letter || tileFrame.get(i).getLetter() == letter-32) {
 				index = i;
 			}
 		}
-
 		return index;
 	}
 
