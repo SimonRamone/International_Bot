@@ -38,29 +38,59 @@ public class PlayGame {
 			System.out.println(scrabblePlayers.players.get(i));
 			System.out.println(scrabblePlayers.players.get(i).getFrame());
 		}
-		
+
 		Board B = new Board();
 		int row;
 		char col;
 		String word;
+		String skip;
 		char orientation;
-		
+
+		int isFirst = 1;
+
 		while(!P.isEmpty()) {
 		for(int i = 0; i < numOfPlayers; i++){
 			System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
 			System.out.println(scrabblePlayers.players.get(i).getFrame());
-			System.out.println("Enter a word to place on the board:");
-			word = q.nextLine();
-			System.out.println("Enter the row for the first letter:");
-			row = Integer.parseInt(q.nextLine());
-			System.out.println("Enter the column for the first letter:");
-			col = q.nextLine().charAt(0);
-			System.out.println("Enter orientation, either 'v' or '>':");
-			orientation = q.nextLine().charAt(0);
-			B.PrintBoard();
-			B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
-			B.PrintBoard();
+
+			System.out.println("Do you want to skip your turn? Y for yes, N for no.");
+			skip = q.nextLine().toUpperCase();
+			if(skip.equals("Y")){
+				System.out.println("Next player's turn...");
+			}
+			else{
+				System.out.println("Enter a word to place on the board:");
+				word = q.nextLine();
+				while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
+					System.out.println("Please only use tiles from your frame");
+					if(B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
+						break;
+					}
+					else {
+						word = q.nextLine();
+					}
+				}
+
+				if(!B.isFirstTurn(isFirst)){
+					System.out.println("Enter the row for the first letter:");
+					row = Integer.parseInt(q.nextLine());
+					System.out.println("Enter the column for the first letter:");
+					col = q.nextLine().charAt(0);
+				}
+				else{
+					row = 7;
+					col = 'H';
+					isFirst++;
+				}
+
+				System.out.println("Enter orientation, either 'v' or '>':");
+				orientation = q.nextLine().charAt(0);
+				B.PrintBoard();
+				B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
+				B.PrintBoard();
+			}
 		}
+
 		}
 //		System.out.println();
 //		System.out.println("To show that removing a tile from frame, refilling frame, and number of tiles left in bag works appropriately:");
