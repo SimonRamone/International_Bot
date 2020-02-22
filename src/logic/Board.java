@@ -171,7 +171,6 @@ public class Board {
 	}
 
 	public boolean wordCheck(String word, Frame tileFrame) {
-		Pool tempPool = new Pool();
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
 
 		for(int i = 0; i < tileFrame.getSize(); i++){
@@ -218,11 +217,30 @@ public class Board {
 		return valid;
 	}
 
-	/*
-	public void wildCardSetLetter(){
-	// will be implemented
+	public Frame wildCardSetLetter(Frame tileFrame, String word){
+		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
+		for(int i = 0; i < tileFrame.getSize(); i++){
+			tempFrame.add(tileFrame.getTile(i));
+		}
+
+		StringBuilder userWord = new StringBuilder(word);
+
+		for (int i = 0; i < tileFrame.getSize(); i++) {
+			for(int j = 0; j < userWord.length(); j++){
+				if(tileFrame.getTile(i).getLetter() == userWord.charAt(j)){
+					userWord.deleteCharAt(j);
+					break;
+				}
+			}
+		}
+		
+		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){
+			tileFrame.getTile('_').setLetter(userWord.charAt(i));
+		}
+
+		return tileFrame;
 	}
-	 */
+
 	
 	public String getLettersAlreadyOnBoard(String userWord, int row, int col, char orientation) {
 		String lettersOnBoard = "";
@@ -270,10 +288,10 @@ public class Board {
     		System.out.println("Please only use tiles from your frame"); // throw an exception?
 		}
     	else{
-    		if(hasWildCardInFrame(player.getFrame())){
-    			player.getFrame().removeTile('_');
-    			// incomplete
+			if(hasWildCardInFrame(player.getFrame())){
+				wildCardSetLetter(player.getFrame(), userWord);
 			}
+			System.out.println(player.getFrame());
     		if(orientation == 'v' || orientation == 'V') {
     			for (int i = 0; i < userWord.length(); i++) {
     				if(isEmpty(row, colInteger)) {

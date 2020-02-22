@@ -74,6 +74,7 @@ public class Frame {
 		throw new IllegalArgumentException ("Selected letter is not in frame.");
 	}
 
+
 	//Method returns true if frame contains queried tile
 	public Boolean containsTile(LetterTile letter) {
 		return tileFrame.contains(letter);
