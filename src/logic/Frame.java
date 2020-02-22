@@ -57,7 +57,7 @@ public class Frame {
 
 	//Method returns tile at queried index
 	public LetterTile getTile(int index) {
-//		if(index > tileFrame.size()-1 || index < 0) throw new IllegalArgumentException ("There is no tile at index: " + index);
+		if(index > tileFrame.size()-1 || index < 0) throw new IllegalArgumentException ("There is no tile at index: " + index);
 		return tileFrame.get(index);
 	}
 	
