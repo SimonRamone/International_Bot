@@ -1,5 +1,6 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Board {
@@ -150,18 +151,19 @@ public class Board {
 	}
 
 	public boolean hasWildCardInFrame(Frame tileFrame){
+    	boolean hasWildCard = false;
     	for(int i = 0; i < tileFrame.getSize(); i++){
 			if (tileFrame.containsTile(LetterTile.tileBlank)) {
-				return true;
+				hasWildCard = true;
 			}
 		}
-    	return false;
+    	return hasWildCard;
 	}
 
 	public int countWildCardInFrame(Frame tileFrame){
     	int count = 0;
 		for(int i = 0; i < tileFrame.getSize(); i++){
-			if (tileFrame.containsTile(LetterTile.tileBlank)) {
+			if (tileFrame.getTile(i) == LetterTile.tileBlank) {
 				count++;
 			}
 		}
@@ -169,24 +171,58 @@ public class Board {
 	}
 
 	public boolean wordCheck(String word, Frame tileFrame) {
-		String userWord = word;
-		boolean valid = false;
+		Pool tempPool = new Pool();
+		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
 
-		char[] wordChar = new char[userWord.length()];
-		for (int i = 0; i < userWord.length(); i++) {
-			wordChar[i] = userWord.charAt(i);
+		for(int i = 0; i < tileFrame.getSize(); i++){
+			tempFrame.add(tileFrame.getTile(i));
 		}
 
-		for (int i = 0; i < wordChar.length; i++) {
-			if (tileFrame.containsTile(wordChar[i]) == false) {
+		boolean valid = true;
+		int wildCardCount = countWildCardInFrame(tileFrame);
+		int foundTilesCount = 0;
+
+		StringBuilder userWord = new StringBuilder(word);
+
+		if(hasWildCardInFrame(tileFrame)){
+			for (int i = 0; i < userWord.length(); i++) {
+				for(int j = 0; j < tempFrame.size(); j++){
+					if (userWord.charAt(i) == tempFrame.get(j).getLetter()) {
+						tempFrame.remove(j);
+						foundTilesCount++;
+						break;
+					}
+				}
+			}
+
+			if(foundTilesCount + wildCardCount != userWord.length()){
 				valid = false;
-			} else {
-				valid = true;
+			}
+		}
+		else{
+			for (int i = 0; i < userWord.length(); i++) {
+				for(int j = 0; j < tempFrame.size(); j++){
+					if (userWord.charAt(i) == tempFrame.get(j).getLetter()) {
+						tempFrame.remove(j);
+						foundTilesCount++;
+						break;
+					}
+				}
+			}
+
+			if(foundTilesCount != userWord.length()){
+				valid = false;
 			}
 		}
 
 		return valid;
 	}
+
+	/*
+	public void wildCardSetLetter(){
+	// will be implemented
+	}
+	 */
 	
 	public String getLettersAlreadyOnBoard(String userWord, int row, int col, char orientation) {
 		String lettersOnBoard = "";
@@ -234,6 +270,10 @@ public class Board {
     		System.out.println("Please only use tiles from your frame"); // throw an exception?
 		}
     	else{
+    		if(hasWildCardInFrame(player.getFrame())){
+    			player.getFrame().removeTile('_');
+    			// incomplete
+			}
     		if(orientation == 'v' || orientation == 'V') {
     			for (int i = 0; i < userWord.length(); i++) {
     				if(isEmpty(row, colInteger)) {

@@ -49,6 +49,10 @@ public class Frame {
 		}
 	}
 
+	public void add(LetterTile letterTile){
+		tileFrame.add(letterTile);
+	}
+
 	//Method for removing a selected tile
 	public void removeTile(LetterTile letter){
 		if(tileFrame.isEmpty()) throw new IllegalArgumentException ("Frame is emtpy. No more tiles can be removed.");
