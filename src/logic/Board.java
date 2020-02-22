@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 public class Board {
     public static int boardSize = 15;
-    public static int tileStart = 7;
     
     public static int wordsOnBoard;
 
@@ -101,6 +100,14 @@ public class Board {
     	scrabbleBoard[row][col].setTile(letter);
     }
 
+    public boolean isFirstTurn(int turn){
+    	if(turn == 1){
+    		return true;
+		}
+
+    	return false;
+	}
+
     public boolean isEmpty(int row, int col){
     	if(scrabbleBoard[row][col].getLetterTile() == null){
     		return true;
@@ -140,6 +147,25 @@ public class Board {
 		}
 		return true;
 
+	}
+
+	public boolean hasWildCardInFrame(Frame tileFrame){
+    	for(int i = 0; i < tileFrame.getSize(); i++){
+			if (tileFrame.containsTile(LetterTile.tileBlank)) {
+				return true;
+			}
+		}
+    	return false;
+	}
+
+	public int countWildCardInFrame(Frame tileFrame){
+    	int count = 0;
+		for(int i = 0; i < tileFrame.getSize(); i++){
+			if (tileFrame.containsTile(LetterTile.tileBlank)) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	public boolean wordCheck(String word, Frame tileFrame) {
@@ -238,7 +264,10 @@ public class Board {
     		}
 		}
     	System.out.println(player.getFrame());
-    	player.getFrame().refillFrame();
+
+    	if(player.getFrame().getSize() < 7){
+			player.getFrame().refillFrame();
+		}
 
     }
 
