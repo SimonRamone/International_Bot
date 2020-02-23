@@ -18,7 +18,7 @@ public class PlayGame {
 		numOfPlayers = Integer.parseInt(q.nextLine());
 		while (numOfPlayers > 4 || numOfPlayers < 2){    //guard for min and max players, will keep asking until appropriate value is given
 			if(numOfPlayers > 4 || numOfPlayers < 2) {
-				System.out.println("# of players entered is invalid. Only 2 to 4 players allowed");
+				System.out.println("# of players entered is invalid. Only 2 to 4 players allowed. Enter again:");
 				numOfPlayers = Integer.parseInt(q.nextLine());
 			}
 			else{
@@ -49,7 +49,7 @@ public class PlayGame {
 		int isFirst = 1;
 
 		while(!P.isEmpty()) {
-		for(int i = 0; i < numOfPlayers; i++){
+		for(int i = 0; i < numOfPlayers; i++){//display player's hand on screen
 			System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
 			System.out.println(scrabblePlayers.players.get(i).getFrame());
 
@@ -60,10 +60,12 @@ public class PlayGame {
 			}
 			else{
 				System.out.println("Enter a word to place on the board:");
-				word = q.nextLine();
+				word = q.nextLine().toUpperCase();
+				System.out.println("word entered is " + word);
 				while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
 					System.out.println("Please only use tiles from your frame");
-					word = q.nextLine();
+					word = q.nextLine().toUpperCase();
+					System.out.println("word entered is " + word);
 				}
 
 				int wordLength = word.length();
@@ -79,10 +81,12 @@ public class PlayGame {
 						System.out.println("Please select coordinates that are within the scrabble board and the word can fit within the board.");
 
 						System.out.println("Enter a word to place on the board:");
-						word = q.nextLine();
+						word = q.nextLine().toUpperCase();
+						System.out.println("word entered is " + word);
 						while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
 							System.out.println("Please only use tiles from your frame");
-							word = q.nextLine();
+							word = q.nextLine().toUpperCase();
+							System.out.println("word entered is " + word);
 						}
 
 						System.out.println("Enter the row for the first letter:");
@@ -97,6 +101,8 @@ public class PlayGame {
 				else{
 					row = 7;
 					col = 'H';
+					System.out.println("Enter orientation, either 'v' or '>':");
+					orientation = q.nextLine().charAt(0);
 					isFirst++;
 				}
 
