@@ -90,6 +90,7 @@ public class PlayGame {
 				B.PrintBoard();
 			}
 		}
+		q.close();
 	}
 
 //		System.out.println();

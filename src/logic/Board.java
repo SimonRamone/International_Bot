@@ -248,7 +248,7 @@ public class Board {
 	
 	public boolean conflictsWithExistingLetters(String word, String existingLetters) {
 		for(int i = 0; i < word.length(); i++) {
-			if(existingLetters.charAt(i) != '*' && word.charAt(i) != existingLetters.charAt(i)) return true;
+			if(existingLetters.charAt(i) != ' ' && word.charAt(i) != existingLetters.charAt(i)) return true;
 		}
 		return false;
 	}
@@ -372,14 +372,14 @@ public class Board {
 		if(orientation == 'v' || orientation == 'V') {
 			for (int i = 0; i < userWord.length(); i++) {
 				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();
-				else lettersOnBoard += "*";
+				else lettersOnBoard += " ";
 				row++;
 			}
 		}
 		else {
 			for (int i = 0; i < userWord.length(); i++) {
 				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();
-				else lettersOnBoard += "*";
+				else lettersOnBoard += " ";
 				col++;
 			}
 		}
@@ -393,7 +393,7 @@ public class Board {
 		String lettersOnBoard = getLettersAlreadyOnBoard(userWord, row, col, orientation);
 		StringBuilder word = new StringBuilder(userWord);
 		for (int i = 0; i < lettersOnBoard.length(); i++) {
-			if(userWord.charAt(letterIndex) == lettersOnBoard.charAt(i)) {
+			if(word.charAt(letterIndex) == lettersOnBoard.charAt(i)) {
 				word.deleteCharAt(letterIndex);
 			} else letterIndex++;
 			System.out.println("Word WHILE remove: " + word.toString());
