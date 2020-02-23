@@ -191,13 +191,8 @@ public class Board {
 				return false;
 			}
 			if(conflictsWithExistingLetters(word, getLettersAlreadyOnBoard(word, row, col, orientation))) {
-<<<<<<< HEAD
 				errorCode = 4;
 				return false;			
-=======
-				errorCode = 5;
-				return false;
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 			}
 			if(!connectsWithOtherWords(word, row, col, orientation)) {
 				errorCode = 5;
@@ -232,18 +227,7 @@ public class Board {
 		}
 		return count;
 	}
-<<<<<<< HEAD
-	
-=======
 
-	public boolean usesAtleastOneLetterFromFrame(String wordAfterRemovingRedundantLetters, Frame tileFrame) {
-		for(int i = 0; i < wordAfterRemovingRedundantLetters.length(); i++) {
-			if(tileFrame.containsTile(wordAfterRemovingRedundantLetters.charAt(i))) return true;
-		}
-		return false;
-	}
-
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 	public boolean conflictsWithExistingLetters(String word, String existingLetters) {
 		for(int i = 0; i < word.length(); i++) {
 			if(existingLetters.charAt(i) != ' ' && word.charAt(i) != existingLetters.charAt(i)) return true;
