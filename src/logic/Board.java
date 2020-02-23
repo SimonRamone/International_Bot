@@ -151,7 +151,6 @@ public class Board {
 
 		return true;
 	}
-<<<<<<< HEAD
 	
 	public String getError() {
 		switch(errorCode) {
@@ -191,16 +190,6 @@ public class Board {
 			if(!inCentreOfBoard(word, row, col, orientation)) {
 				errorCode = 4;
 				return false;
-=======
-		//check if spaces are empty for the word to fit in
-	public boolean isValid(int wordLength, int row, int col, char orientation){
-
-    	if(orientation == '>'){
-			for(int j = col ; j < wordLength; j++){
-				if (!isEmpty(row, j)) {
-					return false;
-				}
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 			}
 		}
 		else {
@@ -280,7 +269,6 @@ public class Board {
 		return false;
 	}
 
-<<<<<<< HEAD
 	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
 		if(isBound(row, col, orientation, word.length())) {
 			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isBlank()) return true;
@@ -304,9 +292,6 @@ public class Board {
 	}
 	
 	public boolean wordCheck(String word, Frame tileFrame) {
-=======
-	public boolean wordCheck(String word, Frame tileFrame) {		//to check if player's hand contains the necessary letters for ward.
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
 		
 		System.out.println("Word Check: " + word);

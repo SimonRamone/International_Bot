@@ -49,7 +49,6 @@ public class PlayGame {
 		B.PrintBoard();
 		
 		while(!P.isEmpty()) {
-<<<<<<< HEAD
 			for(int i = 0; i < numOfPlayers; i++){
 				System.out.println();
 				System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
@@ -59,25 +58,6 @@ public class PlayGame {
 				skip = q.nextLine().charAt(0);
 				if(skip == 'Y' || skip == 'y'){
 					System.out.println("Next player's turn...");
-=======
-		for(int i = 0; i < numOfPlayers; i++){//display player's hand on screen
-			System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
-			System.out.println(scrabblePlayers.players.get(i).getFrame());
-
-			System.out.println("Do you want to skip your turn? Y for yes, N for no.");
-			skip = q.nextLine().toUpperCase();
-			if(skip.equals("Y")){
-				System.out.println("Next player's turn...");
-			}
-			else{
-				System.out.println("Enter a word to place on the board:");
-				word = q.nextLine().toUpperCase();
-				System.out.println("word entered is " + word);
-				while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
-					System.out.println("Please only use tiles from your frame");
-					word = q.nextLine().toUpperCase();
-					System.out.println("word entered is " + word);
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 				}
 				else{
 					System.out.println("Enter the row for the first letter:");
@@ -87,29 +67,13 @@ public class PlayGame {
 					int colInteger = col - 65;
 					System.out.println("Enter orientation, either 'v' or '>':");
 					orientation = q.nextLine().charAt(0);
-<<<<<<< HEAD
 					System.out.println("Enter a word to place on the board:");
 					word = q.nextLine().trim();
 					System.out.println(word);
-					int wordLength = word.length();
 						
 					while(!B.isValid(word, row, colInteger, orientation, scrabblePlayers.players.get(i).getFrame())){
 						System.out.println(B.getError());
 						
-=======
-					while(!B.isBound(row,colInteger, orientation, wordLength)){
-						System.out.println("Please select coordinates that are within the scrabble board and the word can fit within the board.");
-
-						System.out.println("Enter a word to place on the board:");
-						word = q.nextLine().toUpperCase();
-						System.out.println("word entered is " + word);
-						while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
-							System.out.println("Please only use tiles from your frame");
-							word = q.nextLine().toUpperCase();
-							System.out.println("word entered is " + word);
-						}
-
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 						System.out.println("Enter the row for the first letter:");
 						row = Integer.parseInt(q.nextLine());
 						System.out.println("Enter the column for the first letter:");
@@ -120,22 +84,8 @@ public class PlayGame {
 						System.out.println("Enter a word to place on the board:");
 						word = q.nextLine().trim();
 						System.out.println(word);
-						wordLength = word.length();
 					}
 				}
-<<<<<<< HEAD
-				
-=======
-				else{
-					row = 7;
-					col = 'H';
-					System.out.println("Enter orientation, either 'v' or '>':");
-					orientation = q.nextLine().charAt(0);
-					isFirst++;
-				}
-
-				B.PrintBoard();
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 				B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
 				B.PrintBoard();
 			}
