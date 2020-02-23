@@ -63,12 +63,12 @@ public class PlayGame {
 					System.out.println("Enter the row for the first letter:");
 					row = Integer.parseInt(q.nextLine());
 					System.out.println("Enter the column for the first letter:");
-					col = q.nextLine().charAt(0);
+					col = q.nextLine().toUpperCase().charAt(0);
 					int colInteger = col - 65;
 					System.out.println("Enter orientation, either 'v' or '>':");
 					orientation = q.nextLine().charAt(0);
 					System.out.println("Enter a word to place on the board:");
-					word = q.nextLine().trim();
+					word = q.nextLine().trim().toUpperCase();
 					System.out.println(word);
 						
 					while(!B.isValid(word, row, colInteger, orientation, scrabblePlayers.players.get(i).getFrame())){
@@ -77,12 +77,12 @@ public class PlayGame {
 						System.out.println("Enter the row for the first letter:");
 						row = Integer.parseInt(q.nextLine());
 						System.out.println("Enter the column for the first letter:");
-						col = q.nextLine().charAt(0);
+						col = q.nextLine().toUpperCase().charAt(0);
 						colInteger = col - 65;
 						System.out.println("Enter orientation, either 'v' or '>':");
 						orientation = q.nextLine().charAt(0);
 						System.out.println("Enter a word to place on the board:");
-						word = q.nextLine().trim();
+						word = q.nextLine().trim().toUpperCase();
 						System.out.println(word);
 					}
 				}

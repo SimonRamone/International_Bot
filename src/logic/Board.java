@@ -1,7 +1,6 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Board {
     public static final int boardSize = 15;
