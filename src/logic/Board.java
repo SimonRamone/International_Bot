@@ -233,7 +233,7 @@ public class Board {
 				}
 			}
 		}
-		
+
 		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){
 			tileFrame.getTile('_').setLetter(userWord.charAt(i));
 		}
@@ -348,7 +348,7 @@ public class Board {
         for(int i = 0; i < boardSize; i++){
             for(int j = 0; j < boardSize; j++){
                 System.out.print("|");
-                if (i==7 && j==7){System.out.print(" *");}
+                if (i==7 && j==7 && scrabbleBoard[7][7].isEmpty()){System.out.print(" *");}
                 else if (scrabbleBoard[i][j].getLetterMultiplier() == 2 && scrabbleBoard[i][j].isEmpty()){
                     System.out.print("DL");     //DL indicates double letter score
                 }

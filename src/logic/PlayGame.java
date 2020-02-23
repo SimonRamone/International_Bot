@@ -76,6 +76,17 @@ public class PlayGame {
 					row = Integer.parseInt(q.nextLine());
 					System.out.println("Enter the column for the first letter:");
 					col = q.nextLine().charAt(0);
+					int colInteger = col - 65;
+					if(!B.isBound(row, colInteger)){
+						while(!B.isBound(row,colInteger)){
+							System.out.println("Please select coordinates that are within the scrabble board");
+							System.out.println("Enter the row for the first letter:");
+							row = Integer.parseInt(q.nextLine());
+							System.out.println("Enter the column for the first letter:");
+							col = q.nextLine().charAt(0);
+							colInteger = col - 65;
+						}
+					}
 				}
 				else{
 					row = 7;
