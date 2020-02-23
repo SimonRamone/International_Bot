@@ -40,26 +40,36 @@ public class PlayGame {
 		}
 
 		Board B = new Board();
-		int row = 0;
-		char col = 0;
-		String word ="";
-		char skip;
-		char orientation = 'X';
+		int row;
+		char col;
+		String word;
+		String skip;
+		char orientation = 'x';
 
-		B.PrintBoard();
-		
+		int isFirst = 1;
+
 		while(!P.isEmpty()) {
-			for(int i = 0; i < numOfPlayers; i++){
-				System.out.println();
-				System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
-				System.out.println(scrabblePlayers.players.get(i).getFrame());
-	
-				System.out.println("Do you want to skip your turn? Y for yes, N for no.");
-				skip = q.nextLine().charAt(0);
-				if(skip == 'Y' || skip == 'y'){
-					System.out.println("Next player's turn...");
+		for(int i = 0; i < numOfPlayers; i++){//display player's hand on screen
+			System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
+			System.out.println(scrabblePlayers.players.get(i).getFrame());
+
+			System.out.println("Do you want to skip your turn? Y for yes, N for no.");
+			skip = q.nextLine().toUpperCase();
+			if(skip.equals("Y")){
+				System.out.println("Next player's turn...");
+			}
+			else{
+				System.out.println("Enter a word to place on the board:");
+				word = q.nextLine().toUpperCase();
+				System.out.println("word entered is " + word);
+				while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
+					System.out.println("Please only use tiles from your frame");
+					word = q.nextLine().toUpperCase();
+					System.out.println("word entered is " + word);
 				}
-				else{
+
+				int wordLength = word.length();
+				if(!B.isFirstTurn(isFirst)){
 					System.out.println("Enter the row for the first letter:");
 					row = Integer.parseInt(q.nextLine());
 					System.out.println("Enter the column for the first letter:");
@@ -67,13 +77,18 @@ public class PlayGame {
 					int colInteger = col - 65;
 					System.out.println("Enter orientation, either 'v' or '>':");
 					orientation = q.nextLine().charAt(0);
-					System.out.println("Enter a word to place on the board:");
-					word = q.nextLine().trim();
-					System.out.println(word);
-						
-					while(!B.isValid(word, row, colInteger, orientation, scrabblePlayers.players.get(i).getFrame())){
-						System.out.println(B.getError());
-						
+					while(!B.isBound(row,colInteger, orientation, wordLength)){
+						System.out.println("Please select coordinates that are within the scrabble board and the word can fit within the board.");
+
+						System.out.println("Enter a word to place on the board:");
+						word = q.nextLine().toUpperCase();
+						System.out.println("word entered is " + word);
+						while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
+							System.out.println("Please only use tiles from your frame");
+							word = q.nextLine().toUpperCase();
+							System.out.println("word entered is " + word);
+						}
+
 						System.out.println("Enter the row for the first letter:");
 						row = Integer.parseInt(q.nextLine());
 						System.out.println("Enter the column for the first letter:");
@@ -81,17 +96,23 @@ public class PlayGame {
 						colInteger = col - 65;
 						System.out.println("Enter orientation, either 'v' or '>':");
 						orientation = q.nextLine().charAt(0);
-						System.out.println("Enter a word to place on the board:");
-						word = q.nextLine().trim();
-						System.out.println(word);
 					}
 				}
+				else{
+					row = 7;
+					col = 'H';
+					System.out.println("Enter orientation, either 'v' or '>':");
+					orientation = q.nextLine().charAt(0);
+					isFirst++;
+				}
+
+				B.PrintBoard();
 				B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
 				B.PrintBoard();
 			}
 		}
-	}
 
+		}
 //		System.out.println();
 //		System.out.println("To show that removing a tile from frame, refilling frame, and number of tiles left in bag works appropriately:");
 //		System.out.println("For Player 1");
@@ -136,6 +157,6 @@ public class PlayGame {
 //		System.out.println("Tiles left in pool: " + P.tilesLeft());
 //		scrabblePlayers.players.get(1).updateScore(100);
 //		System.out.println(scrabblePlayers.players.get(1));
+	}
+
 }
-
-
