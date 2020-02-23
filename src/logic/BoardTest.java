@@ -93,15 +93,6 @@ public class BoardTest {
         } catch(IllegalArgumentException ex) {}
     }
 
-    @Test
-    void testIsValid(){ //word position validity check
-        try {
-            B.isValid(7,10,5,'v');
-        } catch(IllegalArgumentException ex) {}
-    }
-
-
-
 
 
 
