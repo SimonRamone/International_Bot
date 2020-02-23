@@ -218,7 +218,7 @@ public class Board {
 				}
 			}
 
-			if(foundTilesCount + wildCardCount != userWord.length()){
+			if(foundTilesCount + wildCardCount < userWord.length()){
 				valid = false;
 			}
 		}
@@ -233,7 +233,7 @@ public class Board {
 				}
 			}
 
-			if(foundTilesCount != userWord.length()){
+			if(foundTilesCount < userWord.length()){
 				valid = false;
 			}
 		}
@@ -243,22 +243,22 @@ public class Board {
 
 	public Frame wildCardSetLetter(Frame tileFrame, String word){	//sets blank tile to necessary letter
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
-		for(int i = 0; i < tileFrame.getSize(); i++){
+		for(int i = 0; i < tileFrame.getSize(); i++){		//adds player hand into a frame
 			tempFrame.add(tileFrame.getTile(i));
 		}
 
-		StringBuilder userWord = new StringBuilder(word);
+		StringBuilder userWord = new StringBuilder(word);	//stores word in an array
 
 		for (int i = 0; i < tileFrame.getSize(); i++) {
 			for(int j = 0; j < userWord.length(); j++){
 				if(tileFrame.getTile(i).getLetter() == userWord.charAt(j)){
-					userWord.deleteCharAt(j);
+					userWord.deleteCharAt(j);			//if hand has correct letter from word, that letter in word array is removed
 					break;
 				}
 			}
 		}
 
-		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){
+		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){//sets the blank
 			tileFrame.getTile('_').setLetter(userWord.charAt(i));
 		}
 
