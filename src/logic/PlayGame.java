@@ -77,6 +77,14 @@ public class PlayGame {
 					orientation = q.nextLine().charAt(0);
 					while(!B.isBound(row,colInteger, orientation, wordLength)){
 						System.out.println("Please select coordinates that are within the scrabble board and the word can fit within the board.");
+
+						System.out.println("Enter a word to place on the board:");
+						word = q.nextLine();
+						while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
+							System.out.println("Please only use tiles from your frame");
+							word = q.nextLine();
+						}
+
 						System.out.println("Enter the row for the first letter:");
 						row = Integer.parseInt(q.nextLine());
 						System.out.println("Enter the column for the first letter:");
