@@ -158,14 +158,12 @@ public class Board {
 			case 1:
 				return "Word is not within the bounds of the board!";
 			case 2:
-				return "Word must use atleast one letter from your frame!";
+				return "Word contains atleast one letter that is not in your frame or is not on the board!";
 			case 3:
-				return "Word contains atleast one letter that is not in your frame or is on the board!";
-			case 4:
 				return "Word must be placed on center star!";
-			case 5:
+			case 4:
 				return "Word conflicts with letters that are already on the board!";
-			case 6:
+			case 5:
 				return "Word must connect with atleast one letter that is already on the board!";
 			default:
 				return "Error code invalid!";
@@ -178,16 +176,12 @@ public class Board {
 				errorCode = 1;
 				return false;
 			}
-			if(!usesAtleastOneLetterFromFrame(word, tileFrame)) {
+			if(!wordCheck(word, tileFrame)) {
 				errorCode = 2;
 				return false;
 			}
-			if(!wordCheck(word, tileFrame)) {
-				errorCode = 3;
-				return false;
-			}
 			if(!inCentreOfBoard(word, row, col, orientation)) {
-				errorCode = 4;
+				errorCode = 3;
 				return false;
 			}
 		}
@@ -197,20 +191,16 @@ public class Board {
 				return false;
 			}
 			if(conflictsWithExistingLetters(word, getLettersAlreadyOnBoard(word, row, col, orientation))) {
-				errorCode = 5;
+				errorCode = 4;
 				return false;			
 			}
 			if(!connectsWithOtherWords(word, row, col, orientation)) {
-				errorCode = 6;
+				errorCode = 5;
 				return false;
 			}
 			word = removeRedundantLettersFromWord(word, row, col, orientation);
-			if(!usesAtleastOneLetterFromFrame(word, tileFrame)) {
-				errorCode = 2;
-				return false;
-			}
 			if(!wordCheck(word, tileFrame)) {
-				errorCode = 3;
+				errorCode = 2;
 				return false;
 			}
 		}
@@ -236,13 +226,6 @@ public class Board {
 			}
 		}
 		return count;
-	}
-	
-	public boolean usesAtleastOneLetterFromFrame(String wordAfterRemovingRedundantLetters, Frame tileFrame) {
-		for(int i = 0; i < wordAfterRemovingRedundantLetters.length(); i++) {
-			if(tileFrame.containsTile(wordAfterRemovingRedundantLetters.charAt(i))) return true;
-		}
-		return false;
 	}
 	
 	public boolean conflictsWithExistingLetters(String word, String existingLetters) {

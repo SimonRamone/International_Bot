@@ -67,7 +67,7 @@ public class Frame {
 	
 	public LetterTile getTile(char letter) {
 		for(int i = 0; i < tileFrame.size(); i++) {
-			if(tileFrame.get(i).getLetter() == letter || tileFrame.get(i).getLetter() == letter-32) {
+			if(tileFrame.get(i).getLetter() == letter) {
 				return tileFrame.get(i);
 			}
 		}
@@ -82,7 +82,7 @@ public class Frame {
 	
 	public Boolean containsTile(char letter) {
 		for(int i = 0; i < tileFrame.size(); i++) {
-			if(tileFrame.get(i).getLetter() == letter || tileFrame.get(i).getLetter() == letter-32) return true;
+			if(tileFrame.get(i).getLetter() == letter) return true;
 		}
 		return false;
 	}
@@ -91,7 +91,7 @@ public class Frame {
 		int index = 0;
 
 		for(int i = 0; i < tileFrame.size(); i++) {
-			if(tileFrame.get(i).getLetter() == letter || tileFrame.get(i).getLetter() == letter-32) {
+			if(tileFrame.get(i).getLetter() == letter) {
 				index = i;
 			}
 		}

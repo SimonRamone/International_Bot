@@ -85,11 +85,12 @@ public class PlayGame {
 						word = q.nextLine().trim().toUpperCase();
 						System.out.println(word);
 					}
+					B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
+					B.PrintBoard();
 				}
-				B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
-				B.PrintBoard();
 			}
 		}
+		q.close();
 	}
 
 //		System.out.println();
