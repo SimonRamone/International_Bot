@@ -118,6 +118,7 @@ public class Board {
 		}
 	}
 
+	// check if coordinates are in bound of the board
 	public boolean isBound(int row, int col){
     	if(row > 14 || row < 0){
     		return false;
@@ -128,6 +129,29 @@ public class Board {
 		}
 
     	return true;
+	}
+
+	// check if word can fit in the board
+	public boolean isBound(int row, int col, char orientation, int wordLength){
+		if(row > 14 || row < 0){
+			return false;
+		}
+		if(col > 14 || col < 0){
+			return false;
+		}
+    	if(orientation == '>'){
+			if( (col + wordLength - 1) > 14){
+				return false;
+			}
+		}
+		if(orientation == 'v' || orientation == 'V'){
+			System.out.println(row + wordLength);
+			if( (row + wordLength - 1) > 14){
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public boolean isValid(int wordLength, int row, int col, char orientation){
@@ -275,24 +299,29 @@ public class Board {
 		int colInteger = colChar - 65; // change from ASCII to integer
 		System.out.println(player.getFrame());
     	if(!isBound(row, colInteger)){
-    		System.out.print("Please select coordinates that are within the scrabble board"); // throw an exception?
+			throw new IllegalArgumentException("Please select coordinates that are within the scrabble board");
 		}
     	if(!isValid(userWord.length(), row, colInteger, orientation)){
-    		System.out.println("Not enough space to fit this word here. Try again"); // throw an exception?
+			throw new IllegalArgumentException("Not enough space to fit this word here. Try again");
 		}
-    	
+
+    	int wordLength = userWord.length();
     	userWord = removeRedundantLettersFromWord(userWord, row, colInteger, orientation);
     	System.out.println(userWord);
     	
     	if(!wordCheck(userWord, player.getFrame())){
-    		System.out.println("Please only use tiles from your frame"); // throw an exception?
+			throw new IllegalArgumentException("Please only use tiles from your frame");
 		}
     	else{
 			if(hasWildCardInFrame(player.getFrame())){
 				wildCardSetLetter(player.getFrame(), userWord);
 			}
 			System.out.println(player.getFrame());
-    		if(orientation == 'v' || orientation == 'V') {
+
+			if(!isBound(row, colInteger, orientation, wordLength)){
+				throw new IllegalArgumentException("Please select coordinates that are within the scrabble board and can fit the word");
+			}
+    		else if(orientation == 'v' || orientation == 'V') {
     			for (int i = 0; i < userWord.length(); i++) {
     				if(isEmpty(row, colInteger)) {
     					setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(i)));

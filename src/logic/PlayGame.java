@@ -44,7 +44,7 @@ public class PlayGame {
 		char col;
 		String word;
 		String skip;
-		char orientation;
+		char orientation = 'x';
 
 		int isFirst = 1;
 
@@ -63,29 +63,27 @@ public class PlayGame {
 				word = q.nextLine();
 				while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
 					System.out.println("Please only use tiles from your frame");
-					if(B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
-						break;
-					}
-					else {
-						word = q.nextLine();
-					}
+					word = q.nextLine();
 				}
 
+				int wordLength = word.length();
 				if(!B.isFirstTurn(isFirst)){
 					System.out.println("Enter the row for the first letter:");
 					row = Integer.parseInt(q.nextLine());
 					System.out.println("Enter the column for the first letter:");
 					col = q.nextLine().charAt(0);
 					int colInteger = col - 65;
-					if(!B.isBound(row, colInteger)){
-						while(!B.isBound(row,colInteger)){
-							System.out.println("Please select coordinates that are within the scrabble board");
-							System.out.println("Enter the row for the first letter:");
-							row = Integer.parseInt(q.nextLine());
-							System.out.println("Enter the column for the first letter:");
-							col = q.nextLine().charAt(0);
-							colInteger = col - 65;
-						}
+					System.out.println("Enter orientation, either 'v' or '>':");
+					orientation = q.nextLine().charAt(0);
+					while(!B.isBound(row,colInteger, orientation, wordLength)){
+						System.out.println("Please select coordinates that are within the scrabble board and the word can fit within the board.");
+						System.out.println("Enter the row for the first letter:");
+						row = Integer.parseInt(q.nextLine());
+						System.out.println("Enter the column for the first letter:");
+						col = q.nextLine().charAt(0);
+						colInteger = col - 65;
+						System.out.println("Enter orientation, either 'v' or '>':");
+						orientation = q.nextLine().charAt(0);
 					}
 				}
 				else{
@@ -94,8 +92,6 @@ public class PlayGame {
 					isFirst++;
 				}
 
-				System.out.println("Enter orientation, either 'v' or '>':");
-				orientation = q.nextLine().charAt(0);
 				B.PrintBoard();
 				B.placeWord(scrabblePlayers.players.get(i), word, row, col, orientation);
 				B.PrintBoard();
