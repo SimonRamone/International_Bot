@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Board {
-    public static int boardSize = 15;
+    public static final int boardSize = 15;
+    public static boolean firstWord = true;
+    public static int errorCode = 0;
     
-    public static int wordsOnBoard;
-
     public BoardSquare[][] scrabbleBoard = new BoardSquare[boardSize][boardSize];
 
     public Board(){
         initBoard();
-        wordsOnBoard = 0;
     }
 
     public void initBoard(){
@@ -101,13 +100,13 @@ public class Board {
     	scrabbleBoard[row][col].setTile(letter);
     }
 
-    public boolean isFirstTurn(int turn){
-    	if(turn == 1){
-    		return true;
-		}
-
-    	return false;
+    public boolean isFirstWord(){
+    	return firstWord;
 	}
+    
+    public void setFirstWord() {
+    	firstWord = false;
+    }
 
     public boolean isEmpty(int row, int col){		//if board[i][j] has no tiles on it
     	if(scrabbleBoard[row][col].getLetterTile() == null){
@@ -145,7 +144,6 @@ public class Board {
 			}
 		}
 		if(orientation == 'v' || orientation == 'V'){
-			System.out.println(row + wordLength);
 			if( (row + wordLength - 1) > 14){
 				return false;
 			}
@@ -153,25 +151,72 @@ public class Board {
 
 		return true;
 	}
-		//check if spaces are empty for the word to fit in
-	public boolean isValid(int wordLength, int row, int col, char orientation){
+	
+	public String getError() {
+		switch(errorCode) {
+			case 0:
+				return "No errors found.";
+			case 1:
+				return "Word is not within the bounds of the board!";
+			case 2:
+				return "Word must use atleast one letter from your frame!";
+			case 3:
+				return "Word contains atleast one letter that is not in your frame or is on the board!";
+			case 4:
+				return "Word must be placed on center star!";
+			case 5:
+				return "Word conflicts with letters that are already on the board!";
+			case 6:
+				return "Word must connect with atleast one letter that is already on the board!";
+			default:
+				return "Error code invalid!";
+		}
+	}
 
-    	if(orientation == '>'){
-			for(int j = col ; j < wordLength; j++){
-				if (!isEmpty(row, j)) {
-					return false;
-				}
+	public boolean isValid(String word, int row, int col, char orientation, Frame tileFrame){
+		if(isFirstWord()) {
+			if(!isBound(row, col, orientation, word.length())) {
+				errorCode = 1;
+				return false;
+			}
+			if(!usesAtleastOneLetterFromFrame(word, tileFrame)) {
+				errorCode = 2;
+				return false;
+			}
+			if(!wordCheck(word, tileFrame)) {
+				errorCode = 3;
+				return false;
+			}
+			if(!inCentreOfBoard(word, row, col, orientation)) {
+				errorCode = 4;
+				return false;
 			}
 		}
-    	else{
-			for(int i = row; i < wordLength; i++){
-				if (!isEmpty(i, col)) {
-					return false;
-				}
+		else {
+			if(!isBound(row, col, orientation, word.length())) {
+				errorCode = 1;
+				return false;
+			}
+			if(conflictsWithExistingLetters(word, getLettersAlreadyOnBoard(word, row, col, orientation))) {
+				errorCode = 5;
+				return false;			
+			}
+			if(!connectsWithOtherWords(word, row, col, orientation)) {
+				errorCode = 6;
+				return false;
+			}
+			word = removeRedundantLettersFromWord(word, row, col, orientation);
+			if(!usesAtleastOneLetterFromFrame(word, tileFrame)) {
+				errorCode = 2;
+				return false;
+			}
+			if(!wordCheck(word, tileFrame)) {
+				errorCode = 3;
+				return false;
 			}
 		}
+		errorCode = 0;
 		return true;
-
 	}
 
 	public boolean hasWildCardInFrame(Frame tileFrame){		//if player's hand has blank tile
@@ -193,10 +238,64 @@ public class Board {
 		}
 		return count;
 	}
+	
+	public boolean usesAtleastOneLetterFromFrame(String wordAfterRemovingRedundantLetters, Frame tileFrame) {
+		for(int i = 0; i < wordAfterRemovingRedundantLetters.length(); i++) {
+			if(tileFrame.containsTile(wordAfterRemovingRedundantLetters.charAt(i))) return true;
+		}
+		return false;
+	}
+	
+	public boolean conflictsWithExistingLetters(String word, String existingLetters) {
+		for(int i = 0; i < word.length(); i++) {
+			if(existingLetters.charAt(i) != ' ' && word.charAt(i) != existingLetters.charAt(i)) return true;
+		}
+		return false;
+	}
+	
+	public boolean inCentreOfBoard(String word, int row, int col, char orientation) {
+		if(orientation == '>') {
+			for(int i = 0; i < word.length(); i++) {
+				if(row == 7 && col == 7) return true;
+				col++;
+			}
+		}
+		if(orientation == 'V' || orientation == 'v') {
+			for(int i = 0; i < word.length(); i++) {
+				if(row == 7 && col == 7) return true;
+				row++;
+			}
+		}
+		return false;
+	}
 
-	public boolean wordCheck(String word, Frame tileFrame) {		//to check if player's hand contains the necessary letters for ward.
+	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
+		if(isBound(row, col, orientation, word.length())) {
+			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isBlank()) return true;
+			if(orientation == '>') {
+				for(int i = 0; i < word.length(); i++) {
+					if(row > 0 && !isEmpty(row-1, col)) return true;
+					if (row < 14 && !isEmpty(row+1, col)) return true;
+					col++;
+				}
+			}
+			if(orientation == 'v' || orientation == 'V') {
+				for(int i = 0; i < word.length(); i++) {
+					if(col > 0 && !isEmpty(row, col-1)) return true;
+					if (col < 14 && !isEmpty(row, col+1)) return true;
+					row++;
+				}
+			}
+			return false;
+		}
+		return false;
+	}
+	
+	public boolean wordCheck(String word, Frame tileFrame) {
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
-
+		
+		System.out.println("Word Check: " + word);
+		
 		for(int i = 0; i < tileFrame.getSize(); i++){
 			tempFrame.add(tileFrame.getTile(i));
 		}
@@ -240,6 +339,8 @@ public class Board {
 
 		return valid;
 	}
+	
+	
 
 	public Frame wildCardSetLetter(Frame tileFrame, String word){	//sets blank tile to necessary letter
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
@@ -271,7 +372,7 @@ public class Board {
 		if(orientation == 'v' || orientation == 'V') {
 			for (int i = 0; i < userWord.length(); i++) {
 				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();
-				else lettersOnBoard += "*";
+				else lettersOnBoard += " ";
 				row++;
 			}
 		}
@@ -282,76 +383,67 @@ public class Board {
 				col++;
 			}
 		}
-		System.out.println(lettersOnBoard);
+		System.out.println("Letters on board: " + lettersOnBoard);
 		return lettersOnBoard;
 	}
 			//removes the letters thats already on board, and return whats needed to be inputted by user only.
 	public String removeRedundantLettersFromWord(String userWord, int row, int col, char orientation) {
+		System.out.println("Word before remove: " + userWord);
+		int letterIndex = 0;
 		String lettersOnBoard = getLettersAlreadyOnBoard(userWord, row, col, orientation);
 		StringBuilder word = new StringBuilder(userWord);
 		for (int i = 0; i < lettersOnBoard.length(); i++) {
-			if(userWord.charAt(i) == lettersOnBoard.charAt(i)) word.deleteCharAt(i);
+			if(word.charAt(letterIndex) == lettersOnBoard.charAt(i)) {
+				word.deleteCharAt(letterIndex);
+			} else letterIndex++;
+			System.out.println("Word WHILE remove: " + word.toString());
+			System.out.println("LETTERINDEX: " + letterIndex);
 		}
+		System.out.println("Word after remove: " + word.toString());
 		return word.toString();
 	}
 
 	public void placeWord(SimplePlayer player, String userWord, int row, char colChar, char orientation){
 		int colInteger = colChar - 65; // change from ASCII to integer
-		System.out.println(player.getFrame());
-    	if(!isBound(row, colInteger)){
-			throw new IllegalArgumentException("Please select coordinates that are within the scrabble board");
-		}
-    	if(!isValid(userWord.length(), row, colInteger, orientation)){
-			throw new IllegalArgumentException("Not enough space to fit this word here. Try again");
-		}
-
-    	int wordLength = userWord.length();
-    	userWord = removeRedundantLettersFromWord(userWord, row, colInteger, orientation);
-    	System.out.println(userWord);
-    	
-    	if(!wordCheck(userWord, player.getFrame())){
-			throw new IllegalArgumentException("Please only use tiles from your frame");
+		int wordLength = userWord.length();
+		int letterIndex = 0;
+    	if(!isValid(userWord, row, colInteger, orientation, player.getFrame())){
+			throw new IllegalArgumentException("1 or more errors with input!");
 		}
     	else{
-			if(hasWildCardInFrame(player.getFrame())){
-				wildCardSetLetter(player.getFrame(), userWord);
-			}
-			System.out.println(player.getFrame());
+    		if(!isFirstWord()) userWord = removeRedundantLettersFromWord(userWord, row, colInteger, orientation);
+    			else setFirstWord();
+    		
+			if(hasWildCardInFrame(player.getFrame())) wildCardSetLetter(player.getFrame(), userWord);
 
-			if(!isBound(row, colInteger, orientation, wordLength)){
-				throw new IllegalArgumentException("Please select coordinates that are within the scrabble board and can fit the word");
+			if(orientation == 'v' || orientation == 'V') {
+				for (int i = 0; i < wordLength; i++) {
+	    			if(isEmpty(row, colInteger)) {
+	    				setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(letterIndex)));
+	    				player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(letterIndex)));
+	    				row++;
+	    				letterIndex++;
+	    			}
+	    			else {
+	    				row ++;
+	    			}
+				}
 			}
-    		else if(orientation == 'v' || orientation == 'V') {
-    			for (int i = 0; i < userWord.length(); i++) {
-    				if(isEmpty(row, colInteger)) {
-    					setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(i)));
-    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
-    					row++;
-    				}
-    				else {
-    					setSquare(row+1, colInteger, player.getFrame().getTile(userWord.charAt(i)));
-    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
-    					row += 2;
-    				}
-    			}
-    		}
-    		else {
-    			for (int i = 0; i < userWord.length(); i++) {
-    				if(isEmpty(row, colInteger)) {
-    					setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(i)));
-    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
-    					colInteger++;
-    				}
-    				else {
-    					setSquare(row, colInteger+1, player.getFrame().getTile(userWord.charAt(i)));
-    					player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(i)));
-    					colInteger += 2;
-    				}
-    			}
-    		}
+	    	if(orientation == '>'){
+	    		for (int i = 0; i < wordLength; i++) {
+	    			if(isEmpty(row, colInteger)) {
+	    				setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(letterIndex)));
+	    				player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(letterIndex)));
+	    				colInteger++;
+	    				letterIndex++;
+	    			}
+	    			else {
+	    				colInteger++;
+	    			}
+	    		}
+	    	}			
 		}
-    	System.out.println(player.getFrame());
-
+    	
     	if(player.getFrame().getSize() < 7){
 			player.getFrame().refillFrame();
 		}

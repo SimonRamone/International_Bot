@@ -6,27 +6,9 @@ import java.util.Scanner;
 public class PlayGame {
 
 	public static void main(String[] args) {
-
-
 		Pool P = new Pool();
+		
 		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
-		ScrabblePlayer S = new ScrabblePlayer(P);
-		Board B = new Board();
-		S.addPlayer("Player1");
-		S.players.get(0).playerFrame.emptyFrame();
-		S.players.get(0).playerFrame.add(LetterTile.tileA);
-		S.players.get(0).playerFrame.add(LetterTile.tileBlank);
-		S.players.get(0).playerFrame.add(LetterTile.tileBlank);
-		S.players.get(0).playerFrame.add(LetterTile.tileP);
-		S.players.get(0).playerFrame.add(LetterTile.tileL);
-		S.players.get(0).playerFrame.add(LetterTile.tileE);
-		S.players.get(0).playerFrame.add(LetterTile.tileS);
-
-		System.out.println(S.players.get(0).getFrame());
-		int num = B.countWildCardInFrame(S.players.get(0).getFrame());
-		System.out.println(num);
-		System.out.println(B.wordCheck("APPLE", S.players.get(0).getFrame()));
-		System.out.println(S.players.get(0).getFrame());
 
 		int numOfPlayers = 0;
 		String playerName;
@@ -57,7 +39,7 @@ public class PlayGame {
 			System.out.println(scrabblePlayers.players.get(i).getFrame());
 		}
 
-		//Board B = new Board();
+		Board B = new Board();
 		int row;
 		char col;
 		String word;
@@ -72,17 +54,17 @@ public class PlayGame {
 			System.out.println(scrabblePlayers.players.get(i).getFrame());
 
 			System.out.println("Do you want to skip your turn? Y for yes, N for no.");
-			skip = q.nextLine().trim().toUpperCase();
+			skip = q.nextLine().toUpperCase();
 			if(skip.equals("Y")){
 				System.out.println("Next player's turn...");
 			}
 			else{
 				System.out.println("Enter a word to place on the board:");
-				word = q.nextLine().trim().toUpperCase();
+				word = q.nextLine().toUpperCase();
 				System.out.println("word entered is " + word);
 				while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
 					System.out.println("Please only use tiles from your frame");
-					word = q.nextLine().trim().toUpperCase();
+					word = q.nextLine().toUpperCase();
 					System.out.println("word entered is " + word);
 				}
 
@@ -99,11 +81,11 @@ public class PlayGame {
 						System.out.println("Please select coordinates that are within the scrabble board and the word can fit within the board.");
 
 						System.out.println("Enter a word to place on the board:");
-						word = q.nextLine().trim().toUpperCase();
+						word = q.nextLine().toUpperCase();
 						System.out.println("word entered is " + word);
 						while(!B.wordCheck(word, scrabblePlayers.players.get(i).getFrame())){
 							System.out.println("Please only use tiles from your frame");
-							word = q.nextLine().trim().toUpperCase();
+							word = q.nextLine().toUpperCase();
 							System.out.println("word entered is " + word);
 						}
 
