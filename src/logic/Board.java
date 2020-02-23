@@ -108,7 +108,7 @@ public class Board {
     	firstWord = false;
     }
 
-    public boolean isEmpty(int row, int col){
+    public boolean isEmpty(int row, int col){		//if board[i][j] has no tiles on it
     	if(scrabbleBoard[row][col].getLetterTile() == null){
     		return true;
 		}
@@ -151,6 +151,7 @@ public class Board {
 
 		return true;
 	}
+<<<<<<< HEAD
 	
 	public String getError() {
 		switch(errorCode) {
@@ -190,6 +191,16 @@ public class Board {
 			if(!inCentreOfBoard(word, row, col, orientation)) {
 				errorCode = 4;
 				return false;
+=======
+		//check if spaces are empty for the word to fit in
+	public boolean isValid(int wordLength, int row, int col, char orientation){
+
+    	if(orientation == '>'){
+			for(int j = col ; j < wordLength; j++){
+				if (!isEmpty(row, j)) {
+					return false;
+				}
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 			}
 		}
 		else {
@@ -219,9 +230,9 @@ public class Board {
 		return true;
 	}
 
-	public boolean hasWildCardInFrame(Frame tileFrame){
+	public boolean hasWildCardInFrame(Frame tileFrame){		//if player's hand has blank tile
     	boolean hasWildCard = false;
-    	for(int i = 0; i < tileFrame.getSize(); i++){
+    	for(int i = 0; i < tileFrame.getSize(); i++){		//tileFrame == Arraylist for which contains drawn tiles.
 			if (tileFrame.containsTile(LetterTile.tileBlank)) {
 				hasWildCard = true;
 			}
@@ -229,7 +240,7 @@ public class Board {
     	return hasWildCard;
 	}
 
-	public int countWildCardInFrame(Frame tileFrame){
+	public int countWildCardInFrame(Frame tileFrame){// #of blank tiles
     	int count = 0;
 		for(int i = 0; i < tileFrame.getSize(); i++){
 			if (tileFrame.getTile(i) == LetterTile.tileBlank) {
@@ -269,6 +280,7 @@ public class Board {
 		return false;
 	}
 
+<<<<<<< HEAD
 	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
 		if(isBound(row, col, orientation, word.length())) {
 			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isBlank()) return true;
@@ -292,6 +304,9 @@ public class Board {
 	}
 	
 	public boolean wordCheck(String word, Frame tileFrame) {
+=======
+	public boolean wordCheck(String word, Frame tileFrame) {		//to check if player's hand contains the necessary letters for ward.
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/International-Bot.git
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
 		
 		System.out.println("Word Check: " + word);
@@ -304,7 +319,7 @@ public class Board {
 		int wildCardCount = countWildCardInFrame(tileFrame);
 		int foundTilesCount = 0;
 
-		StringBuilder userWord = new StringBuilder(word);
+		StringBuilder userWord = new StringBuilder(word);	//SB stores word in an array.
 
 		if(hasWildCardInFrame(tileFrame)){
 			for (int i = 0; i < userWord.length(); i++) {
@@ -342,7 +357,7 @@ public class Board {
 	
 	
 
-	public Frame wildCardSetLetter(Frame tileFrame, String word){
+	public Frame wildCardSetLetter(Frame tileFrame, String word){	//sets blank tile to necessary letter
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
 		for(int i = 0; i < tileFrame.getSize(); i++){
 			tempFrame.add(tileFrame.getTile(i));
@@ -386,7 +401,7 @@ public class Board {
 		System.out.println("Letters on board: " + lettersOnBoard);
 		return lettersOnBoard;
 	}
-	
+			//removes the letters thats already on board, and return whats needed to be inputted by user only.
 	public String removeRedundantLettersFromWord(String userWord, int row, int col, char orientation) {
 		System.out.println("Word before remove: " + userWord);
 		int letterIndex = 0;
