@@ -273,11 +273,13 @@ public class Board {
 		return false;
 	}
 
+	// check if the frame contains the required tiles for the word
 	public boolean wordCheck(String word, Frame tileFrame) {
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
 
 		System.out.println("Word Check: " + word);
 
+		// make a temporary frame to hold player's tiles
 		for(int i = 0; i < tileFrame.getSize(); i++){
 			tempFrame.add(tileFrame.getTile(i));
 		}
@@ -288,6 +290,7 @@ public class Board {
 
 		StringBuilder userWord = new StringBuilder(word);	//SB stores word in an array.
 
+		// if there is wildcard in the player's frame, increment the foundTilesCount
 		if(hasWildCardInFrame(tileFrame)){
 			for (int i = 0; i < userWord.length(); i++) {
 				for(int j = 0; j < tempFrame.size(); j++){
@@ -299,11 +302,13 @@ public class Board {
 				}
 			}
 
+			// used to check if there are enough tiles
 			if(foundTilesCount + wildCardCount < userWord.length()){
 				valid = false;
 			}
 		}
 		else{
+			// else when there is no wildcard in the player's frame
 			for (int i = 0; i < userWord.length(); i++) {
 				for(int j = 0; j < tempFrame.size(); j++){
 					if (userWord.charAt(i) == tempFrame.get(j).getLetter()) {
@@ -314,6 +319,7 @@ public class Board {
 				}
 			}
 
+			// used to check if there are enough tiles for the word
 			if(foundTilesCount < userWord.length()){
 				valid = false;
 			}
@@ -341,7 +347,7 @@ public class Board {
 			}
 		}
 
-		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){//sets the blank
+		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){ //sets the blank tile to the required letter for the word
 			tileFrame.getTile('_').setLetter(userWord.charAt(i));
 		}
 
