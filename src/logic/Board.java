@@ -3,19 +3,19 @@ package logic;
 import java.util.ArrayList;
 
 public class Board {
-	public static final int boardSize = 15;
+	public static final int BOARD_SIZE = 15;
 	public static boolean firstWord = true;
 	public static int errorCode = 0;
 
-	public BoardSquare[][] scrabbleBoard = new BoardSquare[boardSize][boardSize];
+	public BoardSquare[][] scrabbleBoard = new BoardSquare[BOARD_SIZE][BOARD_SIZE];
 
 	public Board(){
 		initBoard();
 	}
 
 	public void initBoard(){
-		for(int i = 0; i < boardSize; i++){
-			for(int j = 0; j < boardSize; j++){
+		for(int i = 0; i < BOARD_SIZE; i++){
+			for(int j = 0; j < BOARD_SIZE; j++){
 				scrabbleBoard[i][j] = BoardSquare.normalSquare();
 			}
 		}
@@ -170,6 +170,7 @@ public class Board {
 		}
 	}
 
+	//Checks whether user input is valid
 	public boolean isValid(String word, int row, int col, char orientation, Frame tileFrame){
 		if(isFirstWord()) {
 			if(!isBound(row, col, orientation, word.length())) {
@@ -253,7 +254,9 @@ public class Board {
 
 	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
 		if(isBound(row, col, orientation, word.length())) {
-			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isBlank()) return true;
+			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isBlank()) return true;	//If user input word that uses letters already on board return true
+			
+			//Checks for letters above and below input word
 			if(orientation == '>') {
 				for(int i = 0; i < word.length(); i++) {
 					if(row > 0 && !isEmpty(row-1, col)) return true;
@@ -261,6 +264,8 @@ public class Board {
 					col++;
 				}
 			}
+			
+			//Checks for letters on right and left side of input word
 			if(orientation == 'v' || orientation == 'V') {
 				for(int i = 0; i < word.length(); i++) {
 					if(col > 0 && !isEmpty(row, col-1)) return true;
@@ -348,16 +353,17 @@ public class Board {
 		return tileFrame;
 	}
 
-
+	//Returns string which contains the letters that are one the board in the tiles that user wants to place their word
 	public String getLettersAlreadyOnBoard(String userWord, int row, int col, char orientation) {
 		String lettersOnBoard = "";
 		if(orientation == 'v' || orientation == 'V') {
 			for (int i = 0; i < userWord.length(); i++) {
-				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();
-				else lettersOnBoard += " ";
+				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();	//if the square is not empty, add it to the string for return
+				else lettersOnBoard += " ";		//add space for empty squares
 				row++;
 			}
 		}
+		//when horizontal word
 		else {
 			for (int i = 0; i < userWord.length(); i++) {
 				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();
@@ -368,14 +374,15 @@ public class Board {
 		System.out.println("Letters on board: " + lettersOnBoard);
 		return lettersOnBoard;
 	}
-	//removes the letters thats already on board, and return whats needed to be inputted by user only.
+	
+	//removes the letters that are on the board from the user input word
 	public String removeRedundantLettersFromWord(String userWord, int row, int col, char orientation) {
 		System.out.println("Word before remove: " + userWord);
 		int letterIndex = 0;
 		String lettersOnBoard = getLettersAlreadyOnBoard(userWord, row, col, orientation);
-		StringBuilder word = new StringBuilder(userWord);
+		StringBuilder word = new StringBuilder(userWord);		//new word without letters that are on board
 		for (int i = 0; i < lettersOnBoard.length(); i++) {
-			if(word.charAt(letterIndex) == lettersOnBoard.charAt(i)) {
+			if(word.charAt(letterIndex) == lettersOnBoard.charAt(i)) {	//because users word gets shorter everytime you remove a letter a separate index for it must be used
 				word.deleteCharAt(letterIndex);
 			} else letterIndex++;
 			System.out.println("Word WHILE remove: " + word.toString());
@@ -404,10 +411,10 @@ public class Board {
 						setSquare(row, colInteger, player.getFrame().getTile(userWord.charAt(letterIndex)));
 						player.getFrame().removeTile(player.getFrame().getTile(userWord.charAt(letterIndex)));
 						row++;
-						letterIndex++;
+						letterIndex++;	//only incremented when a letter is placed, to account for the letters that have been removed
 					}
 					else {
-						row ++;
+						row++;
 					}
 				}
 			}
@@ -443,13 +450,13 @@ public class Board {
 
 	public void PrintBoard(){
 		int x =65;
-		for (int j=0;j<boardSize;j++){
+		for (int j=0;j<BOARD_SIZE;j++){
 			int ascii = x + j;
 			System.out.print("{" + (char)ascii + " } ");
 		}
 		System.out.println();
-		for(int i = 0; i < boardSize; i++){
-			for(int j = 0; j < boardSize; j++){
+		for(int i = 0; i < BOARD_SIZE; i++){
+			for(int j = 0; j < BOARD_SIZE; j++){
 				System.out.print("|");
 				if (i==7 && j==7 && scrabbleBoard[7][7].isEmpty()){System.out.print(" *");}
 				else if (scrabbleBoard[i][j].getLetterMultiplier() == 2 && scrabbleBoard[i][j].isEmpty()){

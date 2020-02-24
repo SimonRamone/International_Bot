@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>javafx-sdk-11.0.2</name>
-			<type>2</type>
-			<location>C:/Users/sramo/Downloads/openjfx-11.0.2_windows-x64_bin-sdk/javafx-sdk-11.0.2</location>
-		</link>
-	</linkedResources>
 </projectDescription>
