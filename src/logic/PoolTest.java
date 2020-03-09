@@ -107,7 +107,7 @@ class PoolTest {
         }
     }
 
-    // test if all score are initialized correctly
+    // view.test if all score are initialized correctly
     @Test
     void testGetLetterScore(){
         assertEquals(0, p.getLetterScore('_'));

@@ -42,7 +42,7 @@ public class BoardTest {
     }
 
     @Test
-    void testSetLetterTile(){       //setter and getter test for letter tile on board
+    void testSetLetterTile(){       //setter and getter view.test for letter tile on board
         B.scrabbleBoard[0][0].setTile(LetterTile.tileA);
         B.scrabbleBoard[7][7].setTile(LetterTile.tileH);
         B.scrabbleBoard[9][12].setTile(LetterTile.tileZ);

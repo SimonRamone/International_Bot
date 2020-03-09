@@ -191,7 +191,7 @@ public class Pool {
 
     public static void main(String[] args) {
         /*
-        // some simple code to test functionality
+        // some simple code to view.test functionality
         Pool bag = new Pool();
         System.out.println(bag.LetterPool.get(78).getLetter()); // should output C
         System.out.println(bag.getLetterScore('C')); // should be 3

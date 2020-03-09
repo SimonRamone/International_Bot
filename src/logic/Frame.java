@@ -114,7 +114,7 @@ public class Frame {
 
 	public static void main(String[] args) {
 		/*
-		// Some code to test class functionality
+		// Some code to view.test class functionality
 		Pool P = new Pool();
 		Frame F = new Frame(P);
 		
