@@ -2,6 +2,7 @@ package view;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,14 +37,13 @@ public class BoardUI extends Application {
 
         VBox playerName = new VBox();
         VBox playerScore = new VBox();
-
-        playerScore.setPadding(new Insets(10, 10, 10, 10));
-        playerName.setPadding(new Insets(10, 10, 10, 10));
         HBox scores = new HBox(playerName, playerScore);
 
         Label scoreTitle = new Label("SCOREBOARD");
-        scoreTitle.setPadding(new Insets(10, 10, 10, 50));
         VBox scoreBoard = new VBox(scoreTitle, scores);
+
+        scoreBoard.setAlignment(Pos.CENTER);
+        scores.setAlignment(Pos.CENTER);
 
         Label player1 = new Label("Player 1: ");
         Label score1 = new Label();
