@@ -1,10 +1,12 @@
 package view;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -35,8 +37,13 @@ public class BoardUI extends Application {
         VBox playerName = new VBox();
         VBox playerScore = new VBox();
 
+        playerScore.setPadding(new Insets(10, 10, 10, 10));
+        playerName.setPadding(new Insets(10, 10, 10, 10));
         HBox scores = new HBox(playerName, playerScore);
-        VBox scoreBoard = new VBox(new Label("SCOREBOARD"), scores);
+
+        Label scoreTitle = new Label("SCOREBOARD");
+        scoreTitle.setPadding(new Insets(10, 10, 10, 50));
+        VBox scoreBoard = new VBox(scoreTitle, scores);
 
         Label player1 = new Label("Player 1: ");
         Label score1 = new Label();
@@ -57,8 +64,32 @@ public class BoardUI extends Application {
         playerName.getChildren().addAll(player1, player2, player3, player4);
         playerScore.getChildren().addAll(score1, score2, score3, score4);
 
+        Label label1 = new Label("Word: ");
+        TextField word = new TextField();
+
+        Label label2 = new Label("X-Coordinate:  ");
+        TextField xCoord = new TextField();
+
+        Label label3 = new Label("Y-Coordinate: ");
+        TextField yCoord = new TextField();
+
+        Button submit = new Button("Submit");
+
+        GridPane inputArea = new GridPane();
+        inputArea.setPadding(new Insets(10, 10, 10, 30));
+        inputArea.setVgap(20);
+        inputArea.setHgap(20);
+        inputArea.addRow(0, label1, word);
+        inputArea.addRow(1, label2, xCoord);
+        inputArea.addRow(2, label3, yCoord);
+        inputArea.addRow(3, submit);
+
         TextArea textArea = new TextArea();
-        VBox vbox2 = new VBox(textArea, scoreBoard);
+        inputArea.prefHeightProperty().bind(window.heightProperty().multiply(0.3));
+        scoreBoard.prefHeightProperty().bind(window.heightProperty().multiply(0.2));
+        textArea.prefHeightProperty().bind(window.heightProperty().multiply(0.5));
+
+        VBox vbox2 = new VBox(scoreBoard, inputArea, textArea);
         vbox2.prefWidthProperty().bind(window.widthProperty().multiply(0.5));
 
         HBox hbox = new HBox(vbox1, vbox2);
