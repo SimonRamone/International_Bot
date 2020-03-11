@@ -19,7 +19,7 @@ import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BoardUI extends Application {
-    int BOARD_SIZE = 15;
+    int BOARD_SIZE = 16;
     Stage window;
 
     public static void main(String[] args) {
@@ -64,25 +64,36 @@ public class BoardUI extends Application {
         playerName.getChildren().addAll(player1, player2, player3, player4);
         playerScore.getChildren().addAll(score1, score2, score3, score4);
 
-        Label label1 = new Label("Word: ");
+        Label label1 = new Label("User Input");
         TextField word = new TextField();
 
-        Label label2 = new Label("X-Coordinate:  ");
+        Label label2 = new Label("Row");
         TextField xCoord = new TextField();
+        xCoord.setPrefWidth(100);
 
-        Label label3 = new Label("Y-Coordinate: ");
+        Label label3 = new Label("Column");
         TextField yCoord = new TextField();
+        yCoord.setPrefWidth(100);
 
         Button submit = new Button("Submit");
+        Button skip = new Button("Skip");
+        Button challenge = new Button("Challenge!");
 
         GridPane inputArea = new GridPane();
-        inputArea.setPadding(new Insets(10, 10, 10, 30));
-        inputArea.setVgap(20);
+        inputArea.setPadding(new Insets(30, 10, 10, 30));
         inputArea.setHgap(20);
-        inputArea.addRow(0, label1, word);
-        inputArea.addRow(1, label2, xCoord);
-        inputArea.addRow(2, label3, yCoord);
-        inputArea.addRow(3, submit);
+        inputArea.setVgap(20);
+        HBox coords = new HBox();
+        coords.setSpacing(10);
+        coords.getChildren().addAll(label2, xCoord, label3, yCoord);
+        inputArea.add(label1, 0 , 0);
+        inputArea.add(word, 1, 0);
+        inputArea.add(coords, 0,2,2,1);
+
+        HBox inputButtons = new HBox();
+        inputButtons.getChildren().addAll(submit, skip, challenge);
+        inputButtons.setSpacing(30);
+        inputArea.add(inputButtons, 0 , 4, 3, 1);
 
         TextArea textArea = new TextArea();
         inputArea.prefHeightProperty().bind(window.heightProperty().multiply(0.3));
@@ -98,6 +109,8 @@ public class BoardUI extends Application {
         Board board = new Board();
 
         Button[][] bt = new Button[BOARD_SIZE][BOARD_SIZE];
+        int countX = 65;
+        int countY = 0;
         /*
         normal square - white
         double letter score - lightblue
@@ -112,34 +125,53 @@ public class BoardUI extends Application {
                 bt[r][c].prefHeightProperty().bind(gridPane.heightProperty());
                 gridPane.add(bt[r][c], c, r);
 
-                if(board.scrabbleBoard[r][c].getLetterMultiplier() == 1 && board.scrabbleBoard[r][c].getWordMultiplier() == 1) {
-                    bt[r][c].setStyle("-fx-base: white;");
+                if(r > 14 || c > 14){
+                    if(r ==  15 && c < 15){
+                        bt[r][c].setText(String.valueOf((char)countX));
+                        countX++;
+                    }
+                    else if(c == 15 && r < 15){
+                        bt[r][c].setText(String.valueOf(countY));
+                        countY++;
+                    }
+                    else{
+                        bt[r][c].setText(" ");
+                    }
                 }
-                if(board.scrabbleBoard[r][c].getLetterMultiplier() == 2 && board.scrabbleBoard[r][c].getWordMultiplier() == 1) {
-                    bt[r][c].setStyle("-fx-base: #ADD8E6;");
-                }
-                if(board.scrabbleBoard[r][c].getLetterMultiplier() == 3 && board.scrabbleBoard[r][c].getWordMultiplier() == 1) {
-                    bt[r][c].setStyle("-fx-base: #00008B;");
-                }
-                if(board.scrabbleBoard[r][c].getLetterMultiplier() == 1 && board.scrabbleBoard[r][c].getWordMultiplier() == 2) {
-                    bt[r][c].setStyle("-fx-base: #FF6347;");
-                }
-                if(board.scrabbleBoard[r][c].getLetterMultiplier() == 1 && board.scrabbleBoard[r][c].getWordMultiplier() == 3) {
-                    bt[r][c].setStyle("-fx-base: #9370DB;");
-                }
-                if(r == 7 && c == 7){
-                    bt[r][c].setStyle("-fx-font-size: 120%; -fx-base: #FF6347;");
-                    bt[r][c].setText("\u2B50");
+                else{
+                    if(board.scrabbleBoard[r][c].getLetterMultiplier() == 1 && board.scrabbleBoard[r][c].getWordMultiplier() == 1) {
+                        bt[r][c].setStyle("-fx-base: white;");
+                    }
+                    if(board.scrabbleBoard[r][c].getLetterMultiplier() == 2 && board.scrabbleBoard[r][c].getWordMultiplier() == 1) {
+                        bt[r][c].setStyle("-fx-base: #ADD8E6;");
+                    }
+                    if(board.scrabbleBoard[r][c].getLetterMultiplier() == 3 && board.scrabbleBoard[r][c].getWordMultiplier() == 1) {
+                        bt[r][c].setStyle("-fx-base: #00008B;");
+                    }
+                    if(board.scrabbleBoard[r][c].getLetterMultiplier() == 1 && board.scrabbleBoard[r][c].getWordMultiplier() == 2) {
+                        bt[r][c].setStyle("-fx-base: #FF6347;");
+                    }
+                    if(board.scrabbleBoard[r][c].getLetterMultiplier() == 1 && board.scrabbleBoard[r][c].getWordMultiplier() == 3) {
+                        bt[r][c].setStyle("-fx-base: #9370DB;");
+                    }
+                    if(r == 7 && c == 7){
+                        bt[r][c].setStyle("-fx-font-size: 120%; -fx-base: #FF6347;");
+                        bt[r][c].setText("\u2B50");
+                    }
                 }
 
-                int finalR = r;
-                int finalC = c;
-                bt[r][c].setOnMouseClicked((MouseEvent e) -> {
-                    StringBuilder str = new StringBuilder();
-                    str.append("Coordinate selected: [" + finalR + ", " + finalC + "] \n");
-                    textArea.appendText(str.toString());
-                });
+                if(r < 15 && c < 15){
+                    int finalR = r;
+                    int finalC = c + 65;
+                    bt[r][c].setOnMouseClicked((MouseEvent e) -> {
+                        StringBuilder str = new StringBuilder();
+                        str.append("Coordinate selected: [" + finalR + ", " + (char)finalC + "] \n");
+                        textArea.appendText(str.toString());
 
+                        xCoord.setText(String.valueOf(finalR));
+                        yCoord.setText(String.valueOf((char)finalC));
+                    });
+                }
             }
         }
 
