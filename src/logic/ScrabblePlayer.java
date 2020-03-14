@@ -19,6 +19,11 @@ public class ScrabblePlayer {
         else players.add(new SimplePlayer(scrabblePool, name));
     }
 
+    public SimplePlayer getPlayer(int i) {
+    	if(players.isEmpty()) throw new IllegalArgumentException ("There are no players!");
+    	return players.get(i);
+    }
+    
     public void removePlayer(int i){        //Catch trying to remove empty list
         if(players.isEmpty()) throw new IllegalArgumentException ("No player left. Can't remove anymore players.");
         else players.remove(i);

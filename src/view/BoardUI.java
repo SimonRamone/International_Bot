@@ -14,6 +14,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import logic.Board;
+import logic.Pool;
+import logic.ScrabblePlayer;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,48 +23,167 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BoardUI extends Application {
     int BOARD_SIZE = 16;
     Stage window;
-
+    Scene scene1, scene2;
+	int numberOfPlayers = 0;
+	int i = 1;
+    
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
+    	Pool P = new Pool();
+		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
+		
         window = primaryStage;
-
+        
+        VBox playerName = new VBox();
+        VBox playerScore = new VBox();
+        Label player1 = new Label(), player2 = new Label(), player3 = new Label(), player4 = new Label(), 
+        		score1 = new Label(), score2 = new Label(), score3 = new Label(), score4 = new Label();
+        
+        //First scene - player name input
+        VBox layoutScene1 = new VBox();
+        VBox chooseNumberOfPlayersVBox = new VBox();
+        VBox enterNamesVBox = new VBox();
+        HBox startGameHBox = new HBox();
+        
+        Label label1Scene1 = new Label("Choose Amount of Players");
+        Label label2Scene1 = new Label("Enter Player Names");
+        Button btnStartGame = new Button("Start Game");
+        Button btnReturn = new Button("Return");
+        btnStartGame.setMinWidth(97);
+        btnReturn.setMinWidth(97);
+        
+        Button btnTwoPlayers = new Button("2");
+        Button btnThreePlayers = new Button("3");
+        Button btnFourPlayers = new Button("4");
+        HBox numberOfPlayersHBox = new HBox(btnTwoPlayers, btnThreePlayers, btnFourPlayers);
+        numberOfPlayersHBox.setSpacing(5);
+        numberOfPlayersHBox.setAlignment(Pos.CENTER);
+        
+        TextField playerOneName = new TextField("Player 1");  
+        TextField playerTwoName = new TextField("Player 2");
+        TextField playerThreeName = new TextField("Player 3");
+        TextField playerFourName = new TextField("Player 4");
+        playerOneName.setMaxWidth(200);
+        playerTwoName.setMaxWidth(200);
+        playerThreeName.setMaxWidth(200);
+        playerFourName.setMaxWidth(200);
+        
+        layoutScene1.setSpacing(5);
+        layoutScene1.setAlignment(Pos.CENTER);
+        
+        startGameHBox.getChildren().addAll(btnReturn, btnStartGame);
+        startGameHBox.setSpacing(6);
+        startGameHBox.setAlignment(Pos.CENTER);
+        
+        chooseNumberOfPlayersVBox.getChildren().addAll(label1Scene1, numberOfPlayersHBox);
+        chooseNumberOfPlayersVBox.setSpacing(5);
+        chooseNumberOfPlayersVBox.setAlignment(Pos.CENTER);
+        enterNamesVBox.setSpacing(5);
+        enterNamesVBox.setAlignment(Pos.CENTER);
+        
+        layoutScene1.getChildren().addAll(chooseNumberOfPlayersVBox, enterNamesVBox);
+        
+        btnTwoPlayers.setOnAction(e -> {
+        	enterNamesVBox.getChildren().clear();
+        	chooseNumberOfPlayersVBox.getChildren().clear();
+        	enterNamesVBox.getChildren().addAll(label2Scene1, playerOneName, playerTwoName, startGameHBox);
+        	numberOfPlayers = 2;
+        });
+        
+        btnThreePlayers.setOnAction(e -> {
+        	enterNamesVBox.getChildren().clear();
+        	chooseNumberOfPlayersVBox.getChildren().clear();
+        	enterNamesVBox.getChildren().addAll(label2Scene1, playerOneName, playerTwoName, playerThreeName, startGameHBox);
+        	numberOfPlayers = 3;
+        });
+        
+        btnFourPlayers.setOnAction(e -> {
+        	enterNamesVBox.getChildren().clear();
+        	chooseNumberOfPlayersVBox.getChildren().clear();
+        	enterNamesVBox.getChildren().addAll(label2Scene1, playerOneName, playerTwoName, playerThreeName, playerFourName, startGameHBox);
+        	numberOfPlayers = 4;
+        });
+        
+        btnReturn.setOnAction(e -> {
+        	chooseNumberOfPlayersVBox.getChildren().clear();
+        	chooseNumberOfPlayersVBox.getChildren().addAll(label1Scene1, numberOfPlayersHBox);
+        	enterNamesVBox.getChildren().clear();
+        	layoutScene1.getChildren().clear();
+        	layoutScene1.getChildren().addAll(chooseNumberOfPlayersVBox, enterNamesVBox);
+        	numberOfPlayers = 0;
+        });
+        
+        btnStartGame.setOnAction(e -> {
+        	switch(numberOfPlayers) {
+        		case 2:
+        			scrabblePlayers.addPlayer(playerOneName.getText());
+        			scrabblePlayers.addPlayer(playerTwoName.getText());
+        			player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                	player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                	score1.setText(" 0");
+                	score2.setText(" 0");
+                	playerName.getChildren().addAll(player1, player2);
+                    playerScore.getChildren().addAll(score1, score2);
+        			primaryStage.setScene(scene2);
+        			break;
+        		case 3:
+        			scrabblePlayers.addPlayer(playerOneName.getText());
+        			scrabblePlayers.addPlayer(playerTwoName.getText());
+        			scrabblePlayers.addPlayer(playerThreeName.getText());
+        			player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                	player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                	player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
+                	score1.setText(" 0");
+                	score2.setText(" 0");
+                	score3.setText(" 0");
+                	playerName.getChildren().addAll(player1, player2, player3);
+                    playerScore.getChildren().addAll(score1, score2, score3);
+	        		primaryStage.setScene(scene2);
+	    			break;
+        		case 4:
+        			scrabblePlayers.addPlayer(playerOneName.getText());
+        			scrabblePlayers.addPlayer(playerTwoName.getText());
+        			scrabblePlayers.addPlayer(playerThreeName.getText());
+        			scrabblePlayers.addPlayer(playerFourName.getText());
+        			player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                	player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                	player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
+                	player4.setText("[4]" + scrabblePlayers.getPlayer(3).getName());
+                	score1.setText(" 0");
+                	score2.setText(" 0");
+                	score3.setText(" 0");
+                	score4.setText(" 0");
+                	playerName.getChildren().addAll(player1, player2, player3, player4);
+                    playerScore.getChildren().addAll(score1, score2, score3, score4);
+        			primaryStage.setScene(scene2);
+        			break;
+        	}	
+        	
+        });
+        
+        scene1 = new Scene(layoutScene1, 750, 500);
+        
+        
+        //Second scene - Scrabble board
         GridPane gridPane = new GridPane();
         StackPane rootPane = new StackPane();
         VBox vbox1 = new VBox(rootPane);
         vbox1.prefWidthProperty().bind(window.widthProperty().multiply(1));
 
-        VBox playerName = new VBox();
-        VBox playerScore = new VBox();
-        HBox scores = new HBox(playerName, playerScore);
+        HBox scores = new HBox();
 
         Label scoreTitle = new Label("SCOREBOARD");
-        VBox scoreBoard = new VBox(scoreTitle, scores);
+        VBox scoreBoard = new VBox();
 
         scoreBoard.setAlignment(Pos.CENTER);
         scores.setAlignment(Pos.CENTER);
-
-        Label player1 = new Label("Player 1: ");
-        Label score1 = new Label();
-        score1.setText("Score: 10");
-
-        Label player2 = new Label("Player 2: ");
-        Label score2 = new Label();
-        score2.setText("Score: 20");
-
-        Label player3 = new Label("Player 3: ");
-        Label score3 = new Label();
-        score3.setText("Score: 30");
-
-        Label player4 = new Label("Player 4: ");
-        Label score4 = new Label();
-        score4.setText("Score: 40");
-
-        playerName.getChildren().addAll(player1, player2, player3, player4);
-        playerScore.getChildren().addAll(score1, score2, score3, score4);
+        
+        scores.getChildren().addAll(playerName, playerScore);
+        scoreBoard.getChildren().addAll(scoreTitle, scores);
 
         Label label1 = new Label("User Input");
         TextField word = new TextField();
@@ -76,6 +197,27 @@ public class BoardUI extends Application {
         yCoord.setPrefWidth(100);
 
         Button submit = new Button("Submit");
+        
+        submit.setOnAction(e -> {
+        	switch(numberOfPlayers) {
+    		case 2:
+            	score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
+            	score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
+    			break;
+    		case 3:
+    			score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
+            	score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
+            	score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
+    			break;
+    		case 4:
+    			score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
+            	score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
+            	score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
+            	score4.setText(" " + scrabblePlayers.getPlayer(3).getScore());
+    			break;
+    	}
+        });
+        
         Button skip = new Button("Skip");
         Button challenge = new Button("Challenge!");
 
@@ -102,9 +244,9 @@ public class BoardUI extends Application {
 
         VBox vbox2 = new VBox(scoreBoard, inputArea, textArea);
         vbox2.prefWidthProperty().bind(window.widthProperty().multiply(0.5));
-
+        
         HBox hbox = new HBox(vbox1, vbox2);
-        Scene scene = new Scene(hbox, 770, 500);
+        scene2 = new Scene(hbox, 770, 500);
 
         Board board = new Board();
 
@@ -178,7 +320,7 @@ public class BoardUI extends Application {
         rootPane.getChildren().addAll(gridPane);
 
         window.setTitle("Scrabble");
-        window.setScene(scene);
+        window.setScene(scene1);
         window.show();
 
 
