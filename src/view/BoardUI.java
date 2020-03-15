@@ -3,6 +3,7 @@ package view;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logic.Board;
 import logic.Pool;
@@ -116,7 +118,8 @@ public class BoardUI extends Application {
         	layoutScene1.getChildren().addAll(chooseNumberOfPlayersVBox, enterNamesVBox);
         	numberOfPlayers = 0;
         });
-        
+
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
         btnStartGame.setOnAction(e -> {
         	switch(numberOfPlayers) {
         		case 2:
@@ -128,7 +131,9 @@ public class BoardUI extends Application {
                 	score2.setText(" 0");
                 	playerName.getChildren().addAll(player1, player2);
                     playerScore.getChildren().addAll(score1, score2);
-        			primaryStage.setScene(scene2);
+                    primaryStage.setScene(scene2);
+                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
         			break;
         		case 3:
         			scrabblePlayers.addPlayer(playerOneName.getText());
@@ -142,7 +147,10 @@ public class BoardUI extends Application {
                 	score3.setText(" 0");
                 	playerName.getChildren().addAll(player1, player2, player3);
                     playerScore.getChildren().addAll(score1, score2, score3);
+                    primaryStage.centerOnScreen();
 	        		primaryStage.setScene(scene2);
+                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
 	    			break;
         		case 4:
         			scrabblePlayers.addPlayer(playerOneName.getText());
@@ -159,7 +167,10 @@ public class BoardUI extends Application {
                 	score4.setText(" 0");
                 	playerName.getChildren().addAll(player1, player2, player3, player4);
                     playerScore.getChildren().addAll(score1, score2, score3, score4);
+                    primaryStage.centerOnScreen();
         			primaryStage.setScene(scene2);
+                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
         			break;
         	}	
         	
@@ -185,7 +196,7 @@ public class BoardUI extends Application {
         scores.getChildren().addAll(playerName, playerScore);
         scoreBoard.getChildren().addAll(scoreTitle, scores);
 
-        Label label1 = new Label("User Input");
+        Label label1 = new Label("Input");
         TextField word = new TextField();
 
         Label label2 = new Label("Row");
@@ -222,13 +233,16 @@ public class BoardUI extends Application {
         Button challenge = new Button("Challenge!");
 
         GridPane inputArea = new GridPane();
-        inputArea.setPadding(new Insets(30, 10, 10, 30));
+        inputArea.setPadding(new Insets(10, 10, 10, 30));
         inputArea.setHgap(20);
         inputArea.setVgap(20);
         HBox coords = new HBox();
         coords.setSpacing(10);
         coords.getChildren().addAll(label2, xCoord, label3, yCoord);
         inputArea.add(label1, 0 , 0);
+        word.setPrefWidth(200);
+        xCoord.setPrefWidth(50);
+        yCoord.setPrefWidth(50);
         inputArea.add(word, 1, 0);
         inputArea.add(coords, 0,2,2,1);
 
@@ -246,7 +260,7 @@ public class BoardUI extends Application {
         vbox2.prefWidthProperty().bind(window.widthProperty().multiply(0.5));
         
         HBox hbox = new HBox(vbox1, vbox2);
-        scene2 = new Scene(hbox, 770, 500);
+        scene2 = new Scene(hbox, 1200, 700);
 
         Board board = new Board();
 
