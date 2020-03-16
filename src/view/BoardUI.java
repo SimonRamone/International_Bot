@@ -182,8 +182,8 @@ public class BoardUI extends Application {
         //Second scene - Scrabble board
         GridPane gridPane = new GridPane();
         StackPane rootPane = new StackPane();
-        VBox vbox1 = new VBox(rootPane);
-        vbox1.prefWidthProperty().bind(window.widthProperty().multiply(1));
+        VBox scrabbleBoard = new VBox(rootPane);
+        scrabbleBoard.prefWidthProperty().bind(window.widthProperty().multiply(1));
 
         HBox scores = new HBox();
 
@@ -256,10 +256,10 @@ public class BoardUI extends Application {
         scoreBoard.prefHeightProperty().bind(window.heightProperty().multiply(0.2));
         textArea.prefHeightProperty().bind(window.heightProperty().multiply(0.5));
 
-        VBox vbox2 = new VBox(scoreBoard, inputArea, textArea);
-        vbox2.prefWidthProperty().bind(window.widthProperty().multiply(0.5));
+        VBox informationBox = new VBox(scoreBoard, inputArea, textArea);
+        informationBox.prefWidthProperty().bind(window.widthProperty().multiply(0.5));
         
-        HBox hbox = new HBox(vbox1, vbox2);
+        HBox hbox = new HBox(scrabbleBoard, informationBox);
         scene2 = new Scene(hbox, 1200, 700);
 
         Board board = new Board();
