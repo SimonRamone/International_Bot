@@ -1,25 +1,21 @@
 package view;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logic.Board;
+import logic.LetterTile;
 import logic.Pool;
 import logic.ScrabblePlayer;
 
-import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BoardUI extends Application {
@@ -27,7 +23,6 @@ public class BoardUI extends Application {
     Stage window;
     Scene scene1, scene2;
 	int numberOfPlayers = 0;
-	int i = 1;
     
     public static void main(String[] args) {
         launch(args);
@@ -119,64 +114,6 @@ public class BoardUI extends Application {
         	numberOfPlayers = 0;
         });
 
-        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-        btnStartGame.setOnAction(e -> {
-        	switch(numberOfPlayers) {
-        		case 2:
-        			scrabblePlayers.addPlayer(playerOneName.getText());
-        			scrabblePlayers.addPlayer(playerTwoName.getText());
-        			player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
-                	player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
-                	score1.setText(" 0");
-                	score2.setText(" 0");
-                	playerName.getChildren().addAll(player1, player2);
-                    playerScore.getChildren().addAll(score1, score2);
-                    primaryStage.setScene(scene2);
-                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
-        			break;
-        		case 3:
-        			scrabblePlayers.addPlayer(playerOneName.getText());
-        			scrabblePlayers.addPlayer(playerTwoName.getText());
-        			scrabblePlayers.addPlayer(playerThreeName.getText());
-        			player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
-                	player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
-                	player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
-                	score1.setText(" 0");
-                	score2.setText(" 0");
-                	score3.setText(" 0");
-                	playerName.getChildren().addAll(player1, player2, player3);
-                    playerScore.getChildren().addAll(score1, score2, score3);
-                    primaryStage.centerOnScreen();
-	        		primaryStage.setScene(scene2);
-                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
-	    			break;
-        		case 4:
-        			scrabblePlayers.addPlayer(playerOneName.getText());
-        			scrabblePlayers.addPlayer(playerTwoName.getText());
-        			scrabblePlayers.addPlayer(playerThreeName.getText());
-        			scrabblePlayers.addPlayer(playerFourName.getText());
-        			player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
-                	player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
-                	player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
-                	player4.setText("[4]" + scrabblePlayers.getPlayer(3).getName());
-                	score1.setText(" 0");
-                	score2.setText(" 0");
-                	score3.setText(" 0");
-                	score4.setText(" 0");
-                	playerName.getChildren().addAll(player1, player2, player3, player4);
-                    playerScore.getChildren().addAll(score1, score2, score3, score4);
-                    primaryStage.centerOnScreen();
-        			primaryStage.setScene(scene2);
-                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
-        			break;
-        	}	
-        	
-        });
-
-        
         scene1 = new Scene(layoutScene1, 750, 500);
 
         //Second scene - Scrabble board
@@ -198,6 +135,10 @@ public class BoardUI extends Application {
 
         Label label1 = new Label("Input");
         TextField input = new TextField();
+        input.setTextFormatter(new TextFormatter<>((change) -> {
+            change.setText(change.getText().toUpperCase());
+            return change;
+        }));
 
         Label label2 = new Label("Row");
         TextField xCoord = new TextField();
@@ -235,10 +176,74 @@ public class BoardUI extends Application {
         inputArea.prefHeightProperty().bind(window.heightProperty().multiply(0.3));
         scoreBoard.prefHeightProperty().bind(window.heightProperty().multiply(0.2));
         textArea.prefHeightProperty().bind(window.heightProperty().multiply(0.5));
+        textArea.setEditable(false);
+        AtomicInteger playersTurn = new AtomicInteger();
+        playersTurn.set(0);
+
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        btnStartGame.setOnAction(e -> {
+            switch(numberOfPlayers) {
+                case 2:
+                    scrabblePlayers.addPlayer(playerOneName.getText());
+                    scrabblePlayers.addPlayer(playerTwoName.getText());
+                    player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                    player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                    score1.setText(" 0");
+                    score2.setText(" 0");
+                    playerName.getChildren().addAll(player1, player2);
+                    playerScore.getChildren().addAll(score1, score2);
+                    primaryStage.setScene(scene2);
+                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
+                    break;
+                case 3:
+                    scrabblePlayers.addPlayer(playerOneName.getText());
+                    scrabblePlayers.addPlayer(playerTwoName.getText());
+                    scrabblePlayers.addPlayer(playerThreeName.getText());
+                    player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                    player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                    player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
+                    score1.setText(" 0");
+                    score2.setText(" 0");
+                    score3.setText(" 0");
+                    playerName.getChildren().addAll(player1, player2, player3);
+                    playerScore.getChildren().addAll(score1, score2, score3);
+                    primaryStage.centerOnScreen();
+                    primaryStage.setScene(scene2);
+                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
+                    break;
+                case 4:
+                    scrabblePlayers.addPlayer(playerOneName.getText());
+                    scrabblePlayers.addPlayer(playerTwoName.getText());
+                    scrabblePlayers.addPlayer(playerThreeName.getText());
+                    scrabblePlayers.addPlayer(playerFourName.getText());
+                    player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                    player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                    player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
+                    player4.setText("[4]" + scrabblePlayers.getPlayer(3).getName());
+                    score1.setText(" 0");
+                    score2.setText(" 0");
+                    score3.setText(" 0");
+                    score4.setText(" 0");
+                    playerName.getChildren().addAll(player1, player2, player3, player4);
+                    playerScore.getChildren().addAll(score1, score2, score3, score4);
+                    primaryStage.centerOnScreen();
+                    primaryStage.setScene(scene2);
+                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 4);
+                    break;
+            }
+
+            StringBuilder str = new StringBuilder();
+            str.append(scrabblePlayers.players.get(0).getName() + "'s Turn\n" + scrabblePlayers.players.get(0).getFrame() + "\n");
+            textArea.appendText(str.toString());
+
+        });
 
         VBox informationBox = new VBox(scoreBoard, inputArea, textArea);
         informationBox.prefWidthProperty().bind(window.widthProperty().multiply(0.5));
-        
+
         HBox hbox = new HBox(scrabbleBoard, informationBox);
         scene2 = new Scene(hbox, 1200, 700);
 
@@ -333,31 +338,49 @@ public class BoardUI extends Application {
 
             if(input.getText().equals("HELP")){
                 StringBuilder str = new StringBuilder();
-                str.append("INPUT SEQUENCE: <grid ref> <across/down> <word> \n\n<grid ref> is the position for the first letter\n<across/down> is the direction of word placement\n<word> is the word to be placed.\n");
+                str.append("1) INPUT : <grid ref> <across/down> <word> \n\n<grid ref> is the position for the first letter\n<across/down> is the direction of word placement\n<word> is the word to be placed.\n\n2) EXCHANGE <letters>\nexchanges these letters from the frame\nwith random letters from the pool\n");
                 textArea.appendText(str.toString());
             }
 
             if(input.getText().equals("PASS")){
-
+                StringBuilder str = new StringBuilder();
+                playersTurn.getAndIncrement();
+                if(playersTurn.get() == numberOfPlayers){
+                    playersTurn.set(0);
+                }
+                str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                textArea.appendText(str.toString());
             }
 
             if(input.getText().equals("QUIT")){
-
+                Platform.exit();
             }
 
-            if(input.getText().equals("EXCHANGE")){
-
+            String userInput = input.getText();
+            String[] parsedInput = userInput.split(" ");
+            if(parsedInput[0].equals("EXCHANGE")){
+                char[] ch = userInput.toCharArray();
+                for(int i = 9; i < ch.length; i++){
+                    if(ch[i] != ' '){
+                        LetterTile addToPool = scrabblePlayers.getPlayer(playersTurn.get()).getFrame().getTile(ch[i]);
+                        LetterTile tile = scrabblePlayers.getPlayer(playersTurn.get()).getFrame().getTile(ch[i]);
+                        scrabblePlayers.getPlayer(playersTurn.get()).getFrame().removeTile(tile);
+                        P.LetterPool.add(addToPool);
+                        scrabblePlayers.getPlayer(playersTurn.get()).getFrame().refillFrame();
+                    }
+                }
+                StringBuilder str = new StringBuilder();
+                str.append(scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                textArea.appendText(str.toString());
             }
 
         });
-
 
         rootPane.getChildren().addAll(gridPane);
 
         window.setTitle("Scrabble");
         window.setScene(scene1);
         window.show();
-
 
     }
 }
