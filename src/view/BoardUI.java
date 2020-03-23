@@ -39,7 +39,7 @@ public class BoardUI extends Application {
 		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
 		
         window = primaryStage;
-        
+
         VBox playerName = new VBox();
         VBox playerScore = new VBox();
         Label player1 = new Label(), player2 = new Label(), player3 = new Label(), player4 = new Label(), 
@@ -80,7 +80,7 @@ public class BoardUI extends Application {
         startGameHBox.getChildren().addAll(btnReturn, btnStartGame);
         startGameHBox.setSpacing(6);
         startGameHBox.setAlignment(Pos.CENTER);
-        
+
         chooseNumberOfPlayersVBox.getChildren().addAll(label1Scene1, numberOfPlayersHBox);
         chooseNumberOfPlayersVBox.setSpacing(5);
         chooseNumberOfPlayersVBox.setAlignment(Pos.CENTER);
@@ -175,10 +175,10 @@ public class BoardUI extends Application {
         	}	
         	
         });
+
         
         scene1 = new Scene(layoutScene1, 750, 500);
-        
-        
+
         //Second scene - Scrabble board
         GridPane gridPane = new GridPane();
         StackPane rootPane = new StackPane();
@@ -197,7 +197,7 @@ public class BoardUI extends Application {
         scoreBoard.getChildren().addAll(scoreTitle, scores);
 
         Label label1 = new Label("Input");
-        TextField word = new TextField();
+        TextField input = new TextField();
 
         Label label2 = new Label("Row");
         TextField xCoord = new TextField();
@@ -208,27 +208,7 @@ public class BoardUI extends Application {
         yCoord.setPrefWidth(100);
 
         Button submit = new Button("Submit");
-        
-        submit.setOnAction(e -> {
-        	switch(numberOfPlayers) {
-    		case 2:
-            	score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
-            	score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
-    			break;
-    		case 3:
-    			score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
-            	score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
-            	score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
-    			break;
-    		case 4:
-    			score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
-            	score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
-            	score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
-            	score4.setText(" " + scrabblePlayers.getPlayer(3).getScore());
-    			break;
-    	}
-        });
-        
+
         Button skip = new Button("Skip");
         Button challenge = new Button("Challenge!");
 
@@ -240,10 +220,10 @@ public class BoardUI extends Application {
         coords.setSpacing(10);
         coords.getChildren().addAll(label2, xCoord, label3, yCoord);
         inputArea.add(label1, 0 , 0);
-        word.setPrefWidth(200);
+        input.setPrefWidth(200);
         xCoord.setPrefWidth(50);
         yCoord.setPrefWidth(50);
-        inputArea.add(word, 1, 0);
+        inputArea.add(input, 1, 0);
         inputArea.add(coords, 0,2,2,1);
 
         HBox inputButtons = new HBox();
@@ -316,6 +296,7 @@ public class BoardUI extends Application {
                     }
                 }
 
+
                 if(r < 15 && c < 15){
                     int finalR = r;
                     int finalC = c + 65;
@@ -330,6 +311,46 @@ public class BoardUI extends Application {
                 }
             }
         }
+
+        submit.setOnAction(e -> {
+            switch(numberOfPlayers) {
+                case 2:
+                    score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
+                    score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
+                    break;
+                case 3:
+                    score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
+                    score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
+                    score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
+                    break;
+                case 4:
+                    score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
+                    score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
+                    score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
+                    score4.setText(" " + scrabblePlayers.getPlayer(3).getScore());
+                    break;
+            }
+
+            if(input.getText().equals("HELP")){
+                StringBuilder str = new StringBuilder();
+                str.append("INPUT SEQUENCE: <grid ref> <across/down> <word> \n\n<grid ref> is the position for the first letter\n<across/down> is the direction of word placement\n<word> is the word to be placed.\n");
+                textArea.appendText(str.toString());
+            }
+
+            if(input.getText().equals("PASS")){
+
+            }
+
+            if(input.getText().equals("QUIT")){
+
+            }
+
+            if(input.getText().equals("EXCHANGE")){
+
+            }
+
+        });
+
 
         rootPane.getChildren().addAll(gridPane);
 
