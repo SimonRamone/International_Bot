@@ -31,6 +31,7 @@ public class BoardUI extends Application {
     @Override
     public void start(Stage primaryStage) {
     	Pool P = new Pool();
+    	Board B = new Board();
 		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
 		
         window = primaryStage;
@@ -114,7 +115,7 @@ public class BoardUI extends Application {
         	numberOfPlayers = 0;
         });
 
-        scene1 = new Scene(layoutScene1, 750, 500);
+        scene1 = new Scene(layoutScene1, 250, 250);
 
         //Second scene - Scrabble board
         GridPane gridPane = new GridPane();
@@ -144,7 +145,7 @@ public class BoardUI extends Application {
         TextField xCoord = new TextField();
         xCoord.setPrefWidth(100);
 
-        Label label3 = new Label("Column");
+        Label label3 = new Label("Col");
         TextField yCoord = new TextField();
         yCoord.setPrefWidth(100);
 
@@ -152,6 +153,11 @@ public class BoardUI extends Application {
 
         Button skip = new Button("Skip");
         Button challenge = new Button("Challenge!");
+        Button clear = new Button("DEL");
+        
+        Label labelOrientation = new Label("Angle");
+        Button across = new Button("Across");
+        Button down = new Button("Down");
 
         GridPane inputArea = new GridPane();
         inputArea.setPadding(new Insets(10, 10, 10, 30));
@@ -165,8 +171,15 @@ public class BoardUI extends Application {
         xCoord.setPrefWidth(50);
         yCoord.setPrefWidth(50);
         inputArea.add(input, 1, 0);
+        inputArea.add(clear, 2, 0);
         inputArea.add(coords, 0,2,2,1);
 
+        HBox orientationButtons = new HBox();
+        orientationButtons.getChildren().addAll(across, down);
+        orientationButtons.setSpacing(30);
+        inputArea.add(labelOrientation, 0, 1);
+        inputArea.add(orientationButtons, 1, 1, 3, 1);
+        
         HBox inputButtons = new HBox();
         inputButtons.getChildren().addAll(submit, skip, challenge);
         inputButtons.setSpacing(30);
@@ -312,11 +325,24 @@ public class BoardUI extends Application {
 
                         xCoord.setText(String.valueOf(finalR));
                         yCoord.setText(String.valueOf((char)finalC));
+                        input.setText(String.valueOf((char)finalC) + String.valueOf(finalR) + " ");
                     });
                 }
             }
         }
+        
+        across.setOnAction(e -> {
+        	input.setText(yCoord.getText() + xCoord.getText() + " A ");
+        });
 
+        down.setOnAction(e -> {
+        	input.setText(yCoord.getText() + xCoord.getText() + " D ");
+        });
+        
+        clear.setOnAction(e -> {
+        	input.setText("");
+        });
+        
         submit.setOnAction(e -> {
             switch(numberOfPlayers) {
                 case 2:
@@ -350,6 +376,7 @@ public class BoardUI extends Application {
                 }
                 str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
+                input.setText("");
             }
 
             if(input.getText().equals("QUIT")){
@@ -372,8 +399,48 @@ public class BoardUI extends Application {
                 StringBuilder str = new StringBuilder();
                 str.append(scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
+                input.setText("");
             }
-
+            else {
+            	parsedInput = userInput.split(" ");
+            	String word = parsedInput[2];
+            	StringBuilder rowString = new StringBuilder();
+            	parsedInput[0] += " ";
+            	System.out.println(parsedInput[0] +"|" + parsedInput[1] + parsedInput[2]);
+            	rowString.append(parsedInput[0].charAt(1));
+            	rowString.append(parsedInput[0].charAt(2));
+            	int row = Integer.parseInt(rowString.toString().trim());
+            	int col = parsedInput[0].charAt(0) - 65;
+            	char orientation =  parsedInput[1].charAt(0);
+            	if(orientation == 'A') orientation = '>';
+            		else orientation = 'V';
+            	if(!B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
+            		StringBuilder str = new StringBuilder();
+                    str.append(B.getError() + "\n" + "Review your input and try again.\n" + word + row + " " + col + " " + orientation);
+                    textArea.appendText(str.toString());
+            	} 
+            	else if (B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
+            		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
+            		StringBuilder str = new StringBuilder();
+                    playersTurn.getAndIncrement();
+                    if(playersTurn.get() == numberOfPlayers){
+                        playersTurn.set(0);
+                    }
+                    str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                    textArea.appendText(str.toString());
+                    if(orientation == '>') {
+                    	for(int i = col; i < col+word.length(); i++) {
+                    		bt[row][i].setText(B.getSquare(row, i).getLetter());
+                    	}
+                    }
+                    else {
+                    	for(int i = row; i < row+word.length(); i++) {
+                    		bt[i][col].setText(B.getSquare(i, col).getLetter());
+                    	}
+                    }
+                    input.setText("");
+            	}
+            }
         });
 
         rootPane.getChildren().addAll(gridPane);

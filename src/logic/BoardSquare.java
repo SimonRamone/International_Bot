@@ -31,6 +31,10 @@ public class BoardSquare {
     public LetterTile getLetterTile(){
         return letter;
     }
+    
+    public String getLetter(){
+        return String.valueOf(letter.getLetter());
+    }
 
     /*
      * Types of letter scores -
