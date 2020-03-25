@@ -19,6 +19,7 @@ public class Scrabble {
 
 
     public void scoreCalculator(SimplePlayer player, String word, int row, int col, char orientation){
+        //this is put into the Board.java function.
 
         int wordScore =0;
         int wordMultiplier =0;

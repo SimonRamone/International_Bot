@@ -380,7 +380,13 @@ public class BoardUI extends Application {
                     }
                 }
                 StringBuilder str = new StringBuilder();
-                str.append(scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                str.append("New Frame: \n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+
+                playersTurn.getAndIncrement();
+                if(playersTurn.get() == numberOfPlayers){   //player's turn would finish once it exchanges a tile.
+                    playersTurn.set(0);
+                }
+                str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
                 input.setText("");
             }
@@ -407,7 +413,7 @@ public class BoardUI extends Application {
             		StringBuilder str = new StringBuilder();
 
 
-                    B.scoreCalculator(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
+                    B.scoreCalculator(scrabblePlayers.getPlayer(playersTurn.get()), word, row, col, orientation);
                     playersTurn.getAndIncrement();
                     if(playersTurn.get() == numberOfPlayers){
                         playersTurn.set(0);

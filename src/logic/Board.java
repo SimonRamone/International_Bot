@@ -6,6 +6,7 @@ public class Board {
 	public static final int BOARD_SIZE = 15;
 	public static boolean firstWord = true;
 	public static int errorCode = 0;
+	public Boolean bingoChecker = false;
 
 	public BoardSquare[][] scrabbleBoard = new BoardSquare[BOARD_SIZE][BOARD_SIZE];
 
@@ -439,8 +440,10 @@ public class Board {
 				}
 			}
 		}
-
+		System.out.println("tiles in hand before refill: " + player.getFrame().getSize());
+		bingoChecker = false;
 		if(player.getFrame().getSize() < 7){
+			if(player.getFrame().getSize() == 0){bingoChecker = true;}
 			player.getFrame().refillFrame();
 		}
 
@@ -452,17 +455,21 @@ public class Board {
 	}
 
 	public void scoreCalculator(SimplePlayer player, String word, int row, int col, char orientation){
-
+		System.out.println("beginning tiles in frame" + player.getFrame().getSize());
 		int wordScore =0;
 		int wordMultiplier =0;
 		if(orientation == '>') {
 			for(int i = col; i < col+word.length(); i++) {
-				wordScore += (getSquare(row, col).getLetterTile().getScore()) * getSquare(row, col).getLetterMultiplier();
+				wordScore += ((getSquare(row, i).getLetterTile().getScore()) * getSquare(row, i).getLetterMultiplier());
+				System.out.println("current word score" + wordScore);
+				System.out.println("tiles in frame" + player.getFrame().getSize());
 			}
 		}
-		else if(orientation == 'v'){
-			for(int i = row; i < row+word.length(); i++) {
-				wordScore += (getSquare(row, col).getLetterTile().getScore()) * getSquare(row, col).getLetterMultiplier();
+		else if(orientation == 'v' || orientation == 'V'){
+			for(int j = row; j < row+word.length(); j++) {
+				wordScore += ((getSquare(j, col).getLetterTile().getScore()) * getSquare(j, col).getLetterMultiplier());
+				System.out.println((getSquare(row, col).getLetterTile().getScore())+ "current word score" + wordScore);
+				System.out.println("tiles in frame" + player.getFrame().getSize());
 			}
 		}
 
@@ -472,9 +479,15 @@ public class Board {
 			}else if(getSquare(row, col).getWordMultiplier() ==3){
 				wordMultiplier = 3;
 			}else{wordMultiplier =1;}
+
+			System.out.println("wordmultiplier is :" + wordMultiplier);
 		}
 
-		player.score = wordScore*wordMultiplier;
+		if(bingoChecker == true){	//case of bingo: all 7 tiles are used.
+			player.score += 50;
+		}
+
+		player.score += wordScore*wordMultiplier;
 		System.out.println("scrabble score : " + player.score);
 
 	}
