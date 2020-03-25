@@ -344,7 +344,10 @@ public class BoardUI extends Application {
         });
         
         submit.setOnAction(e -> {
-            switch(numberOfPlayers) {
+        	String userInput = input.getText();
+            String[] parsedInput = userInput.split(" ");
+        	
+        	switch(numberOfPlayers) {
                 case 2:
                     score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
                     score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
@@ -368,7 +371,7 @@ public class BoardUI extends Application {
                 textArea.appendText(str.toString());
             }
 
-            if(input.getText().equals("PASS")){
+            else if(input.getText().equals("PASS")){
                 StringBuilder str = new StringBuilder();
                 playersTurn.getAndIncrement();
                 if(playersTurn.get() == numberOfPlayers){
@@ -379,13 +382,10 @@ public class BoardUI extends Application {
                 input.setText("");
             }
 
-            if(input.getText().equals("QUIT")){
+            else if(input.getText().equals("QUIT")){
                 Platform.exit();
             }
-
-            String userInput = input.getText();
-            String[] parsedInput = userInput.split(" ");
-            if(parsedInput[0].equals("EXCHANGE")){
+            else if(parsedInput[0].equals("EXCHANGE")){
                 char[] ch = userInput.toCharArray();
                 for(int i = 9; i < ch.length; i++){
                     if(ch[i] != ' '){
@@ -412,22 +412,18 @@ public class BoardUI extends Application {
             	int row = Integer.parseInt(rowString.toString().trim());
             	int col = parsedInput[0].charAt(0) - 65;
             	char orientation =  parsedInput[1].charAt(0);
-            	if(orientation == 'A') orientation = '>';
-            		else orientation = 'V';
+            	
+            	if(orientation == 'A') {
+            		orientation = '>';
+            	} else orientation = 'V';
+            	
             	if(!B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
             		StringBuilder str = new StringBuilder();
                     str.append(B.getError() + "\n" + "Review your input and try again.\n" + word + row + " " + col + " " + orientation);
                     textArea.appendText(str.toString());
-            	} 
-            	else if (B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
+            	} else {
+            		B.PrintBoard();
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
-            		StringBuilder str = new StringBuilder();
-                    playersTurn.getAndIncrement();
-                    if(playersTurn.get() == numberOfPlayers){
-                        playersTurn.set(0);
-                    }
-                    str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
-                    textArea.appendText(str.toString());
                     if(orientation == '>') {
                     	for(int i = col; i < col+word.length(); i++) {
                     		bt[row][i].setText(B.getSquare(row, i).getLetter());
@@ -435,10 +431,20 @@ public class BoardUI extends Application {
                     }
                     else {
                     	for(int i = row; i < row+word.length(); i++) {
-                    		bt[i][col].setText(B.getSquare(i, col).getLetter());
+                    		bt[i][col].setText(B.getSquare(i, col).getLetter());	
                     	}
                     }
+                    System.out.println(B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame()));
+                    B.PrintBoard();
+                    StringBuilder str = new StringBuilder();
+                    playersTurn.getAndIncrement();
+                    if(playersTurn.get() == numberOfPlayers){
+                        playersTurn.set(0);
+                    }
+                    str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                    textArea.appendText(str.toString());
                     input.setText("");
+                    B.PrintBoard();
             	}
             }
         });

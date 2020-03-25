@@ -186,7 +186,7 @@ public class Board {
 				return false;
 			}
 		}
-		else {
+		if(!isFirstWord()) {
 			if(!isBound(row, col, orientation, word.length())) {
 				errorCode = 1;
 				return false;
