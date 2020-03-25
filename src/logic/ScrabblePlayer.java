@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ScrabblePlayer {
 
     public ArrayList<SimplePlayer> players = new ArrayList<SimplePlayer>();
+    public int score = 0;
     public Pool scrabblePool;
 
     public ScrabblePlayer(Pool P){
@@ -36,8 +37,19 @@ public class ScrabblePlayer {
 //        }else {
             removePlayer(i);
             players.add(i, new SimplePlayer(scrabblePool, name));
+            players.get(i).resetScore();
+
         //}
     }
+
+    private void setScore(int i) {
+        this.score = i;
+    }
+    public void resetScore() { // re-initiallise player's score to 0
+        setScore(0);
+    }
+
+
 
 
     public static void main(String[] args) {

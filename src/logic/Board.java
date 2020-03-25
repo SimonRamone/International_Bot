@@ -58,6 +58,7 @@ public class Board {
 		scrabbleBoard[9][9] = BoardSquare.tripleLetterScore();
 		scrabbleBoard[9][13] = BoardSquare.tripleLetterScore();
 		scrabbleBoard[13][5] = BoardSquare.tripleLetterScore();
+		scrabbleBoard[13][9] = BoardSquare.tripleLetterScore();
 		scrabbleBoard[1][9] = BoardSquare.tripleLetterScore();
 
 		// 8 squares contain the triple word multiplier

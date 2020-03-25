@@ -41,14 +41,14 @@ class ScrabblePlayerTest{
         assertEquals(0, s.players.get(0).getScore());
     }
 
-    @Test
-    void TestUpdateScore(){
-        s.addPlayer("bob builder ");
-        s.players.get(0).setScore(123);
-        s.players.get(0).updateScore(26);
-        s.players.get(0).updateScore(1);
-        assertEquals(150, s.players.get(0).getScore());
-    }
+//    @Test
+//    void TestUpdateScore(){
+//        s.addPlayer("bob builder ");
+//        s.players.get(0).setScore(123);
+//        s.players.get(0).updateScore(26);
+//        s.players.get(0).updateScore(1);
+//        assertEquals(150, s.players.get(0).getScore());
+//    }
 
     @Test
     void TestAddAndRemovePlayer(){

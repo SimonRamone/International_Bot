@@ -15,6 +15,7 @@ import logic.Board;
 import logic.LetterTile;
 import logic.Pool;
 import logic.ScrabblePlayer;
+import logic.Scrabble;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -73,11 +74,11 @@ public class BoardUI extends Application {
         layoutScene1.setSpacing(5);
         layoutScene1.setAlignment(Pos.CENTER);
         
-        startGameHBox.getChildren().addAll(btnReturn, btnStartGame);
+        startGameHBox.getChildren().addAll(btnReturn, btnStartGame);    //scene where u choose to start game or return to scene 1.
         startGameHBox.setSpacing(6);
         startGameHBox.setAlignment(Pos.CENTER);
 
-        chooseNumberOfPlayersVBox.getChildren().addAll(label1Scene1, numberOfPlayersHBox);
+        chooseNumberOfPlayersVBox.getChildren().addAll(label1Scene1, numberOfPlayersHBox);//first scene of choose amount of players, with 2,3,4 buttons below.
         chooseNumberOfPlayersVBox.setSpacing(5);
         chooseNumberOfPlayersVBox.setAlignment(Pos.CENTER);
         enterNamesVBox.setSpacing(5);
@@ -85,7 +86,7 @@ public class BoardUI extends Application {
         
         layoutScene1.getChildren().addAll(chooseNumberOfPlayersVBox, enterNamesVBox);
         
-        btnTwoPlayers.setOnAction(e -> {
+        btnTwoPlayers.setOnAction(e -> {    //once numofPlayers chosen, second scene displays enter player names + two buttons start / return
         	enterNamesVBox.getChildren().clear();
         	chooseNumberOfPlayersVBox.getChildren().clear();
         	enterNamesVBox.getChildren().addAll(label2Scene1, playerOneName, playerTwoName, startGameHBox);
@@ -106,7 +107,7 @@ public class BoardUI extends Application {
         	numberOfPlayers = 4;
         });
         
-        btnReturn.setOnAction(e -> {
+        btnReturn.setOnAction(e -> {        //return clears the scenes and remake them like it's during the initialisation stage.
         	chooseNumberOfPlayersVBox.getChildren().clear();
         	chooseNumberOfPlayersVBox.getChildren().addAll(label1Scene1, numberOfPlayersHBox);
         	enterNamesVBox.getChildren().clear();
@@ -131,12 +132,12 @@ public class BoardUI extends Application {
         scoreBoard.setAlignment(Pos.CENTER);
         scores.setAlignment(Pos.CENTER);
         
-        scores.getChildren().addAll(playerName, playerScore);
-        scoreBoard.getChildren().addAll(scoreTitle, scores);
+        scores.getChildren().addAll(playerName, playerScore);// horizontal: name + score
+        scoreBoard.getChildren().addAll(scoreTitle, scores);    //vertical: scoreboard + scores hbox
 
         Label label1 = new Label("Input");
         TextField input = new TextField();
-        input.setTextFormatter(new TextFormatter<>((change) -> {
+        input.setTextFormatter(new TextFormatter<>((change) -> {    //to uppercase input
             change.setText(change.getText().toUpperCase());
             return change;
         }));
@@ -201,8 +202,8 @@ public class BoardUI extends Application {
                     scrabblePlayers.addPlayer(playerTwoName.getText());
                     player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
                     player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
-                    score1.setText(" 0");
-                    score2.setText(" 0");
+                    score1.setText("{" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                    score2.setText("{" + scrabblePlayers.getPlayer(1).getScore() + "}");
                     playerName.getChildren().addAll(player1, player2);
                     playerScore.getChildren().addAll(score1, score2);
                     primaryStage.setScene(scene2);
@@ -216,9 +217,9 @@ public class BoardUI extends Application {
                     player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
                     player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
                     player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
-                    score1.setText(" 0");
-                    score2.setText(" 0");
-                    score3.setText(" 0");
+                    score1.setText("{" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                    score2.setText("{" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                    score3.setText("{" + scrabblePlayers.getPlayer(2).getScore() + "}");
                     playerName.getChildren().addAll(player1, player2, player3);
                     playerScore.getChildren().addAll(score1, score2, score3);
                     primaryStage.centerOnScreen();
@@ -235,10 +236,10 @@ public class BoardUI extends Application {
                     player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
                     player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
                     player4.setText("[4]" + scrabblePlayers.getPlayer(3).getName());
-                    score1.setText(" 0");
-                    score2.setText(" 0");
-                    score3.setText(" 0");
-                    score4.setText(" 0");
+                    score1.setText("{" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                    score2.setText("{" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                    score3.setText("{" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                    score4.setText("{" + scrabblePlayers.getPlayer(3).getScore() + "}");
                     playerName.getChildren().addAll(player1, player2, player3, player4);
                     playerScore.getChildren().addAll(score1, score2, score3, score4);
                     primaryStage.centerOnScreen();
@@ -248,7 +249,7 @@ public class BoardUI extends Application {
                     break;
             }
 
-            StringBuilder str = new StringBuilder();
+            StringBuilder str = new StringBuilder();    //print players hand
             str.append(scrabblePlayers.players.get(0).getName() + "'s Turn\n" + scrabblePlayers.players.get(0).getFrame() + "\n");
             textArea.appendText(str.toString());
 
@@ -272,7 +273,7 @@ public class BoardUI extends Application {
         double word score - purple
         triple word score - red
          */
-        for (int r = 0; r < BOARD_SIZE; r++) {
+        for (int r = 0; r < BOARD_SIZE; r++) {      //creating board of buttons
             for (int c = 0; c < BOARD_SIZE; c++) {
                 bt[r][c] = new Button();
                 bt[r][c].prefWidthProperty().bind(gridPane.widthProperty());
@@ -280,7 +281,7 @@ public class BoardUI extends Application {
                 gridPane.add(bt[r][c], c, r);
 
                 if(r > 14 || c > 14){
-                    if(r ==  15 && c < 15){
+                    if(r ==  15 && c < 15){ //setting row and column indicator.
                         bt[r][c].setText(String.valueOf((char)countX));
                         countX++;
                     }
@@ -292,7 +293,7 @@ public class BoardUI extends Application {
                         bt[r][c].setText(" ");
                     }
                 }
-                else{
+                else{   //colour to indicate type of board square
                     if(board.scrabbleBoard[r][c].getLetterMultiplier() == 1 && board.scrabbleBoard[r][c].getWordMultiplier() == 1) {
                         bt[r][c].setStyle("-fx-base: white;");
                     }
@@ -315,7 +316,7 @@ public class BoardUI extends Application {
                 }
 
 
-                if(r < 15 && c < 15){
+                if(r < 15 && c < 15){       //mouse click on button returns coordinates
                     int finalR = r;
                     int finalC = c + 65;
                     bt[r][c].setOnMouseClicked((MouseEvent e) -> {
@@ -323,7 +324,7 @@ public class BoardUI extends Application {
                         str.append("Coordinate selected: [" + finalR + ", " + (char)finalC + "] \n");
                         textArea.appendText(str.toString());
 
-                        xCoord.setText(String.valueOf(finalR));
+                        xCoord.setText(String.valueOf(finalR)); //in input horizontal bar: xy_
                         yCoord.setText(String.valueOf((char)finalC));
                         input.setText(String.valueOf((char)finalC) + String.valueOf(finalR) + " ");
                     });
@@ -344,26 +345,8 @@ public class BoardUI extends Application {
         });
         
         submit.setOnAction(e -> {
-            switch(numberOfPlayers) {
-                case 2:
-                    score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
-                    score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
-                    break;
-                case 3:
-                    score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
-                    score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
-                    score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
-                    break;
-                case 4:
-                    score1.setText(" " + scrabblePlayers.getPlayer(0).getScore());
-                    score2.setText(" " + scrabblePlayers.getPlayer(1).getScore());
-                    score3.setText(" " + scrabblePlayers.getPlayer(2).getScore());
-                    score4.setText(" " + scrabblePlayers.getPlayer(3).getScore());
-                    break;
-            }
-
             if(input.getText().equals("HELP")){
-                StringBuilder str = new StringBuilder();
+                StringBuilder str = new StringBuilder();        //help instruction
                 str.append("1) INPUT : <grid ref> <across/down> <word> \n\n<grid ref> is the position for the first letter\n<across/down> is the direction of word placement\n<word> is the word to be placed.\n\n2) EXCHANGE <letters>\nexchanges these letters from the frame\nwith random letters from the pool\n");
                 textArea.appendText(str.toString());
             }
@@ -371,7 +354,7 @@ public class BoardUI extends Application {
             if(input.getText().equals("PASS")){
                 StringBuilder str = new StringBuilder();
                 playersTurn.getAndIncrement();
-                if(playersTurn.get() == numberOfPlayers){
+                if(playersTurn.get() == numberOfPlayers){   //iterates between 0-#of players
                     playersTurn.set(0);
                 }
                 str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
@@ -385,7 +368,7 @@ public class BoardUI extends Application {
 
             String userInput = input.getText();
             String[] parsedInput = userInput.split(" ");
-            if(parsedInput[0].equals("EXCHANGE")){
+            if(parsedInput[0].equals("EXCHANGE")){  //swaping player tiles
                 char[] ch = userInput.toCharArray();
                 for(int i = 9; i < ch.length; i++){
                     if(ch[i] != ' '){
@@ -401,12 +384,12 @@ public class BoardUI extends Application {
                 textArea.appendText(str.toString());
                 input.setText("");
             }
-            else {
+            else {// error checking & word placement
             	parsedInput = userInput.split(" ");
-            	String word = parsedInput[2];
+            	String word = parsedInput[2];   //third string = word
             	StringBuilder rowString = new StringBuilder();
             	parsedInput[0] += " ";
-            	System.out.println(parsedInput[0] +"|" + parsedInput[1] + parsedInput[2]);
+            	System.out.println(parsedInput[0] +"| " + parsedInput[1] + " " + parsedInput[2]);
             	rowString.append(parsedInput[0].charAt(1));
             	rowString.append(parsedInput[0].charAt(2));
             	int row = Integer.parseInt(rowString.toString().trim());
@@ -422,6 +405,26 @@ public class BoardUI extends Application {
             	else if (B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
             		StringBuilder str = new StringBuilder();
+
+                    switch(numberOfPlayers) {
+                        case 2:
+                            //score1.setText(" {" + scrabblePlayers.getPlayer(0).updateScore(scrabblePlayers.getPlayer(0), word,row, col, orientation) + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            break;
+                        case 3:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                            break;
+                        case 4:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                            score4.setText(" {" + scrabblePlayers.getPlayer(3).getScore() + "}");
+                            break;
+                    }
+
+
                     playersTurn.getAndIncrement();
                     if(playersTurn.get() == numberOfPlayers){
                         playersTurn.set(0);
@@ -440,6 +443,7 @@ public class BoardUI extends Application {
                     }
                     input.setText("");
             	}
+
             }
         });
 

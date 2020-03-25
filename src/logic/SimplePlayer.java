@@ -1,5 +1,5 @@
 package logic;
-
+import logic.Scrabble;
 //International Bot: 17205786, 18439314, 18763829
 public class SimplePlayer {
     public String name;
@@ -41,15 +41,16 @@ public class SimplePlayer {
         return text;
     }
 
-    public void updateScore(int wordScore){
-        score += wordScore; //based on the pool and frame methods, player's score will add
-    }                           // with the value of the word, wordscore method will be implemented later
+    public void updateScore(SimplePlayer player, String word, int row, int col, char orientation){
+        updateScore(player, word, row, col, orientation);
+        System.out.println("current score is : " + score);
+        score = player.score;
+    }
     public String getName() {
         return name.trim();     //return trimmed name
     }
 
     public int getScore() {
-        return score;
+        System.out.println("getscore ////////" + score);
+        return this.score; }
     }
-
-}
