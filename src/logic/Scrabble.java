@@ -18,7 +18,7 @@ public class Scrabble {
 
 
 
-    public void scoreCalculator(ScrabblePlayer player, String word, int row, int col, char orientation){
+    public void scoreCalculator(SimplePlayer player, String word, int row, int col, char orientation){
 
         int wordScore =0;
         int wordMultiplier =0;

@@ -5,6 +5,7 @@ public class SimplePlayer {
     public String name;
     public int score;
     public Frame playerFrame;
+    Scrabble s = new Scrabble();
 
     public SimplePlayer(Pool P, String name ){
         playerFrame = new Frame(P);
@@ -42,7 +43,7 @@ public class SimplePlayer {
     }
 
     public void updateScore(SimplePlayer player, String word, int row, int col, char orientation){
-        updateScore(player, word, row, col, orientation);
+        s.scoreCalculator(player,word,row,col,orientation);
         System.out.println("current score is : " + score);
         score = player.score;
     }
