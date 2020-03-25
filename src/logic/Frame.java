@@ -104,6 +104,8 @@ public class Frame {
 			else tileFrame.remove(index);
 	}
 
+
+
 	public String toString(){
 		String frameString = "";
 		for(int i = 0; i < tileFrame.size(); i++){

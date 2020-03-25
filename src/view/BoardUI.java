@@ -406,25 +406,8 @@ public class BoardUI extends Application {
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
             		StringBuilder str = new StringBuilder();
 
-                    switch(numberOfPlayers) {
-                        case 2:
-                            //score1.setText(" {" + scrabblePlayers.getPlayer(0).updateScore(scrabblePlayers.getPlayer(0), word,row, col, orientation) + "}");
-                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
-                            break;
-                        case 3:
-                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
-                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
-                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
-                            break;
-                        case 4:
-                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
-                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
-                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
-                            score4.setText(" {" + scrabblePlayers.getPlayer(3).getScore() + "}");
-                            break;
-                    }
 
-
+                    B.scoreCalculator(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
                     playersTurn.getAndIncrement();
                     if(playersTurn.get() == numberOfPlayers){
                         playersTurn.set(0);
@@ -441,7 +424,25 @@ public class BoardUI extends Application {
                     		bt[i][col].setText(B.getSquare(i, col).getLetter());
                     	}
                     }
+
                     input.setText("");
+                    switch(numberOfPlayers) {
+                        case 2:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            break;
+                        case 3:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                            break;
+                        case 4:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                            score4.setText(" {" + scrabblePlayers.getPlayer(3).getScore() + "}");
+                            break;
+                    }
             	}
 
             }

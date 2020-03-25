@@ -451,6 +451,34 @@ public class Board {
 		return scrabbleBoard[row][col];
 	}
 
+	public void scoreCalculator(SimplePlayer player, String word, int row, int col, char orientation){
+
+		int wordScore =0;
+		int wordMultiplier =0;
+		if(orientation == '>') {
+			for(int i = col; i < col+word.length(); i++) {
+				wordScore += (getSquare(row, col).getLetterTile().getScore()) * getSquare(row, col).getLetterMultiplier();
+			}
+		}
+		else if(orientation == 'v'){
+			for(int i = row; i < row+word.length(); i++) {
+				wordScore += (getSquare(row, col).getLetterTile().getScore()) * getSquare(row, col).getLetterMultiplier();
+			}
+		}
+
+		for (int i=0; i<word.length();i++){
+			if(getSquare(row, col).getWordMultiplier()==2) {
+				wordMultiplier = 2;
+			}else if(getSquare(row, col).getWordMultiplier() ==3){
+				wordMultiplier = 3;
+			}else{wordMultiplier =1;}
+		}
+
+		player.score = wordScore*wordMultiplier;
+		System.out.println("scrabble score : " + player.score);
+
+	}
+
 	public static void main(String[] args) {
 
 	}
