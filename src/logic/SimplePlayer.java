@@ -43,6 +43,7 @@ public class SimplePlayer {
     }
 
     public void updateScore(SimplePlayer player, String word, int row, int col, char orientation){
+        //here
         s.scoreCalculator(player,word,row,col,orientation);
         System.out.println("current score is : " + score);
         score = player.score;
