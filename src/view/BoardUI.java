@@ -272,6 +272,7 @@ public class BoardUI extends Application {
         triple letter score - darkblue
         double word score - purple
         triple word score - red
+        center piece is double word score
          */
         for (int r = 0; r < BOARD_SIZE; r++) {      //creating board of buttons
             for (int c = 0; c < BOARD_SIZE; c++) {
