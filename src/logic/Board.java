@@ -443,11 +443,11 @@ public class Board {
 			}
 		}
 		System.out.println("tiles in hand before refill: " + player.getFrame().getSize());
-		bingoChecker = false;
-		if(player.getFrame().getSize() < 7){
-			if(player.getFrame().getSize() == 0){bingoChecker = true;}
-			player.getFrame().refillFrame();
-		}
+//		bingoChecker = false;
+//		if(player.getFrame().getSize() < 7){
+//			if(player.getFrame().getSize() == 0){bingoChecker = true;}
+//			player.getFrame().refillFrame();
+//		}
 
 	}
 

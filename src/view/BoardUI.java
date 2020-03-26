@@ -152,7 +152,7 @@ public class BoardUI extends Application {
 
         Button submit = new Button("Submit");
 
-        Button skip = new Button("Skip");
+        Button pass = new Button("Pass");
         Button challenge = new Button("Challenge!");
         Button clear = new Button("DEL");
         
@@ -182,7 +182,7 @@ public class BoardUI extends Application {
         inputArea.add(orientationButtons, 1, 1, 3, 1);
         
         HBox inputButtons = new HBox();
-        inputButtons.getChildren().addAll(submit, skip, challenge);
+        inputButtons.getChildren().addAll(submit, pass, challenge);
         inputButtons.setSpacing(30);
         inputArea.add(inputButtons, 0 , 4, 3, 1);
 
@@ -345,37 +345,47 @@ public class BoardUI extends Application {
         	input.setText("");
         });
 
+        pass.setOnAction(e -> {
+            input.setText("PASS");
+        });
+
         AtomicInteger preChallengedScore = new AtomicInteger();
         AtomicInteger lengthChallengedWord = new AtomicInteger();
         AtomicInteger rowOfChallengedWord = new AtomicInteger();
         AtomicInteger colOfChallengedWord = new AtomicInteger();
         AtomicReference<Character> orientationOfChallengedWord = new AtomicReference<>((char) 0);
+        AtomicReference<String> challengedLettersOnBoard = new AtomicReference<>("");
 
         submit.setOnAction(e -> {
+            String userInput = input.getText();
+            String[] parsedInput = userInput.split(" ");
             if(input.getText().equals("HELP")){
                 StringBuilder str = new StringBuilder();        //help instruction
                 str.append("1) INPUT : <grid ref> <across/down> <word> \n\n<grid ref> is the position for the first letter\n<across/down> is the direction of word placement\n<word> is the word to be placed.\n\n2) EXCHANGE <letters>\nexchanges these letters from the frame\nwith random letters from the pool\n");
                 textArea.appendText(str.toString());
             }
 
-            if(input.getText().equals("PASS")){
+            else if(input.getText().equals("PASS")) {
                 StringBuilder str = new StringBuilder();
+                // only refill frame after turn is over
+                if(scrabblePlayers.getPlayer(playersTurn.get()).getFrame().getSize() < 7){
+                    scrabblePlayers.getPlayer(playersTurn.get()).getFrame().refillFrame();
+                    str.append(scrabblePlayers.getPlayer(playersTurn.get()).getName() + "'s refilled Frame:\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                }
                 playersTurn.getAndIncrement();
-                if(playersTurn.get() == numberOfPlayers){   //iterates between 0-#of players
+                if (playersTurn.get() == numberOfPlayers) {   //iterates between 0-#of players
                     playersTurn.set(0);
                 }
-                str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() + "'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
                 input.setText("");
             }
 
-            if(input.getText().equals("QUIT")){
+            else if(input.getText().equals("QUIT")){
                 Platform.exit();
             }
 
-            String userInput = input.getText();
-            String[] parsedInput = userInput.split(" ");
-            if(parsedInput[0].equals("EXCHANGE")){  //swaping player tiles
+            else if(parsedInput[0].equals("EXCHANGE")){  //swaping player tiles
                 char[] ch = userInput.toCharArray();
                 for(int i = 9; i < ch.length; i++){
                     if(ch[i] != ' '){
@@ -416,6 +426,8 @@ public class BoardUI extends Application {
                     textArea.appendText(str.toString());
             	} 
             	else if (B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
+            	    // challengedLettersOnBoard filters out all words that are already on board. words that exist will take a blank space character
+            	    challengedLettersOnBoard.set(B.getLettersAlreadyOnBoard(word, row, col, orientation));
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
             		StringBuilder str = new StringBuilder();
 
@@ -426,13 +438,9 @@ public class BoardUI extends Application {
             		colOfChallengedWord.set(col);
                     orientationOfChallengedWord.set(orientation);
 
+
                     B.scoreCalculator(scrabblePlayers.getPlayer(playersTurn.get()), word, row, col, orientation);
-                    playersTurn.getAndIncrement();
-                    if(playersTurn.get() == numberOfPlayers){
-                        playersTurn.set(0);
-                    }
-                    str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
-                    textArea.appendText(str.toString());
+
                     if(orientation == '>') {
                     	for(int i = col; i < col+word.length(); i++) {
                     		bt[row][i].setText(B.getSquare(row, i).getLetter());
@@ -444,7 +452,6 @@ public class BoardUI extends Application {
                     	}
                     }
 
-                    input.setText("");
                     switch(numberOfPlayers) {
                         case 2:
                             score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
@@ -468,10 +475,7 @@ public class BoardUI extends Application {
         });
 
         challenge.setOnAction(e -> {
-            int playerChallenged = playersTurn.get() - 1;
-            if(playersTurn.get() == 0){
-                playerChallenged = numberOfPlayers - 1;
-            }
+            int playerChallenged = playersTurn.get();
             if(B.challengeWord()){
                 scrabblePlayers.getPlayer(playerChallenged).setScore(preChallengedScore.get());
                 switch(numberOfPlayers) {
@@ -493,25 +497,64 @@ public class BoardUI extends Application {
                 }
 
                 if(orientationOfChallengedWord.get().equals('>')){
-                    for(int i = colOfChallengedWord.get(); i <= colOfChallengedWord.get() + lengthChallengedWord.get(); i++){
-                        bt[rowOfChallengedWord.get()][i].setText("");
-                        B.scrabbleBoard[rowOfChallengedWord.get()][i].removeTile();
+                    int j = 0;
+                    // to detect if the tiles placed on the board belongs to the players. ensure correct tiles are refunded
+                    for(int i = colOfChallengedWord.get(); i < colOfChallengedWord.get() + lengthChallengedWord.get(); i++){
+                        // loop through all the challengedLettersOnBoard(letters that initially belong on the board)
+                        while(j < challengedLettersOnBoard.get().length()){
+                            // if challengedLettersOnBoard is not a blankspace, it is not the player's tile
+                            if(challengedLettersOnBoard.get().charAt(j) != ' '){
+                                j++;
+                                break;
+                            }
+                            // remove player's tile and put it back in player's frame
+                            else{
+                                LetterTile refundTile = B.scrabbleBoard[rowOfChallengedWord.get()][i].getLetterTile();
+                                scrabblePlayers.getPlayer(playerChallenged).getFrame().add(refundTile);
+                                bt[rowOfChallengedWord.get()][i].setText("");
+                                B.scrabbleBoard[rowOfChallengedWord.get()][i].removeTile();
+                                j++;
+                                break;
+                            }
+                        }
                     }
                 }
                 else{
-                    for(int i = rowOfChallengedWord.get(); i <= rowOfChallengedWord.get() + lengthChallengedWord.get(); i++){
-                        bt[i][colOfChallengedWord.get()].setText("");
-                        B.scrabbleBoard[i][colOfChallengedWord.get()].removeTile();
+                    int j = 0;
+                    // to detect if the tiles placed on the board belongs to the players. ensure correct tiles are refunded
+                    for(int i = rowOfChallengedWord.get(); i < rowOfChallengedWord.get() + lengthChallengedWord.get(); i++){
+                        // loop through all the challengedLettersOnBoard(letters that initially belong on the board)
+                        while(j < challengedLettersOnBoard.get().length()){
+                            // if challengedLettersOnBoard is not a blankspace, it is not the player's tile
+                            if(challengedLettersOnBoard.get().charAt(j) != ' '){
+                                j++;
+                                break;
+                            }
+                            // remove player's tile and put it back in player's frame
+                            else{
+                                LetterTile refundTile = B.scrabbleBoard[i][colOfChallengedWord.get()].getLetterTile();
+                                scrabblePlayers.getPlayer(playerChallenged).getFrame().add(refundTile);
+                                bt[i][colOfChallengedWord.get()].setText("");
+                                B.scrabbleBoard[i][colOfChallengedWord.get()].removeTile();
+                                j++;
+                                break;
+                            }
+                        }
                     }
                 }
 
                 StringBuilder str = new StringBuilder();
-                str.append("Challenge Passed!");
+                str.append("Tiles refunded back to frame... \n" + scrabblePlayers.getPlayer(playerChallenged).getName() + "'s Frame" + scrabblePlayers.getPlayer(playerChallenged).getFrame() + "\n");
+                playersTurn.getAndIncrement();
+                if(playersTurn.get() == numberOfPlayers){
+                    playersTurn.set(0);
+                }
+                str.append("Challenge Passed!\n Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
             }
             else{
                 StringBuilder str = new StringBuilder();
-                str.append("Challenge Failed!");
+                str.append("Challenge Failed!\n");
                 textArea.appendText(str.toString());
             }
 
