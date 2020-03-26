@@ -8,7 +8,7 @@ public class PlayGame {
 
 	public static void main(String[] args) {
 		Pool P = new Pool();
-		
+
 		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
 
 		int numOfPlayers = 0;
@@ -48,13 +48,13 @@ public class PlayGame {
 		char orientation = 'X';
 
 		B.PrintBoard();
-		
+
 		while(!P.isEmpty()) {
 			for(int i = 0; i < numOfPlayers; i++){
 				System.out.println();
 				System.out.println(scrabblePlayers.players.get(i).getName() + "'s TURN!");
 				System.out.println(scrabblePlayers.players.get(i).getFrame());
-	
+
 				System.out.println("Do you want to skip your turn? Y for yes, N for no.");
 				skip = q.nextLine().charAt(0);
 				if(skip == 'Y' || skip == 'y'){
@@ -71,10 +71,10 @@ public class PlayGame {
 					System.out.println("Enter a word to place on the board:");
 					word = q.nextLine().trim().toUpperCase();
 					System.out.println(word);
-						
+
 					while(!B.isValid(word, row, colInteger, orientation, scrabblePlayers.players.get(i).getFrame())){
 						System.out.println(B.getError());
-						
+
 						System.out.println("Enter the row for the first letter:");
 						row = Integer.parseInt(q.nextLine());
 						System.out.println("Enter the column for the first letter:");

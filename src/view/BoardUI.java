@@ -272,6 +272,7 @@ public class BoardUI extends Application {
         triple letter score - darkblue
         double word score - purple
         triple word score - red
+        center piece is double word score
          */
         for (int r = 0; r < BOARD_SIZE; r++) {      //creating board of buttons
             for (int c = 0; c < BOARD_SIZE; c++) {
@@ -380,7 +381,13 @@ public class BoardUI extends Application {
                     }
                 }
                 StringBuilder str = new StringBuilder();
-                str.append(scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                str.append("New Frame: \n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+
+                playersTurn.getAndIncrement();
+                if(playersTurn.get() == numberOfPlayers){   //player's turn would finish once it exchanges a tile.
+                    playersTurn.set(0);
+                }
+                str.append("Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
                 input.setText("");
             }
@@ -406,25 +413,8 @@ public class BoardUI extends Application {
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
             		StringBuilder str = new StringBuilder();
 
-                    switch(numberOfPlayers) {
-                        case 2:
-                            //score1.setText(" {" + scrabblePlayers.getPlayer(0).updateScore(scrabblePlayers.getPlayer(0), word,row, col, orientation) + "}");
-                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
-                            break;
-                        case 3:
-                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
-                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
-                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
-                            break;
-                        case 4:
-                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
-                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
-                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
-                            score4.setText(" {" + scrabblePlayers.getPlayer(3).getScore() + "}");
-                            break;
-                    }
 
-
+                    B.scoreCalculator(scrabblePlayers.getPlayer(playersTurn.get()), word, row, col, orientation);
                     playersTurn.getAndIncrement();
                     if(playersTurn.get() == numberOfPlayers){
                         playersTurn.set(0);
@@ -441,7 +431,25 @@ public class BoardUI extends Application {
                     		bt[i][col].setText(B.getSquare(i, col).getLetter());
                     	}
                     }
+
                     input.setText("");
+                    switch(numberOfPlayers) {
+                        case 2:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            break;
+                        case 3:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                            break;
+                        case 4:
+                            score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                            score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                            score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                            score4.setText(" {" + scrabblePlayers.getPlayer(3).getScore() + "}");
+                            break;
+                    }
             	}
 
             }

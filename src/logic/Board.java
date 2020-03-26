@@ -6,6 +6,7 @@ public class Board {
 	public static final int BOARD_SIZE = 15;
 	public static boolean firstWord = true;
 	public static int errorCode = 0;
+	public Boolean bingoChecker = false;
 
 	public BoardSquare[][] scrabbleBoard = new BoardSquare[BOARD_SIZE][BOARD_SIZE];
 
@@ -439,8 +440,10 @@ public class Board {
 				}
 			}
 		}
-
+		System.out.println("tiles in hand before refill: " + player.getFrame().getSize());
+		bingoChecker = false;
 		if(player.getFrame().getSize() < 7){
+			if(player.getFrame().getSize() == 0){bingoChecker = true;}
 			player.getFrame().refillFrame();
 		}
 
@@ -449,6 +452,76 @@ public class Board {
 
 	public BoardSquare getSquare(int row, int col){
 		return scrabbleBoard[row][col];
+	}
+
+	public void scoreCalculator(SimplePlayer player, String word, int row, int col, char orientation){
+		System.out.println("beginning tiles in frame of calc" + player.getFrame().getSize());
+		int wordScore =0;
+		int wordMultiplier =1;
+		int multiplierCounter = 0;	//checks for which word multiplier case it will be.
+
+		if(orientation == '>') {		//across, horizontal calculations
+			for(int i = col; i < col+word.length(); i++) {
+				wordScore += ((getSquare(row, i).getLetterTile().getScore()) * getSquare(row, i).getLetterMultiplier());
+				System.out.println((getSquare(row, i).getLetterTile().getScore()) + "current word score" + wordScore + "word mul" +getSquare(row, i).getWordMultiplier());
+				if(getSquare(row, i).getWordMultiplier()==2){
+					multiplierCounter += 2;
+				}else if(getSquare(row, i).getWordMultiplier() ==3){
+					multiplierCounter += 3;
+
+				}
+			}
+		}
+		else if(orientation == 'v' || orientation == 'V'){
+			for(int j = row; j < row+word.length(); j++) {
+				wordScore += ((getSquare(j, col).getLetterTile().getScore()) * getSquare(j, col).getLetterMultiplier());
+				System.out.println((getSquare(j, col).getLetterTile().getScore())+ "current word score" + wordScore + "word mul" +getSquare(j, col).getWordMultiplier());
+				if(getSquare(j,col).getWordMultiplier()==2) {
+					multiplierCounter += 2;
+				}
+				else if(getSquare(j, col).getWordMultiplier() ==3){
+					multiplierCounter += 3;
+				}
+			}
+		}
+		System.out.println("multiplierCounter is :" + multiplierCounter);
+
+		switch (multiplierCounter){
+			case 2:
+				wordMultiplier = 2;
+				player.score += wordScore*wordMultiplier;
+				break;
+
+			case 3:
+				wordMultiplier = 3;
+				player.score += wordScore*wordMultiplier;
+				break;
+			case 4:				//when the word has two double word score multiplier, the score of the word is doubled, and that score is then doubled again.
+				wordScore *= 2;
+				wordScore *= 2;
+				player.score += wordScore;
+				break;
+			case 6:			//when the word has two triple word score multiplier, the score of the word is tripled, and that score is then tripled again.
+				wordScore *= 3;
+				wordScore *= 3;
+				player.score += wordScore;
+				break;
+			case 5:		//this is the case for if word covers a double and a triple letter word multiplier. I didn't find the rule for this online
+				wordScore *= 2;		//but based on the previous cases i presumed that it would be (wordScore *2 ) *3;
+				wordScore *= 3;
+				player.score += wordScore;
+				break;
+			default:
+				player.score += wordScore*wordMultiplier;
+		}
+		System.out.println(" word score for this round: " + wordScore);
+
+		if(bingoChecker == true){	//case of bingo: all 7 tiles are used.
+			player.score += 50;
+		}
+
+		System.out.println("Player current score: " + player.score);
+
 	}
 
 	public static void main(String[] args) {
