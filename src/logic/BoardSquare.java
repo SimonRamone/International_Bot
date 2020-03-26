@@ -23,6 +23,10 @@ public class BoardSquare {
         this.letter = selectedTile;
         return null;
     }
+
+    public void removeTile(){
+        this.letter = null;
+    }
     
     public Boolean isEmpty() {
     	return letter==null?true:false;

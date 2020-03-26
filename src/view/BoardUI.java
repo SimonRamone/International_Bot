@@ -15,9 +15,9 @@ import logic.Board;
 import logic.LetterTile;
 import logic.Pool;
 import logic.ScrabblePlayer;
-import logic.Scrabble;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BoardUI extends Application {
     int BOARD_SIZE = 16;
@@ -344,7 +344,13 @@ public class BoardUI extends Application {
         clear.setOnAction(e -> {
         	input.setText("");
         });
-        
+
+        AtomicInteger preChallengedScore = new AtomicInteger();
+        AtomicInteger lengthChallengedWord = new AtomicInteger();
+        AtomicInteger rowOfChallengedWord = new AtomicInteger();
+        AtomicInteger colOfChallengedWord = new AtomicInteger();
+        AtomicReference<Character> orientationOfChallengedWord = new AtomicReference<>((char) 0);
+
         submit.setOnAction(e -> {
             if(input.getText().equals("HELP")){
                 StringBuilder str = new StringBuilder();        //help instruction
@@ -413,6 +419,12 @@ public class BoardUI extends Application {
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
             		StringBuilder str = new StringBuilder();
 
+            		// details for challenging a word that is placed by current player
+            		preChallengedScore.set(scrabblePlayers.getPlayer(playersTurn.get()).getScore());
+            		lengthChallengedWord.set(word.length());
+            		rowOfChallengedWord.set(row);
+            		colOfChallengedWord.set(col);
+                    orientationOfChallengedWord.set(orientation);
 
                     B.scoreCalculator(scrabblePlayers.getPlayer(playersTurn.get()), word, row, col, orientation);
                     playersTurn.getAndIncrement();
@@ -454,6 +466,57 @@ public class BoardUI extends Application {
 
             }
         });
+
+        challenge.setOnAction(e -> {
+            int playerChallenged = playersTurn.get() - 1;
+            if(playersTurn.get() == 0){
+                playerChallenged = numberOfPlayers - 1;
+            }
+            if(B.challengeWord()){
+                scrabblePlayers.getPlayer(playerChallenged).setScore(preChallengedScore.get());
+                switch(numberOfPlayers) {
+                    case 2:
+                        score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                        score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                        break;
+                    case 3:
+                        score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                        score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                        score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                        break;
+                    case 4:
+                        score1.setText(" {" + scrabblePlayers.getPlayer(0).getScore() + "}");
+                        score2.setText(" {" + scrabblePlayers.getPlayer(1).getScore() + "}");
+                        score3.setText(" {" + scrabblePlayers.getPlayer(2).getScore() + "}");
+                        score4.setText(" {" + scrabblePlayers.getPlayer(3).getScore() + "}");
+                        break;
+                }
+
+                if(orientationOfChallengedWord.get().equals('>')){
+                    for(int i = colOfChallengedWord.get(); i <= colOfChallengedWord.get() + lengthChallengedWord.get(); i++){
+                        bt[rowOfChallengedWord.get()][i].setText("");
+                        B.scrabbleBoard[rowOfChallengedWord.get()][i].removeTile();
+                    }
+                }
+                else{
+                    for(int i = rowOfChallengedWord.get(); i <= rowOfChallengedWord.get() + lengthChallengedWord.get(); i++){
+                        bt[i][colOfChallengedWord.get()].setText("");
+                        B.scrabbleBoard[i][colOfChallengedWord.get()].removeTile();
+                    }
+                }
+
+                StringBuilder str = new StringBuilder();
+                str.append("Challenge Passed!");
+                textArea.appendText(str.toString());
+            }
+            else{
+                StringBuilder str = new StringBuilder();
+                str.append("Challenge Failed!");
+                textArea.appendText(str.toString());
+            }
+
+        });
+
 
         rootPane.getChildren().addAll(gridPane);
 

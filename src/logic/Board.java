@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Board {
 	public static final int BOARD_SIZE = 15;
@@ -188,14 +189,15 @@ public class Board {
 				return false;
 			}
 		}
-		if(!isFirstWord()) {
+		else if(!isFirstWord()) {
+
 			if(!isBound(row, col, orientation, word.length())) {
 				errorCode = 1;
 				return false;
 			}
 			if(conflictsWithExistingLetters(word, getLettersAlreadyOnBoard(word, row, col, orientation))) {
 				errorCode = 4;
-				return false;			
+				return false;
 			}
 			if(!connectsWithOtherWords(word, row, col, orientation)) {
 				errorCode = 5;
@@ -257,7 +259,7 @@ public class Board {
 	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
 		if(isBound(row, col, orientation, word.length())) {
 			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isEmpty()) return true;	//If user input word that uses letters already on board return true
-			
+
 			//Checks for letters above and below input word
 			if(orientation == '>') {
 				for(int i = 0; i < word.length(); i++) {
@@ -266,7 +268,7 @@ public class Board {
 					col++;
 				}
 			}
-			
+
 			//Checks for letters on right and left side of input word
 			if(orientation == 'v' || orientation == 'V') {
 				for(int i = 0; i < word.length(); i++) {
@@ -382,7 +384,7 @@ public class Board {
 		System.out.println("Letters on board: " + lettersOnBoard);
 		return lettersOnBoard;
 	}
-	
+
 	//removes the letters that are on the board from the user input word
 	public String removeRedundantLettersFromWord(String userWord, int row, int col, char orientation) {
 		System.out.println("Word before remove: " + userWord);
@@ -522,6 +524,18 @@ public class Board {
 
 		System.out.println("Player current score: " + player.score);
 
+	}
+
+	// a challenge function by random
+	public boolean challengeWord(){
+		Random randomNum = new Random();
+		int coinflip = randomNum.nextInt(2);
+		if(coinflip == 0){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	public static void main(String[] args) {
