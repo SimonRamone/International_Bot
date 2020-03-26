@@ -9,7 +9,7 @@ public class Frame {
 
 	public ArrayList<LetterTile> tileFrame = new ArrayList<LetterTile>();	//Arraylist for which contains drawn tiles
 	public static Pool P;	//Pool from which tiles are drawn
-	private final int MAX_TILES_IN_FRAME = 7;	//Maximum number of tiles allowed in a Scrabble frame
+	private final int MAX_TILES_IN_FRAME = 7;	//Maximum number of tiles allowed in a view.Scrabble frame
 
 	//Method returns the arraylist tileFrame containing all tiles
 	public ArrayList<LetterTile> getFrame(){

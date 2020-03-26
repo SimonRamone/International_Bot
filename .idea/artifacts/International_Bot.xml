@@ -3,10 +3,10 @@
     <output-path>$PROJECT_DIR$/classes/artifacts/International_Bot</output-path>
     <properties id="javafx-properties">
       <options>
-        <option name="appClass" value="BoardUI" />
+        <option name="appClass" value="view.Scrabble" />
         <option name="description" value="" />
         <option name="htmlPlaceholderId" value="" />
-        <option name="title" value="" />
+        <option name="title" value="International-Bot: Scrabble" />
         <option name="vendor" value="" />
         <option name="version" value="" />
       </options>
