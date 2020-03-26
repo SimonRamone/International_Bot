@@ -281,7 +281,7 @@ public class Board {
 
 	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
 		if(isBound(row, col, orientation, word.length())) {
-			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isBlank()) return true;	//If user input word that uses letters already on board return true
+			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isEmpty()) return true;	//If user input word that uses letters already on board return true
 
  			//Checks for letters above and below input word
 			if(orientation == '>') {
@@ -468,11 +468,11 @@ public class Board {
 			}
 		}
 		System.out.println("tiles in hand before refill: " + player.getFrame().getSize());
-//		bingoChecker = false;
-//		if(player.getFrame().getSize() < 7){
-//			if(player.getFrame().getSize() == 0){bingoChecker = true;}
+		bingoChecker = false;
+		if(player.getFrame().getSize() < 7){
+			if(player.getFrame().getSize() == 0){bingoChecker = true;}
 //			player.getFrame().refillFrame();
-//		}
+		}
 
 	}
 
