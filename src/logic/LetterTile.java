@@ -68,4 +68,36 @@ public class LetterTile {
     public String toString() {
         return "[ " + getLetter() + " " + getScore() + " ]";
     }
+    
+    public static LetterTile getLetterTile(char letter) {
+    	switch(letter) {
+    		case 'A': return tileA;
+    		case 'B': return tileB;
+    		case 'C': return tileC;
+    		case 'D': return tileD;
+    		case 'E': return tileE;
+    		case 'F': return tileF;
+    		case 'G': return tileG;
+    		case 'H': return tileH;
+    		case 'I': return tileI;
+    		case 'J': return tileJ;
+    		case 'K': return tileK;
+    		case 'L': return tileL;
+    		case 'M': return tileM;
+    		case 'N': return tileN;
+    		case 'O': return tileO;
+    		case 'P': return tileP;
+    		case 'Q': return tileQ;
+    		case 'R': return tileR;
+    		case 'S': return tileS;
+    		case 'T': return tileT;
+    		case 'U': return tileU;
+    		case 'V': return tileV;
+    		case 'W': return tileW;
+    		case 'X': return tileQ;
+    		case 'Y': return tileW;
+    		case 'Z': return tileY;
+    		default: return tileBlank;
+    	}
+    }
 }

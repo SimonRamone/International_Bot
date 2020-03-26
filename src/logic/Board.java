@@ -6,8 +6,10 @@ import java.util.Random;
 public class Board {
 	public static final int BOARD_SIZE = 15;
 	public static boolean firstWord = true;
+	public static int wordsOnBoard = 0;
 	public static int errorCode = 0;
 	public Boolean bingoChecker = false;
+
 
 	public BoardSquare[][] scrabbleBoard = new BoardSquare[BOARD_SIZE][BOARD_SIZE];
 
@@ -109,7 +111,23 @@ public class Board {
 	public void setFirstWord() {
 		firstWord = false;
 	}
-
+	
+	public void resetFirstWord() {
+		firstWord = true;
+	}
+	
+	public int wordsOnBoard() {
+		return wordsOnBoard;
+	}
+	
+	public int AddWordsOnBoard() {
+		return wordsOnBoard++;
+	}
+	
+	public int RemoveWordsOnBoard() {
+		return wordsOnBoard--;
+	}
+	
 	public boolean isEmpty(int row, int col){		//if board[i][j] has no tiles on it
 		if(scrabbleBoard[row][col].getLetterTile() == null){
 			return true;
@@ -132,6 +150,7 @@ public class Board {
 		return true;
 	}
 
+	
 	// check if word can fit in the board
 	public boolean isBound(int row, int col, char orientation, int wordLength){
 		if(row > 14 || row < 0){
@@ -171,6 +190,10 @@ public class Board {
 			default:
 				return "Error code invalid!";
 		}
+	}
+	
+	public int getErrorCode() {
+		return errorCode;
 	}
 
 	//Checks whether user input is valid
@@ -258,9 +281,9 @@ public class Board {
 
 	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
 		if(isBound(row, col, orientation, word.length())) {
-			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isEmpty()) return true;	//If user input word that uses letters already on board return true
+			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isBlank()) return true;	//If user input word that uses letters already on board return true
 
-			//Checks for letters above and below input word
+ 			//Checks for letters above and below input word
 			if(orientation == '>') {
 				for(int i = 0; i < word.length(); i++) {
 					if(row > 0 && !isEmpty(row-1, col)) return true;
@@ -268,7 +291,7 @@ public class Board {
 					col++;
 				}
 			}
-
+			
 			//Checks for letters on right and left side of input word
 			if(orientation == 'v' || orientation == 'V') {
 				for(int i = 0; i < word.length(); i++) {
@@ -357,7 +380,9 @@ public class Board {
 		}
 
 		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){ //sets the blank tile to the required letter for the word
-			tileFrame.getTile('_').setLetter(userWord.charAt(i));
+			tileFrame.removeTile(tileFrame.findTileByChar('_'));
+			tileFrame.add(LetterTile.getLetterTile(userWord.charAt(i)));
+
 		}
 
 		return tileFrame;
@@ -368,8 +393,8 @@ public class Board {
 		String lettersOnBoard = "";
 		if(orientation == 'v' || orientation == 'V') {
 			for (int i = 0; i < userWord.length(); i++) {
-				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter();	//if the square is not empty, add it to the string for return
-				else lettersOnBoard += " ";		//add space for empty squares
+				if(!isEmpty(row, col)) lettersOnBoard += getSquare(row, col).getLetterTile().getLetter(); //if the square is not empty, add the letter to the string for return
+				else lettersOnBoard += " ";	//add space for empty squares
 				row++;
 			}
 		}
@@ -384,7 +409,7 @@ public class Board {
 		System.out.println("Letters on board: " + lettersOnBoard);
 		return lettersOnBoard;
 	}
-
+	
 	//removes the letters that are on the board from the user input word
 	public String removeRedundantLettersFromWord(String userWord, int row, int col, char orientation) {
 		System.out.println("Word before remove: " + userWord);
@@ -411,9 +436,9 @@ public class Board {
 		}
 		else{
 			if(!isFirstWord()) userWord = removeRedundantLettersFromWord(userWord, row, colInteger, orientation);
-			else setFirstWord();
+			
 
-			if(hasWildCardInFrame(player.getFrame())) wildCardSetLetter(player.getFrame(), userWord);
+		
 
 			if(orientation == 'v' || orientation == 'V') {
 				for (int i = 0; i < wordLength; i++) {

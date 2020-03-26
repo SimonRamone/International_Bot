@@ -30,6 +30,29 @@ public class ScrabblePlayer {
         else players.remove(i);
 
     }
+    
+	public int getWinner() {
+		switch (players.size()) {
+			case 2: 
+				if(getPlayer(0).getScore()>getPlayer(1).getScore()) return 0;
+				if(getPlayer(1).getScore()>getPlayer(0).getScore()) return 1;
+				else return 99;
+			case 3:
+				if(getPlayer(0).getScore()>getPlayer(1).getScore() && getPlayer(0).getScore()>getPlayer(2).getScore()) return 0;
+				if(getPlayer(1).getScore()>getPlayer(0).getScore() && getPlayer(1).getScore()>getPlayer(2).getScore()) return 1;
+				if(getPlayer(2).getScore()>getPlayer(0).getScore() && getPlayer(2).getScore()>getPlayer(1).getScore()) return 2;
+				else return 99;
+			case 4:
+				if(getPlayer(0).getScore()>getPlayer(1).getScore() && getPlayer(0).getScore()>getPlayer(2).getScore()&& getPlayer(0).getScore()>getPlayer(3).getScore() ) return 0;
+				if(getPlayer(1).getScore()>getPlayer(0).getScore() && getPlayer(1).getScore()>getPlayer(2).getScore()&& getPlayer(1).getScore()>getPlayer(3).getScore() ) return 1;
+				if(getPlayer(2).getScore()>getPlayer(0).getScore() && getPlayer(2).getScore()>getPlayer(1).getScore()&& getPlayer(2).getScore()>getPlayer(3).getScore() ) return 2;
+				if(getPlayer(3).getScore()>getPlayer(0).getScore() && getPlayer(3).getScore()>getPlayer(1).getScore()&& getPlayer(3).getScore()>getPlayer(2).getScore() ) return 3;
+				else return 99;
+			default: 
+				return 99;
+		}
+	}
+    
     //reset player will remove current player at index i,and create a new player at that index.
     public void resetPlayer(int i, String name){
 //        if (i<0|| i>players.size()-1){  java automatically throws out of bounds exception

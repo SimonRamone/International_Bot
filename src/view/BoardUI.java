@@ -357,6 +357,7 @@ public class BoardUI extends Application {
         AtomicReference<String> challengedLettersOnBoard = new AtomicReference<>("");
 
         submit.setOnAction(e -> {
+        		if(!P.isEmpty()) {
             String userInput = input.getText();
             String[] parsedInput = userInput.split(" ");
             if(input.getText().equals("HELP")){
@@ -412,7 +413,6 @@ public class BoardUI extends Application {
             	String word = parsedInput[2];   //third string = word
             	StringBuilder rowString = new StringBuilder();
             	parsedInput[0] += " ";
-            	System.out.println(parsedInput[0] +"| " + parsedInput[1] + " " + parsedInput[2]);
             	rowString.append(parsedInput[0].charAt(1));
             	rowString.append(parsedInput[0].charAt(2));
             	int row = Integer.parseInt(rowString.toString().trim());
@@ -420,16 +420,27 @@ public class BoardUI extends Application {
             	char orientation =  parsedInput[1].charAt(0);
             	if(orientation == 'A') orientation = '>';
             		else orientation = 'V';
+            	if(!B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame()) && B.getErrorCode() == 2) {
+            			try {
+            				if(B.hasWildCardInFrame(scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) B.wildCardSetLetter(scrabblePlayers.getPlayer(playersTurn.get()).getFrame(), B.removeRedundantLettersFromWord(word, row, col, orientation));
+            			}catch (IllegalArgumentException ex) {
+            				StringBuilder str = new StringBuilder();
+                            str.append("Word contains letters not in your frame. \n" + "Review your input and try again.\n Your frame: " + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                            textArea.appendText(str.toString());
+            			}
+            			
+            			
+            		
+            	}
             	if(!B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
             		StringBuilder str = new StringBuilder();
-                    str.append(B.getError() + "\n" + "Review your input and try again.\n" + word + row + " " + col + " " + orientation);
+                    str.append(B.getError() + "\n" + "Review your input and try again.\n" + "Your frame: " + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                     textArea.appendText(str.toString());
             	} 
-            	else if (B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
+            	else {
             	    // challengedLettersOnBoard filters out all words that are already on board. words that exist will take a blank space character
             	    challengedLettersOnBoard.set(B.getLettersAlreadyOnBoard(word, row, col, orientation));
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
-            		StringBuilder str = new StringBuilder();
 
             		// details for challenging a word that is placed by current player
             		preChallengedScore.set(scrabblePlayers.getPlayer(playersTurn.get()).getScore());
@@ -469,9 +480,23 @@ public class BoardUI extends Application {
                             score4.setText(" {" + scrabblePlayers.getPlayer(3).getScore() + "}");
                             break;
                     }
+                    B.AddWordsOnBoard();
+                    B.setFirstWord();
+                    if(playersTurn.get()+1 == numberOfPlayers) textArea.appendText(scrabblePlayers.getPlayer(0).getName() + " can challenge the word!\nOtherwise click [PASS] -> [SUBMIT].\n");
+                    else textArea.appendText(scrabblePlayers.getPlayer(playersTurn.get()+1).getName() + " can challenge the word!\nOtherwise click PASS -> SUBMIT.\n");
             	}
 
             }
+        	}
+        	else {
+        		if(scrabblePlayers.getWinner() != 99) {
+        			textArea.appendText("Game Ended! \n" + scrabblePlayers.getPlayer(scrabblePlayers.getWinner()).getName() + " is the WINNER!\n"
+        					+ "Winning score: " + scrabblePlayers.getPlayer(scrabblePlayers.getWinner()).getScore() + "\n");
+        		}
+        		else {
+        			textArea.appendText("Game Ended! \n It's a TIE! \n");
+        		}
+        	}
         });
 
         challenge.setOnAction(e -> {
@@ -551,11 +576,26 @@ public class BoardUI extends Application {
                 }
                 str.append("Challenge Passed!\n Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
+                B.RemoveWordsOnBoard();
+                if(B.wordsOnBoard() == 0) B.resetFirstWord();
             }
             else{
                 StringBuilder str = new StringBuilder();
-                str.append("Challenge Failed!\n");
+                if(scrabblePlayers.getPlayer(playersTurn.get()).getFrame().getSize() < 7){
+                    scrabblePlayers.getPlayer(playersTurn.get()).getFrame().refillFrame();
+                    str.append(scrabblePlayers.getPlayer(playersTurn.get()).getName() + "'s refilled Frame:\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
+                }
+                playersTurn.getAndIncrement();
+                if(playersTurn.get() == numberOfPlayers){
+                    playersTurn.set(0);
+                }
+                playersTurn.getAndIncrement();
+                if(playersTurn.get() == numberOfPlayers){
+                    playersTurn.set(0);
+                }
+                str.append("Challenge Failed!\n Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
+                B.setFirstWord();
             }
 
         });
