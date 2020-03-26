@@ -281,7 +281,9 @@ public class Board {
 
 	public boolean connectsWithOtherWords(String word, int row, int col, char orientation) {
 		if(isBound(row, col, orientation, word.length())) {
-			if(!getLettersAlreadyOnBoard(word, row, col, orientation).isEmpty()) return true;	//If user input word that uses letters already on board return true
+			if(getLettersAlreadyOnBoard(word, row, col, orientation).trim().length() != 0) {
+				return true;	//If user input word that uses letters already on board return true
+			}
 
  			//Checks for letters above and below input word
 			if(orientation == '>') {
@@ -380,8 +382,7 @@ public class Board {
 		}
 
 		for(int i = 0; i < countWildCardInFrame(tileFrame); i++){ //sets the blank tile to the required letter for the word
-			tileFrame.removeTile(tileFrame.findTileByChar('_'));
-			tileFrame.add(LetterTile.getLetterTile(userWord.charAt(i)));
+			tileFrame.getTile('_').setLetter(userWord.charAt(i));
 
 		}
 

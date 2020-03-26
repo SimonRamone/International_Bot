@@ -420,18 +420,12 @@ public class BoardUI extends Application {
             	char orientation =  parsedInput[1].charAt(0);
             	if(orientation == 'A') orientation = '>';
             		else orientation = 'V';
-            	if(!B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame()) && B.getErrorCode() == 2) {
-            			try {
-            				if(B.hasWildCardInFrame(scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) B.wildCardSetLetter(scrabblePlayers.getPlayer(playersTurn.get()).getFrame(), B.removeRedundantLettersFromWord(word, row, col, orientation));
-            			}catch (IllegalArgumentException ex) {
-            				StringBuilder str = new StringBuilder();
-                            str.append("Word contains letters not in your frame. \n" + "Review your input and try again.\n Your frame: " + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
-                            textArea.appendText(str.toString());
-            			}
-            			
-            			
-            		
+            	
+            	if(B.wordCheck(B.removeRedundantLettersFromWord(word, row, col, orientation), scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
+            		            	if(B.hasWildCardInFrame(scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) B.wildCardSetLetter(scrabblePlayers.getPlayer(playersTurn.get()).getFrame(), B.removeRedundantLettersFromWord(word, row, col, orientation));
+
             	}
+
             	if(!B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
             		StringBuilder str = new StringBuilder();
                     str.append(B.getError() + "\n" + "Review your input and try again.\n" + "Your frame: " + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
