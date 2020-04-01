@@ -127,14 +127,12 @@ public class Board {
 	public int RemoveWordsOnBoard() {
 		return wordsOnBoard--;
 	}
-	
+
 	public boolean isEmpty(int row, int col){		//if board[i][j] has no tiles on it
-		if(scrabbleBoard[row][col].getLetterTile() == null){
-			return true;
-		}
-		else{
+		if(scrabbleBoard[row][col].getLetterTile() != null){
 			return false;
 		}
+		return true;
 	}
 
 	// check if coordinates are in bound of the board
@@ -437,9 +435,6 @@ public class Board {
 		}
 		else{
 			if(!isFirstWord()) userWord = removeRedundantLettersFromWord(userWord, row, colInteger, orientation);
-			
-
-		
 
 			if(orientation == 'v' || orientation == 'V') {
 				for (int i = 0; i < wordLength; i++) {
@@ -485,7 +480,6 @@ public class Board {
 	public void scoreCalculator(SimplePlayer player, String word, int row, int col, char orientation){
 		System.out.println("beginning tiles in frame of calc" + player.getFrame().getSize());
 		int wordScore =0;
-		int wordMultiplier =1;
 		int multiplierCounter = 0;	//checks for which word multiplier case it will be.
 
 		if(orientation == '>') {		//across, horizontal calculations
@@ -514,6 +508,18 @@ public class Board {
 		}
 		System.out.println("multiplierCounter is :" + multiplierCounter);
 
+		multiplier(multiplierCounter, player, wordScore);
+		System.out.println(" word score for this round: " + wordScore);
+
+		if(bingoChecker == true){	//case of bingo: all 7 tiles are used.
+			player.score += 50;
+		}
+		System.out.println("Player current score: " + player.score);
+
+	}
+
+	public void multiplier(int multiplierCounter, SimplePlayer player, int wordScore){
+		int wordMultiplier = 1;
 		switch (multiplierCounter){
 			case 2:
 				wordMultiplier = 2;
@@ -542,14 +548,119 @@ public class Board {
 			default:
 				player.score += wordScore*wordMultiplier;
 		}
-		System.out.println(" word score for this round: " + wordScore);
+	}
 
-		if(bingoChecker == true){	//case of bingo: all 7 tiles are used.
-			player.score += 50;
+	public void additionalWords(SimplePlayer player, String word, int row, int col, char orientation, String existingLetters){
+		int wordScore = 0;
+		int multiplierCounter = 0;
+		int playersTilePointer = 0;
+		int iterator;
+		if(orientation == '>') {
+			for (int i = col; i < col + word.length(); i++) {
+				// if it is player's tile, add the score of the additional word
+				if (existingLetters.charAt(playersTilePointer) == ' ') {
+					iterator = row;
+					wordScore = 0;
+					playersTilePointer++;
+					// if word formed is below and the character is the first letter of the additional word
+					if (!getSquare(row + 1, i).isEmpty() && getSquare(row - 1, i).isEmpty()) {
+						while (!getSquare(iterator, i).isEmpty()) {
+							iterator++;
+						}
+						// get score of new word and add to player score
+						for(int j = row; j < iterator; j++) {
+							wordScore += ((getSquare(j, i).getLetterTile().getScore()) * getSquare(j, i).getLetterMultiplier());
+							if(getSquare(j, i).getWordMultiplier()==2){
+								multiplierCounter += 2;
+							}else if(getSquare(j, i).getWordMultiplier() ==3){
+								multiplierCounter += 3;
+							}
+						}
+						multiplier(multiplierCounter, player, wordScore);
+					}
+					// if the character in the coordinate is not the first letter of the additional word
+					else if(!getSquare(row - 1, i).isEmpty()){
+						iterator = row;
+						wordScore = 0;
+						// iterate to start of the word
+						while (!getSquare(iterator, i).isEmpty()) {
+							iterator--;
+						}
+						int newWordFirstLetter = iterator + 1;
+						iterator++;
+						// find the length of the word
+						while (!getSquare(iterator, i).isEmpty()) {
+							iterator++;
+						}
+						// get score of new word and add to player score
+						for(int j = newWordFirstLetter; j < iterator; j++) {
+							wordScore += ((getSquare(j, i).getLetterTile().getScore()) * getSquare(j, i).getLetterMultiplier());
+							if(getSquare(j,i).getWordMultiplier()==2) {
+								multiplierCounter += 2;
+							}
+							else if(getSquare(j, i).getWordMultiplier() ==3){
+								multiplierCounter += 3;
+							}
+						}
+						multiplier(multiplierCounter, player, wordScore);
+					}
+				}
+				else{
+					playersTilePointer++;
+				}
+			}
 		}
-
-		System.out.println("Player current score: " + player.score);
-
+		else if(orientation == 'v' || orientation == 'V') {
+			for (int i = row; i < row + word.length(); i++) {
+				if (existingLetters.charAt(playersTilePointer) == ' ') {
+					playersTilePointer++;
+					// if it is the first letter of the new word
+					if (!getSquare(i, col + 1).isEmpty() && getSquare(i, col - 1).isEmpty()) {
+						iterator = col;
+						while (!getSquare(iterator, i).isEmpty()) {
+							iterator++;
+						}
+						// get score of new word and add to player score
+						for(int j = col; j < iterator; j++) {
+							wordScore += ((getSquare(i, j).getLetterTile().getScore()) * getSquare(i, j).getLetterMultiplier());
+							if(getSquare(i, j).getWordMultiplier()==2){
+								multiplierCounter += 2;
+							}else if(getSquare(i, j).getWordMultiplier() ==3){
+								multiplierCounter += 3;
+							}
+						}
+						multiplier(multiplierCounter, player, wordScore);
+					}
+					// if the character in the coordinate is not the first letter of the additional word
+					else if (!getSquare(i, col - 1).isEmpty()) {
+						// start from current row
+						iterator = col;
+						// iterate to start of the word
+						while (!getSquare(iterator, i).isEmpty()) {
+							iterator--;
+						}
+						int newWordFirstLetter = iterator + 1;
+						// form the word in array list
+						while (!getSquare(iterator, i).isEmpty()) {
+							iterator++;
+						}
+						// get score of new word and add to player score
+						for(int j = newWordFirstLetter; j < iterator; j++) {
+							wordScore += ((getSquare(i, j).getLetterTile().getScore()) * getSquare(i, j).getLetterMultiplier());
+							if(getSquare(i, j).getWordMultiplier()==2){
+								multiplierCounter += 2;
+							}else if(getSquare(i, j).getWordMultiplier() ==3){
+								multiplierCounter += 3;
+							}
+						}
+						multiplier(multiplierCounter, player, wordScore);
+					}
+				}
+				else{
+					playersTilePointer++;
+				}
+			}
+		}
 	}
 
 	// a challenge function by random

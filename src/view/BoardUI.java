@@ -474,8 +474,8 @@ public class BoardUI extends Application {
             		colOfChallengedWord.set(col);
                     orientationOfChallengedWord.set(orientation);
 
-
                     B.scoreCalculator(scrabblePlayers.getPlayer(playersTurn.get()), word, row, col, orientation);
+                    B.additionalWords(scrabblePlayers.getPlayer(playersTurn.get()), word, row, col, orientation, challengedLettersOnBoard.get());
 
                     if(orientation == '>') {
                     	for(int i = col; i < col+word.length(); i++) {
@@ -487,6 +487,7 @@ public class BoardUI extends Application {
                     		bt[i][col].setText(B.getSquare(i, col).getLetter());
                     	}
                     }
+
 
                     switch(numberOfPlayers) {
                         case 2:
