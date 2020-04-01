@@ -357,6 +357,7 @@ public class BoardUI extends Application {
         AtomicReference<String> challengedLettersOnBoard = new AtomicReference<>("");
 
         submit.setOnAction(e -> {
+            String setName = new String();
         		if(!P.isEmpty()) {
             String userInput = input.getText();
             String[] parsedInput = userInput.split(" ");
@@ -384,6 +385,36 @@ public class BoardUI extends Application {
 
             else if(input.getText().equals("QUIT")){
                 Platform.exit();
+            }
+
+
+            else if(parsedInput[0].equals("NAME")){
+
+                for(int i = 1; i < parsedInput.length; i++){
+                    setName += parsedInput[i] + " ";
+
+                }
+
+                scrabblePlayers.getPlayer(playersTurn.get()).setName(setName);
+
+                switch(numberOfPlayers) {
+                    case 2:
+                        player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                        player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                        break;
+                    case 3:
+                        player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                        player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                        player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
+                        break;
+                    case 4:
+
+                        player1.setText("[1]" + scrabblePlayers.getPlayer(0).getName());
+                        player2.setText("[2]" + scrabblePlayers.getPlayer(1).getName());
+                        player3.setText("[3]" + scrabblePlayers.getPlayer(2).getName());
+                        player4.setText("[4]" + scrabblePlayers.getPlayer(3).getName());
+                        break;
+                }
             }
 
             else if(parsedInput[0].equals("EXCHANGE")){  //swaping player tiles
