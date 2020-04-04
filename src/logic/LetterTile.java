@@ -94,7 +94,7 @@ public class LetterTile {
     		case 'U': return tileU;
     		case 'V': return tileV;
     		case 'W': return tileW;
-    		case 'X': return tileQ;
+    		case 'X': return tileX;
     		case 'Y': return tileW;
     		case 'Z': return tileY;
     		default: return tileBlank;

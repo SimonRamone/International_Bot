@@ -451,11 +451,26 @@ public class BoardUI extends Application {
             	char orientation =  parsedInput[1].charAt(0);
             	if(orientation == 'A') orientation = '>';
             		else orientation = 'V';
+            	String blankTileLetters = "";
             	
-            	if(B.wordCheck(B.removeRedundantLettersFromWord(word, row, col, orientation), scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
-            		            	if(B.hasWildCardInFrame(scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) B.wildCardSetLetter(scrabblePlayers.getPlayer(playersTurn.get()).getFrame(), B.removeRedundantLettersFromWord(word, row, col, orientation));
-
-            	}
+            	if(word.contains("_")) {
+            		blankTileLetters = parsedInput[3];
+            		if(B.countBlankTilesInWord(word) == 1) blankTileLetters = String.valueOf(blankTileLetters.charAt(0));
+            		if(B.countBlankTilesInWord(word) == 2) { 
+            			blankTileLetters = String.valueOf(blankTileLetters.charAt(0)) + String.valueOf(blankTileLetters.charAt(1));
+            		}
+            		scrabblePlayers.getPlayer(playersTurn.get()).getFrame().setBlankTiles(blankTileLetters);
+            			word = B.replaceBlankTilesInWord(word, blankTileLetters);
+            			System.out.println(blankTileLetters);
+            			System.out.println(word);
+            			System.out.println(scrabblePlayers.getPlayer(playersTurn.get()).getFrame());
+            		}
+            	
+            	
+//            	if(B.wordCheck(B.removeRedundantLettersFromWord(word, row, col, orientation), scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
+//            		            	if(B.hasWildCardInFrame(scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) B.wildCardSetLetter(scrabblePlayers.getPlayer(playersTurn.get()).getFrame(), B.removeRedundantLettersFromWord(word, row, col, orientation));
+//
+//            	}
 
             	if(!B.isValid(word, row, col, orientation, scrabblePlayers.getPlayer(playersTurn.get()).getFrame())) {
             		StringBuilder str = new StringBuilder();

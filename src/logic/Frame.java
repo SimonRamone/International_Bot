@@ -34,6 +34,11 @@ public class Frame {
 		P = passedInPool;
 		refillFrame();
 	}
+	
+	//Constructor method for new empty frame
+	public Frame(){
+
+	}
 
 	//Method refills frame
 	public void refillFrame(){
@@ -52,11 +57,22 @@ public class Frame {
 	public void add(LetterTile letterTile){
 		tileFrame.add(letterTile);
 	}
+	
+	public void setBlankTiles(String blankTileLetters) {
+		if(blankTileLetters.length() == 1) {
+			getTile(LetterTile.tileBlank.getLetter()).setLetter(blankTileLetters.charAt(0));
+		}
+		if(blankTileLetters.length() == 2) {
+			getTile('_').setLetter(blankTileLetters.charAt(0));
+			getTile('_').setLetter(blankTileLetters.charAt(1));
+		}
+	}
 
 	//Method for removing a selected tile
 	public void removeTile(LetterTile letter){
 		if(tileFrame.isEmpty()) throw new IllegalArgumentException ("Frame is emtpy. No more tiles can be removed.");
-			else tileFrame.remove(letter);
+			else if(!tileFrame.contains(letter)) throw new IllegalArgumentException ("Frame does not contain selected letter.");
+				else tileFrame.remove(letter);
 	}
 
 	//Method returns tile at queried index
@@ -92,10 +108,12 @@ public class Frame {
 
 		for(int i = 0; i < tileFrame.size(); i++) {
 			if(tileFrame.get(i).getLetter() == letter) {
-				index = i;
-			}
+				System.out.println("Find tile:" + tileFrame);
+				return index;
+			} 
 		}
-		return index;
+		
+		throw new IllegalArgumentException ("Selected letter is not in frame.");
 	}
 
 	//Method for removing a tile at the selected index
@@ -103,8 +121,21 @@ public class Frame {
 		if(tileFrame.isEmpty()) throw new IllegalArgumentException ("Frame is emtpy. No more tiles can be removed.");
 			else tileFrame.remove(index);
 	}
-
-
+	
+	public void removeTile(char letter){
+		int check = 0;
+		for(int i = 0; i < tileFrame.size(); i++) {
+			if(tileFrame.get(i).getLetter() == letter) {
+				tileFrame.remove(i);
+				check++;
+			} 
+			if(check > 0) {
+				i = 99;
+				break;
+			}
+		}
+		if(check == 0) throw new IllegalArgumentException ("Selected letter is not in frame.");
+	}
 
 	public String toString(){
 		String frameString = "";

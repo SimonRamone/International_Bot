@@ -185,6 +185,10 @@ public class Board {
 				return "Word conflicts with letters that are already on the board!";
 			case 5:
 				return "Word must connect with atleast one letter that is already on the board!";
+			case 6:
+				return "You don't have enough blank tiles!";
+			case 7:
+				return "You must place more than one tile!";
 			default:
 				return "Error code invalid!";
 		}
@@ -209,6 +213,14 @@ public class Board {
 				errorCode = 3;
 				return false;
 			}
+			if(countBlankTilesInWord(word) > countWildCardInFrame(tileFrame)) {
+				errorCode = 6;
+				return false;
+			}
+			if(word.length() <= 1) {
+				errorCode = 7;
+				return false;
+			}
 		}
 		else if(!isFirstWord()) {
 
@@ -227,6 +239,14 @@ public class Board {
 			word = removeRedundantLettersFromWord(word, row, col, orientation);
 			if(!wordCheck(word, tileFrame)) {
 				errorCode = 2;
+				return false;
+			}
+			if(countBlankTilesInWord(word) > countWildCardInFrame(tileFrame)) {
+				errorCode = 6;
+				return false;
+			}
+			if(word.length() <= 1) {
+				errorCode = 7;
 				return false;
 			}
 		}
@@ -307,60 +327,44 @@ public class Board {
 
 	// check if the frame contains the required tiles for the word
 	public boolean wordCheck(String word, Frame tileFrame) {
-		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
-
-		System.out.println("Word Check: " + word);
+		Frame tempFrame = new Frame();
+		System.out.println("temp frame1: " + tempFrame);
 
 		// make a temporary frame to hold player's tiles
 		for(int i = 0; i < tileFrame.getSize(); i++){
 			tempFrame.add(tileFrame.getTile(i));
+		}			
+		System.out.println("temp frame2: " + tempFrame);
+		// used to check if there are enough tiles for the word
+		if(tileFrame.getSize() < word.length()){
+			System.out.println("temp frameempty: " + tempFrame);
+			return false;
 		}
-
-		boolean valid = true;
-		int wildCardCount = countWildCardInFrame(tileFrame);
-		int foundTilesCount = 0;
-
-		StringBuilder userWord = new StringBuilder(word);	//SB stores word in an array.
-
-		// if there is wildcard in the player's frame, increment the foundTilesCount
-		if(hasWildCardInFrame(tileFrame)){
-			for (int i = 0; i < userWord.length(); i++) {
-				for(int j = 0; j < tempFrame.size(); j++){
-					if (userWord.charAt(i) == tempFrame.get(j).getLetter()) {
-						tempFrame.remove(j);
-						foundTilesCount++;
-						break;
-					}
-				}
+		
+		char[] wordChars = word.toCharArray();
+		try {
+			for(int i = 0; i < word.length(); i++) {
+				System.out.println(LetterTile.getLetterTile(wordChars[i]).getLetter());
+				tempFrame.removeTile(wordChars[i]);
+				System.out.println("temp frame3: " + tempFrame);
 			}
-
-			// used to check if there are enough tiles
-			if(foundTilesCount + wildCardCount < userWord.length()){
-				valid = false;
-			}
+		} catch (Exception e) {
+			return false;
 		}
-		else{
-			// else when there is no wildcard in the player's frame
-			for (int i = 0; i < userWord.length(); i++) {
-				for(int j = 0; j < tempFrame.size(); j++){
-					if (userWord.charAt(i) == tempFrame.get(j).getLetter()) {
-						tempFrame.remove(j);
-						foundTilesCount++;
-						break;
-					}
-				}
-			}
+		
 
-			// used to check if there are enough tiles for the word
-			if(foundTilesCount < userWord.length()){
-				valid = false;
-			}
-		}
 
-		return valid;
+		return true;
 	}
-
-
+	
+	public int countBlankTilesInWord(String word) {
+		if(!word.contains("_")) return 0;
+		int n = 0;
+		for (int i = 0; i < word.length(); i++) {
+			if(word.charAt(i) == '_') n++;
+		}
+		return n;
+	}
 
 	public Frame wildCardSetLetter(Frame tileFrame, String word){	//sets blank tile to necessary letter
 		ArrayList<LetterTile> tempFrame = new ArrayList<LetterTile>();
@@ -385,6 +389,29 @@ public class Board {
 		}
 
 		return tileFrame;
+	}
+	
+	public String replaceBlankTilesInWord (String word, String blankTileLetters) {
+		char[] wordChars = word.toCharArray();
+		if(blankTileLetters.length() == 1) { 
+			for(int i = 0; i < word.length(); i++) {
+				if(word.charAt(i) == '_') {
+					wordChars[i] = blankTileLetters.charAt(0);
+					break;
+				}
+			}
+		}
+		int index = 0;
+		if(blankTileLetters.length() == 2) {
+			for(int i = 0; i < word.length(); i++) {
+				if(word.charAt(i) == '_') {
+					wordChars[i] = blankTileLetters.charAt(index);
+					index++;
+				}
+				if(index == 2) break;
+			}
+		}
+		return String.valueOf(wordChars);
 	}
 
 	//Returns string which contains the letters that are one the board in the tiles that user wants to place their word
