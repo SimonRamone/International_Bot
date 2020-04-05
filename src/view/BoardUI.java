@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logic.Board;
+import logic.Dictionary;
 import logic.LetterTile;
 import logic.Pool;
 import logic.ScrabblePlayer;
@@ -24,16 +25,18 @@ public class BoardUI extends Application {
     Stage window;
     Scene scene1, scene2;
 	int numberOfPlayers = 0;
+	String lastPlacedWord = "";
     
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
     	Pool P = new Pool();
     	Board B = new Board();
 		ScrabblePlayer scrabblePlayers = new ScrabblePlayer(P);
+		Dictionary scrabbleWords = new Dictionary();
 		
         window = primaryStage;
 
@@ -481,7 +484,7 @@ public class BoardUI extends Application {
             	    // challengedLettersOnBoard filters out all words that are already on board. words that exist will take a blank space character
             	    challengedLettersOnBoard.set(B.getLettersAlreadyOnBoard(word, row, col, orientation));
             		B.placeWord(scrabblePlayers.getPlayer(playersTurn.get()), word, row, parsedInput[0].charAt(0), orientation);
-
+            		lastPlacedWord = word;
             		// details for challenging a word that is placed by current player
             		preChallengedScore.set(scrabblePlayers.getPlayer(playersTurn.get()).getScore());
             		lengthChallengedWord.set(word.length());
@@ -542,7 +545,7 @@ public class BoardUI extends Application {
 
         challenge.setOnAction(e -> {
             int playerChallenged = playersTurn.get();
-            if(B.challengeWord()){
+            if(!scrabbleWords.search(lastPlacedWord)){
                 scrabblePlayers.getPlayer(playerChallenged).setScore(preChallengedScore.get());
                 switch(numberOfPlayers) {
                     case 2:
