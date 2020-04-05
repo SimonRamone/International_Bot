@@ -691,7 +691,7 @@ public class Board {
 	}
 
 	// a challenge function by random
-	public boolean challengeWord(){
+	public static boolean challengeWord(){
 		Random randomNum = new Random();
 		int coinflip = randomNum.nextInt(2);
 		if(coinflip == 0){
