@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="International-Bot2">
+    <output-path>$PROJECT_DIR$/classes/artifacts/International_Bot2</output-path>
+    <root id="root">
+      <element id="archive" name="International_Bot.jar">
+        <element id="module-output" name="International-Bot" />
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/view/META-INF/MANIFEST.MF" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
