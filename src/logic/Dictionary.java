@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Dictionary {
 	
-	private final static File DICTIONARY_FILE = new File("src/Collins_Scrabble_Words_2019.txt");
+	private final static File DICTIONARY_FILE = new File("Collins_Scrabble_Words_2019.txt");
 	static final int ALPHABET_SIZE = 26;
 
 	static final class TrieNode {
