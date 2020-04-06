@@ -481,7 +481,6 @@ public class BoardUI extends Application {
                     textArea.appendText(str.toString());
             	} 
             	else {
-            		System.out.println("Last placed word: " + word);
             	    lastPlacedWord = word;
             		// challengedLettersOnBoard filters out all words that are already on board. words that exist will take a blank space character
             	    challengedLettersOnBoard.set(B.getLettersAlreadyOnBoard(word, row, col, orientation));
