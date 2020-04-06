@@ -20,6 +20,7 @@ public class Dictionary {
 	}
 
 	public Dictionary() throws Exception{
+		root = new TrieNode();
 		initDictionary();
 	}
 	
@@ -34,7 +35,6 @@ public class Dictionary {
 	static TrieNode root;
 
 	public static void insert(String word){ 	//inserts dictionary words into our trie
-		//needs to be implemented
 		int level, index;
 		int length = word.length();
 
@@ -51,8 +51,8 @@ public class Dictionary {
 
 		current.isEndOfWord = true;
 	}
-												//need to link this with challenge button :)
-	public static boolean search(String word) {		//returns trur if word is in trie
+											
+	public static boolean search(String word) {		//returns true if word is in trie
 		int level;
 		int length = word.length();
 		int index;
@@ -70,7 +70,6 @@ public class Dictionary {
 		}
 
 		return (current != null && current.isEndOfWord);
-//		return Board.challengeWord();	//this needs to be deleted
 	}
 	
 	public static void main(String args[]) throws Exception { 
