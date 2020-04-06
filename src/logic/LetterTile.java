@@ -71,6 +71,7 @@ public class LetterTile {
     
     public static LetterTile getLetterTile(char letter) {
     	switch(letter) {
+    		case '_': return tileBlank;
     		case 'A': return tileA;
     		case 'B': return tileB;
     		case 'C': return tileC;

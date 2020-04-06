@@ -443,6 +443,7 @@ public class BoardUI extends Application {
                 input.setText("");
             }
             else {// error checking & word placement
+            	lastPlacedWord = "";
             	parsedInput = userInput.split(" ");
             	String word = parsedInput[2];   //third string = word
             	StringBuilder rowString = new StringBuilder();
@@ -545,7 +546,8 @@ public class BoardUI extends Application {
         });
 
         challenge.setOnAction(e -> {
-            int playerChallenged = playersTurn.get();
+        	if(lastPlacedWord != "") {
+        	int playerChallenged = playersTurn.get();
             if(!scrabbleWords.search(lastPlacedWord)){
                 scrabblePlayers.getPlayer(playerChallenged).setScore(preChallengedScore.get());
                 switch(numberOfPlayers) {
@@ -612,7 +614,12 @@ public class BoardUI extends Application {
                         }
                     }
                 }
-
+                
+                //removes letters from blank tiles
+                if(scrabblePlayers.getPlayer(playerChallenged).getFrame().containsTile(LetterTile.getLetterTile('_'))) {
+                	scrabblePlayers.getPlayer(playerChallenged).getFrame().resetBlankTiles();
+                }
+                	
                 StringBuilder str = new StringBuilder();
                 str.append("Tiles refunded back to frame... \n" + scrabblePlayers.getPlayer(playerChallenged).getName() + "'s Frame" + scrabblePlayers.getPlayer(playerChallenged).getFrame() + "\n");
                 playersTurn.getAndIncrement();
@@ -623,6 +630,7 @@ public class BoardUI extends Application {
                 textArea.appendText(str.toString());
                 B.RemoveWordsOnBoard();
                 if(B.wordsOnBoard() == 0) B.resetFirstWord();
+                lastPlacedWord = "";
             }
             else{
                 StringBuilder str = new StringBuilder();
@@ -641,7 +649,13 @@ public class BoardUI extends Application {
                 str.append("Challenge Failed!\n Next player's turn...\n" + scrabblePlayers.getPlayer(playersTurn.get()).getName() +"'s Turn\n" + scrabblePlayers.getPlayer(playersTurn.get()).getFrame() + "\n");
                 textArea.appendText(str.toString());
                 B.setFirstWord();
+                lastPlacedWord = "";
             }
+        	}
+        	else {
+        		textArea.appendText("You cannot challenge right now!\n");
+        	}
+            
 
         });
 

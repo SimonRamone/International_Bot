@@ -137,6 +137,14 @@ public class Frame {
 		if(check == 0) throw new IllegalArgumentException ("Selected letter is not in frame.");
 	}
 
+	public void resetBlankTiles(){
+		for(int i = 0; i < tileFrame.size(); i++) {
+			if(tileFrame.get(i) == LetterTile.tileBlank) {
+				tileFrame.get(i).setLetter('_');
+			} 
+		}
+	}
+	
 	public String toString(){
 		String frameString = "";
 		for(int i = 0; i < tileFrame.size(); i++){
