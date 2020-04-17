@@ -1,5 +1,18 @@
 International Bot 17205786, 18439314, 18763829
 
+Dictionary class implemented, it generates a trie and inserts all the word into tree.
+contains a check function that will check weather or not the word is a correct word.
+
+Challenge button now activates the search function:
+->if player challenges and it's successful, player being challenged will loose points and get the tiles from the challenged word back.
+->if player challenge unsuccessful, the player who chose to challenge will loose turn.
+
+can run the Board.UI to start the game :)
+
+also we created the jar file, but for some reason it wont show up in intelliJ but it is in the artifacts folder of the project
+in cmd we had to type "java -jar C:\Users\jackl\IdeaProjects\International-Bot\classes\artifacts\International_Bot_Assignment4\International_Bot.jar
+for it to work
+
 Run the executable jar file on in terminal.
 Input, java -jar International-Bot.jar to run the jar file.
 
