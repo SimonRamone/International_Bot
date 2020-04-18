@@ -1,4 +1,5 @@
 package BOT.BasicBots_v2;
+
 public class Coordinates {
 
     int row, col;

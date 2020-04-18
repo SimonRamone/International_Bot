@@ -42,8 +42,7 @@ public class BoardUI extends Application {
 
         VBox playerName = new VBox();
         VBox playerScore = new VBox();
-        Label player1 = new Label(), player2 = new Label(), player3 = new Label(), player4 = new Label(), 
-        		score1 = new Label(), score2 = new Label(), score3 = new Label(), score4 = new Label();
+        Label player1 = new Label(), player2 = new Label(), player3 = new Label(), player4 = new Label(), score1 = new Label(), score2 = new Label(), score3 = new Label(), score4 = new Label();
         
         //First scene - player name input
         VBox layoutScene1 = new VBox();

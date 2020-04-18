@@ -1,4 +1,5 @@
 package BOT.BasicBots_v2;
+
 public class Tile {
 
     public static final char BLANK = '_';
