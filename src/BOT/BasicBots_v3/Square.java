@@ -1,5 +1,4 @@
-package BOT.BasicBots_v2;
-
+package BOT.BasicBots_v3;
 public class Square {
 
     private int letterMuliplier;

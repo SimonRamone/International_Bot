@@ -1,4 +1,4 @@
-package BOT.BasicBots_v2;
+package BOT.BasicBots_v3;
 
 public class Bot1 implements BotAPI {
 

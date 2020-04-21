@@ -1,5 +1,4 @@
-package BOT.BasicBots_v2;
-
+package BOT.BasicBots_v3;
 public class Node {
     private static final int NUM_LETTERS = 26;
 

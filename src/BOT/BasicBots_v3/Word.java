@@ -1,5 +1,4 @@
-package BOT.BasicBots_v2;
-
+package BOT.BasicBots_v3;
 public class Word {
 
 	private int row, column; // first letter position

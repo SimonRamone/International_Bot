@@ -1,5 +1,4 @@
-package BOT.BasicBots_v2;
-
+package BOT.BasicBots_v3;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
