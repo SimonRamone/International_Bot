@@ -1,6 +1,5 @@
-
-// International Bot 17205786, 18439314, 18763829
 package bot;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,16 +8,16 @@ import java.util.Scanner;
 
 public class InternationalBot implements BotAPI {
 
-    // International Bot 17205786, 18439314, 18763829
     // The public API of Bot must not change
     // This is ONLY class that you can edit in the program
     // Rename Bot to the name of your team. Use camel case.
     // Bot may not alter the state of the game objects
     // It may only inspect the state of the board and the player objects
 
-    private static String inputFileName = "C:\\Users\\jackl\\Downloads\\BasicBots3\\Collins_Scrabble_Words_2019.txt";
+    private static String inputFileName = "C:\\Users\\Jerald Choon\\IdeaProjects\\International-Bot\\src\\bot\\Collins_Scrabble_Words_2019.txt";
     private static final int[] TILE_VALUE = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
     ArrayList<WordNode> highestScoringWords = new ArrayList<WordNode>();
+    ArrayList<WordNode> wordsApplicable = new ArrayList<WordNode>();
     ArrayList<Square> anchorTiles = new ArrayList<Square>();
     ArrayList<Character> lettersOnBoard = new ArrayList<Character>();
 
@@ -63,6 +62,20 @@ public class InternationalBot implements BotAPI {
                 //System.out.println("END");
 
                 command = playGame();
+
+                for(int i = 0; i < 15; i++) {
+                    for(int j = 0; j < 15; j++) {
+                        System.out.print(board.getSquareCopy(i, j).isOccupied());
+                    }
+                    System.out.println();
+                }
+                System.out.println("8, 8: " + hasAdjacentTiles(7, 7));
+                System.out.println("7, 8: " + hasAdjacentTiles(6, 7));
+                System.out.println("6, 8: " + hasAdjacentTiles(5, 7));
+                System.out.println("5, 8: " + hasAdjacentTiles(4, 7));
+                System.out.println("9, 8: " + hasAdjacentTiles(8, 7));
+                System.out.println("10, 8: " + hasAdjacentTiles(9, 7));
+                System.out.println("11, 8: " + hasAdjacentTiles(10, 7));
                 break;
         }
         turnCount++;
@@ -111,8 +124,14 @@ public class InternationalBot implements BotAPI {
     }
 
     public String playGame(){
-        if(board.isFirstPlay()){
+        if(!board.getSquareCopy(7, 7).isOccupied()){
             return placeFirstWord();
+        }
+
+        makeWordsFromFrame();
+        for(int i = 0; i < wordsApplicable.size(); i++){
+            System.out.println("here");
+            System.out.println(wordsApplicable.get(i).getWord());
         }
 
         return "H9 A " + makeFirstWord();
@@ -145,7 +164,6 @@ public class InternationalBot implements BotAPI {
     public void sortHighestScoringWordsList() {
         Collections.sort(highestScoringWords);
     }
-
 
     public String makeFirstWord() {
         // search through arraylist for a possible word that contains all the letters in my frame
@@ -201,14 +219,78 @@ public class InternationalBot implements BotAPI {
     }
 
     public boolean hasAdjacentTiles(int i, int j) {
-        if(board.getSquareCopy(i+1, j).isOccupied()) return true;
-        if(board.getSquareCopy(i-1, j).isOccupied()) return true;
-        if(board.getSquareCopy(i, j-1).isOccupied()) return true;
-        if(board.getSquareCopy(i, j+1).isOccupied()) return true;
-        return false;
+        if(i == 0 && j == 0) {
+            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
+        }
+        else if(i == 0 && j > 0 && j < 14) {
+            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied() || board.getSquareCopy(i, j-1).isOccupied();
+        }
+        else if(i == 0 && j == 14) {
+            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i, j-1).isOccupied();
+        }
+        else if(i == 14 && j == 0) {
+            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
+        }
+        else if(i == 14 && j > 0 && j < 14) {
+            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied()
+                    || board.getSquareCopy(i, j-1).isOccupied();
+        }
+        else if(j == 0 && i > 0 && i < 14) {
+            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i-1, j).isOccupied();
+        }
+        else if(j == 0 && i == 14){
+            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
+        }
+        else if(j == 14 && i > 0 && i < 14){
+            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i-1, j).isOccupied();
+        }
+        else if(j == 14 && i == 14){
+            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j-1).isOccupied();
+        }
+        else {
+            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i-1, j).isOccupied()
+                    || board.getSquareCopy(i, j-1).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
+        }
+
     }
 
+    public void makeWordsFromFrame(){
+        searchBoard();
+        String myFrame = me.getFrameAsString() + lettersOnBoard;
+        StringBuilder tiles = new StringBuilder(myFrame);
 
+        System.out.println(tiles.toString());
+        // includes all the possible letters to use that are located on board
+        int index = 0;
+        StringBuilder searchWord = new StringBuilder();
+
+        while (index < highestScoringWords.size()) {
+            String currentWord = highestScoringWords.get(index).getWord();
+            // compare each character from a word from highestScoringWords to tiles in frame.
+            // If character found, remove letter from frame and increment searchWordLen
+            for(int i = 0; i < currentWord.length(); i++){
+                for(int j = 0; j < tiles.length(); j++) {
+                    if (currentWord.charAt(i) == tiles.charAt(j)) {
+                        searchWord.append(currentWord.charAt(i));
+                        tiles.deleteCharAt(j);
+                    }
+                }
+            }
+
+            // check if the word that have been sourced is the same as the current word. If it is, add to list
+            if(searchWord.equals(currentWord)) {
+                WordNode node = new WordNode(searchWord.toString(), getWordScore(searchWord.toString()));
+                wordsApplicable.add(node);
+            }
+
+            //reset variables to prepare for next search
+            searchWord.setLength(0);
+            tiles = new StringBuilder(myFrame);
+            index++;
+
+        }
+
+    }
 
     public static void main(String[] args) {
 

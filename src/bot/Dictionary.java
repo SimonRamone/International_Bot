@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Dictionary implements DictionaryAPI {
 
-    private static String inputFileName = "C:\\Users\\jackl\\Downloads\\BasicBots3\\Collins_Scrabble_Words_2019.txt";
+    private static String inputFileName = "C:\\Users\\Jerald Choon\\IdeaProjects\\International-Bot\\src\\bot\\Collins_Scrabble_Words_2019.txt";
     private Node root;
 
     Dictionary() throws FileNotFoundException {
