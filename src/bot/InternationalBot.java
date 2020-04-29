@@ -63,8 +63,8 @@ public class InternationalBot implements BotAPI {
 
                 command = playGame();
 
-                for(int i = 0; i < 15; i++) {
-                    for(int j = 0; j < 15; j++) {
+                for (int i = 0; i < 15; i++) {
+                    for (int j = 0; j < 15; j++) {
                         System.out.print(board.getSquareCopy(i, j).isOccupied());
                     }
                     System.out.println();
@@ -123,18 +123,18 @@ public class InternationalBot implements BotAPI {
         }
     }
 
-    public String playGame(){
-        if(!board.getSquareCopy(7, 7).isOccupied()){
+    public String playGame() {
+        if (!board.getSquareCopy(7, 7).isOccupied()) {
             return placeFirstWord();
         }
 
         makeWordsFromFrame();
-        for(int i = 0; i < wordsApplicable.size(); i++){
-            System.out.println("here");
-            System.out.println(wordsApplicable.get(i).getWord());
-        }
+//        for(int i = 0; i < wordsApplicable.size(); i++){
+//            System.out.println("here");
+//            System.out.println(wordsApplicable.get(i).getWord());
+//        }
 
-        return "H9 A " + makeFirstWord();
+        return "H9 A " + wordsApplicable.get(0).getWord();
     }
 
 
@@ -211,50 +211,41 @@ public class InternationalBot implements BotAPI {
             for (int j = 0; j < Board.BOARD_SIZE; j++) {
                 if (board.getSquareCopy(i, j).isOccupied()) {
                     lettersOnBoard.add(board.getSquareCopy(i, j).getTile().getLetter());
-                } else if (hasAdjacentTiles(i,j)){
-                    anchorTiles.add(board.getSquareCopy(i,j));
+                } else if (hasAdjacentTiles(i, j)) {
+                    anchorTiles.add(board.getSquareCopy(i, j));
                 }
             }
         }
     }
 
     public boolean hasAdjacentTiles(int i, int j) {
-        if(i == 0 && j == 0) {
-            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
-        }
-        else if(i == 0 && j > 0 && j < 14) {
-            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied() || board.getSquareCopy(i, j-1).isOccupied();
-        }
-        else if(i == 0 && j == 14) {
-            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i, j-1).isOccupied();
-        }
-        else if(i == 14 && j == 0) {
-            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
-        }
-        else if(i == 14 && j > 0 && j < 14) {
-            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied()
-                    || board.getSquareCopy(i, j-1).isOccupied();
-        }
-        else if(j == 0 && i > 0 && i < 14) {
-            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i-1, j).isOccupied();
-        }
-        else if(j == 0 && i == 14){
-            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
-        }
-        else if(j == 14 && i > 0 && i < 14){
-            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i-1, j).isOccupied();
-        }
-        else if(j == 14 && i == 14){
-            return board.getSquareCopy(i-1, j).isOccupied() || board.getSquareCopy(i, j-1).isOccupied();
-        }
-        else {
-            return board.getSquareCopy(i+1, j).isOccupied() || board.getSquareCopy(i-1, j).isOccupied()
-                    || board.getSquareCopy(i, j-1).isOccupied() || board.getSquareCopy(i, j+1).isOccupied();
+        if (i == 0 && j == 0) {
+            return board.getSquareCopy(i + 1, j).isOccupied() || board.getSquareCopy(i, j + 1).isOccupied();
+        } else if (i == 0 && j > 0 && j < 14) {
+            return board.getSquareCopy(i + 1, j).isOccupied() || board.getSquareCopy(i, j + 1).isOccupied() || board.getSquareCopy(i, j - 1).isOccupied();
+        } else if (i == 0 && j == 14) {
+            return board.getSquareCopy(i + 1, j).isOccupied() || board.getSquareCopy(i, j - 1).isOccupied();
+        } else if (i == 14 && j == 0) {
+            return board.getSquareCopy(i - 1, j).isOccupied() || board.getSquareCopy(i, j + 1).isOccupied();
+        } else if (i == 14 && j > 0 && j < 14) {
+            return board.getSquareCopy(i - 1, j).isOccupied() || board.getSquareCopy(i, j + 1).isOccupied()
+                    || board.getSquareCopy(i, j - 1).isOccupied();
+        } else if (j == 0 && i > 0 && i < 14) {
+            return board.getSquareCopy(i + 1, j).isOccupied() || board.getSquareCopy(i - 1, j).isOccupied();
+        } else if (j == 0 && i == 14) {
+            return board.getSquareCopy(i - 1, j).isOccupied() || board.getSquareCopy(i, j + 1).isOccupied();
+        } else if (j == 14 && i > 0 && i < 14) {
+            return board.getSquareCopy(i + 1, j).isOccupied() || board.getSquareCopy(i - 1, j).isOccupied();
+        } else if (j == 14 && i == 14) {
+            return board.getSquareCopy(i - 1, j).isOccupied() || board.getSquareCopy(i, j - 1).isOccupied();
+        } else {
+            return board.getSquareCopy(i + 1, j).isOccupied() || board.getSquareCopy(i - 1, j).isOccupied()
+                    || board.getSquareCopy(i, j - 1).isOccupied() || board.getSquareCopy(i, j + 1).isOccupied();
         }
 
     }
 
-    public void makeWordsFromFrame(){
+    public void makeWordsFromFrame() {
         searchBoard();
         String myFrame = me.getFrameAsString() + lettersOnBoard;
         StringBuilder tiles = new StringBuilder(myFrame);
@@ -266,22 +257,28 @@ public class InternationalBot implements BotAPI {
 
         while (index < highestScoringWords.size()) {
             String currentWord = highestScoringWords.get(index).getWord();
+            System.out.println("Current Word: " + currentWord);
             // compare each character from a word from highestScoringWords to tiles in frame.
             // If character found, remove letter from frame and increment searchWordLen
-            for(int i = 0; i < currentWord.length(); i++){
-                for(int j = 0; j < tiles.length(); j++) {
+            for (int i = 0; i < currentWord.length(); i++) {
+                for (int j = 0; j < tiles.length(); j++) {
                     if (currentWord.charAt(i) == tiles.charAt(j)) {
                         searchWord.append(currentWord.charAt(i));
                         tiles.deleteCharAt(j);
+                        break;
                     }
                 }
             }
 
+            System.out.println("Searched Word: " + searchWord);
+
             // check if the word that have been sourced is the same as the current word. If it is, add to list
-            if(searchWord.equals(currentWord)) {
+            if (searchWord.toString().equals(currentWord)) {
                 WordNode node = new WordNode(searchWord.toString(), getWordScore(searchWord.toString()));
                 wordsApplicable.add(node);
+                System.out.println("words Applicable added: " + wordsApplicable.get(0).getWord());
             }
+
 
             //reset variables to prepare for next search
             searchWord.setLength(0);
@@ -291,10 +288,4 @@ public class InternationalBot implements BotAPI {
         }
 
     }
-
-    public static void main(String[] args) {
-
-    }
-
-
 }
