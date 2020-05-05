@@ -1,6 +1,7 @@
 package bot;
 
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -158,9 +159,12 @@ public class InternationalBot implements BotAPI {
     }
 
     public String playGame() {
-        if (!board.getSquareCopy(7, 7).isOccupied()) {
+        if (board.isFirstPlay()) {
             return placeFirstWord();
         }
+        int allLettersOnBoardSize = allLettersOnBoard.size();
+        searchBoard();
+        if(allLettersOnBoardSize == allLettersOnBoard.size()) return "PASS";
         wordsApplicable.clear();
         makeWordsFromFrame();
 //       for(int i = 0; i < wordsApplicable.size(); i++){
@@ -176,7 +180,7 @@ public class InternationalBot implements BotAPI {
     	for(int i = 0; i < wordsApplicable.size(); i++) {
     		for(int j = 0; j < anchorTiles.size(); j++) {
     			String word = wordsApplicable.get(i).getWord();
-    			if(word.length() > 2 || me.getFrameAsString().length() < 7) {
+//    			if(word.length() > 5 || me.getFrameAsString().length() < 7) {
     				if(isValid(word, anchorTiles.get(j).getRow(), 
     					anchorTiles.get(j).getCol(), 'A', me.getFrameAsString())) {
     				if(anchorTiles.get(j).getCol() >= 1 && anchorTiles.get(j).getCol() + word.length() < Board.BOARD_SIZE) {
@@ -268,7 +272,7 @@ public class InternationalBot implements BotAPI {
     			}
     		} 
     	}
-    			}
+    			//}
     			
     	
     	return "PASS";
@@ -502,7 +506,6 @@ public class InternationalBot implements BotAPI {
     }
 
     public void makeWordsFromFrame() {
-        searchBoard();
         String myFrame = me.getFrameAsString() + allLettersOnBoard;
         StringBuilder tiles = new StringBuilder(myFrame);
 
