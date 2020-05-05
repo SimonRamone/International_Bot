@@ -1,26 +1,8 @@
-package bot;
-
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-
-import Board;
-import BoardAPI;
-import BotAPI;
-import DictionaryAPI;
-import OpponentAPI;
-import PlayerAPI;
-import UserInterfaceAPI;
-
-
-
-
-
-//import bot.BotAPI;
 
 public class InternationalBot implements BotAPI {
 
@@ -30,10 +12,10 @@ public class InternationalBot implements BotAPI {
     // Bot may not alter the state of the game objects
     // It may only inspect the state of the board and the player objects
 
-    private static String inputFileName = "src/csw.txt";
+    private static String inputFileName = "csw.txt";  //Dictionary file
     private static final int[] TILE_VALUE = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
-    ArrayList<WordNode> highestScoringWords = new ArrayList<WordNode>();
-    ArrayList<WordNode> wordsApplicable = new ArrayList<WordNode>();
+    ArrayList<WordStruct> highestScoringWords = new ArrayList<WordStruct>();
+    ArrayList<WordStruct> wordsApplicable = new ArrayList<WordStruct>();
     ArrayList<BoardSquare> anchorTiles = new ArrayList<BoardSquare>();
     ArrayList<Character> allLettersOnBoard = new ArrayList<Character>();
 
@@ -62,47 +44,19 @@ public class InternationalBot implements BotAPI {
             case 0:
                 command = "NAME InternationalBot";
                 break;
-//            case 1:
-//                command = "PASS";
-//                break;
-//             case 2:
-//                command = "HELP";
-//                break;
-//            case 3:
-//                command = "SCORE";
-//                break;
-//            case 4:
-//                command = "POOL";
-//                break;
             default:
-                //System.out.println("END");
-
                 command = playGame();
-
-                for (int i = 0; i < 15; i++) {
-                    for (int j = 0; j < 15; j++) {
-                        System.out.print(board.getSquareCopy(i, j).isOccupied());
-                    }
-                    System.out.println();
-                }
-                System.out.println("8, 8: " + hasAdjacentTiles(7, 7));
-                System.out.println("7, 8: " + hasAdjacentTiles(6, 7));
-                System.out.println("6, 8: " + hasAdjacentTiles(5, 7));
-                System.out.println("5, 8: " + hasAdjacentTiles(4, 7));
-                System.out.println("9, 8: " + hasAdjacentTiles(8, 7));
-                System.out.println("10, 8: " + hasAdjacentTiles(9, 7));
-                System.out.println("11, 8: " + hasAdjacentTiles(10, 7));
                 break;
         }
         turnCount++;
         return command;
     }
 
-    public static class WordNode implements Comparable<WordNode> {
+    public static class WordStruct implements Comparable<WordStruct> {
         String word;
         int score;
 
-        public WordNode(String w, int s) {
+        public WordStruct(String w, int s) {
             word = w;
             score = s;
         }
@@ -123,9 +77,9 @@ public class InternationalBot implements BotAPI {
             return word;
         }
 
-        public int compareTo(WordNode node) {
+        public int compareTo(WordStruct w) {
 
-            return WordNode.compare(getScore(), node.getScore());
+            return WordStruct.compare(getScore(), w.getScore());
         }
 
         private static int compare(int score2, int score3) {
@@ -162,75 +116,74 @@ public class InternationalBot implements BotAPI {
         if (board.isFirstPlay()) {
             return placeFirstWord();
         }
+        
         int allLettersOnBoardSize = allLettersOnBoard.size();
         searchBoard();
+        //Pass if board hasn't changed
         if(allLettersOnBoardSize == allLettersOnBoard.size()) return "PASS";
+        
         wordsApplicable.clear();
         makeWordsFromFrame();
-//       for(int i = 0; i < wordsApplicable.size(); i++){
-//            System.out.println("here");
-//        System.out.println(wordsApplicable.get(i).getWord());
-//        }
-
+        
         return placeWord();
     }
     
+    //used for turns after the first word has been placed
     public String placeWord() {
     	String command = "";
     	for(int i = 0; i < wordsApplicable.size(); i++) {
     		for(int j = 0; j < anchorTiles.size(); j++) {
     			String word = wordsApplicable.get(i).getWord();
-//    			if(word.length() > 5 || me.getFrameAsString().length() < 7) {
-    				if(isValid(word, anchorTiles.get(j).getRow(), 
-    					anchorTiles.get(j).getCol(), 'A', me.getFrameAsString())) {
-    				if(anchorTiles.get(j).getCol() >= 1 && anchorTiles.get(j).getCol() + word.length() < Board.BOARD_SIZE) {
-    					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 
-    						anchorTiles.get(j).getCol()-1).isOccupied()) {
-    					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 
-        						anchorTiles.get(j).getCol()+word.length()).isOccupied()) {
-	    					char col = (char) (anchorTiles.get(j).getCol() + 65);
-	    					int row = anchorTiles.get(j).getRow()+1;
-	    					command = command + col;
-	    					command = command + row + " ";
-	    					command = command + "A";
-	    					return command + " " + word;
-    					}
-    					}
-    				}
-    				else if(anchorTiles.get(j).getCol() == 0) {
-
-        					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 
-            						anchorTiles.get(j).getCol()+word.length()).isOccupied()) {
-    	    					char col = (char) (anchorTiles.get(j).getCol() + 65);
-    	    					int row = anchorTiles.get(j).getRow()+1;
-    	    					command = command + col;
-    	    					command = command + row + " ";
-    	    					command = command + "A";
-    	    					return command + " " + word;
-        					}
-        					
-    				}
-    				else if(anchorTiles.get(j).getCol() == Board.BOARD_SIZE-1) {
-    					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 
-        						anchorTiles.get(j).getCol()-1).isOccupied()) {
-    	    					char col = (char) (anchorTiles.get(j).getCol() + 65);
-    	    					int row = anchorTiles.get(j).getRow()+1;
-    	    					command = command + col;
-    	    					command = command + row + " ";
-    	    					command = command + "A";
-    	    					return command + " " + word;
-        					}
-        					
-    				}
+    				if(isValid(word, anchorTiles.get(j).getRow(), 			
+    					anchorTiles.get(j).getCol(), 'A', me.getFrameAsString())) {  //if word is valid across
+	    				if(anchorTiles.get(j).getCol() >= 1 && anchorTiles.get(j).getCol() + word.length() < Board.BOARD_SIZE) { //if word is not on board edge
+	    					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 	
+	    						anchorTiles.get(j).getCol()-1).isOccupied()) {		//if there is no tile before word
+		    					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 
+		        						anchorTiles.get(j).getCol()+word.length()).isOccupied()) {	//if there is no tile after word
+			    					char col = (char) (anchorTiles.get(j).getCol() + 65);
+			    					int row = anchorTiles.get(j).getRow()+1;
+			    					command = command + col;
+			    					command = command + row + " ";
+			    					command = command + "A";
+			    					return command + " " + word;
+		    					}
+	    					}
+	    				}
+	    				else if(anchorTiles.get(j).getCol() == 0) {		//if word is on left edge
+	
+	        					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 
+	            						anchorTiles.get(j).getCol()+word.length()).isOccupied()) {  //if there is no tile after word
+	    	    					char col = (char) (anchorTiles.get(j).getCol() + 65);
+	    	    					int row = anchorTiles.get(j).getRow()+1;
+	    	    					command = command + col;
+	    	    					command = command + row + " ";
+	    	    					command = command + "A";
+	    	    					return command + " " + word;
+	        					}
+	        					
+	    				}
+	    				else if(anchorTiles.get(j).getCol() == Board.BOARD_SIZE-1) {	//if word is on right edge
+	    					if(!board.getSquareCopy(anchorTiles.get(j).getRow(), 
+	        						anchorTiles.get(j).getCol()-1).isOccupied()) {	//if there is no tile before word
+	    	    					char col = (char) (anchorTiles.get(j).getCol() + 65);
+	    	    					int row = anchorTiles.get(j).getRow()+1;
+	    	    					command = command + col;
+	    	    					command = command + row + " ";
+	    	    					command = command + "A";
+	    	    					return command + " " + word;
+	        					}
+	        					
+	    				}
     				
     			}
-    			if(isValid(word, anchorTiles.get(j).getRow(), 
+    			if(isValid(word, anchorTiles.get(j).getRow(), 			//if word is valid down
     					anchorTiles.get(j).getCol(), 'D', me.getFrameAsString())) {
-    				if(anchorTiles.get(j).getRow() >= 1 && anchorTiles.get(j).getRow() + word.length() < Board.BOARD_SIZE) {
+    				if(anchorTiles.get(j).getRow() >= 1 && anchorTiles.get(j).getRow() + word.length() < Board.BOARD_SIZE) {  //if word is not on board edge
     					if(!board.getSquareCopy(anchorTiles.get(j).getRow()-1, 
-    						anchorTiles.get(j).getCol()).isOccupied()) {
+    						anchorTiles.get(j).getCol()).isOccupied()) {	//if there is no tile before word
     					if(!board.getSquareCopy(anchorTiles.get(j).getRow() + word.length(), 
-    						anchorTiles.get(j).getCol()).isOccupied()) {
+    						anchorTiles.get(j).getCol()).isOccupied()) {	//if the is no tile after word
     						char col = (char) (anchorTiles.get(j).getCol() + 65);
     						int row = anchorTiles.get(j).getRow()+1;
     						command = command + col;
@@ -241,9 +194,9 @@ public class InternationalBot implements BotAPI {
     					
     					}
     				}
-    				else if(anchorTiles.get(j).getRow() == 0) {
+    				else if(anchorTiles.get(j).getRow() == 0) {	//if word is on top edge
         					if(!board.getSquareCopy(anchorTiles.get(j).getRow() + word.length(), 
-        						anchorTiles.get(j).getCol()).isOccupied()) {
+        						anchorTiles.get(j).getCol()).isOccupied()) { //if there is no tile after word
         						char col = (char) (anchorTiles.get(j).getCol() + 65);
         						int row = anchorTiles.get(j).getRow()+1;
         						command = command + col;
@@ -254,9 +207,9 @@ public class InternationalBot implements BotAPI {
         					
        
     				}
-    				else if(anchorTiles.get(j).getRow() == Board.BOARD_SIZE-1) {
+    				else if(anchorTiles.get(j).getRow() == Board.BOARD_SIZE-1) { //if word is on bottom edge
     					if(!board.getSquareCopy(anchorTiles.get(j).getRow()-1, 
-        						anchorTiles.get(j).getCol()).isOccupied()) {
+        						anchorTiles.get(j).getCol()).isOccupied()) {	//if there is no tile before word
         		
         						char col = (char) (anchorTiles.get(j).getCol() + 65);
         						int row = anchorTiles.get(j).getRow()+1;
@@ -271,13 +224,11 @@ public class InternationalBot implements BotAPI {
     				
     			}
     		} 
-    	}
-    			//}
-    			
-    	
-    	return "PASS";
+    	} 	
+    	return "PASS";	//pass turn if no word with suitable anchor square was found
     }
     
+    //checks if word and word placement is valid
 	public boolean isValid(String word, int row, int col, char orientation, String tileFrame){
 		if(!isBound(row, col, orientation, word.length())) {
 			return false;
@@ -294,7 +245,7 @@ public class InternationalBot implements BotAPI {
 		}
 	return true;
 }
-	
+	//Checks if frame has necessary tiles for word
 	public boolean wordCheck(String word, String tileFrame) {			
 		// used to check if there are enough tiles for the word
 		if(tileFrame.length() < word.length()){
@@ -413,7 +364,7 @@ public class InternationalBot implements BotAPI {
         Scanner in = new Scanner(inputFile);
         while (in.hasNextLine()) {
             String word = in.nextLine();
-            WordNode node = new WordNode(word, getWordScore(word));
+            WordStruct node = new WordStruct(word, getWordScore(word));
             highestScoringWords.add(node);
         }
         in.close();
@@ -462,6 +413,7 @@ public class InternationalBot implements BotAPI {
 
     public String placeFirstWord() {
         String word = makeFirstWord();
+        if(word == null || word.isEmpty() ||  word == "" || word == " ") return "PASS";
         return "H8 A " + word;
     }
 
@@ -533,8 +485,8 @@ public class InternationalBot implements BotAPI {
 
             // check if the word that have been sourced is the same as the current word. If it is, add to list
             if (searchWord.toString().equals(currentWord)) {
-                WordNode node = new WordNode(searchWord.toString(), getWordScore(searchWord.toString()));
-                wordsApplicable.add(node);
+                WordStruct word = new WordStruct(searchWord.toString(), getWordScore(searchWord.toString()));
+                wordsApplicable.add(word);
                 //System.out.println("words Applicable added: " + wordsApplicable.get(0).getWord());
             }
 
